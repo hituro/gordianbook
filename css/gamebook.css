@@ -1,0 +1,168 @@
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    padding: 3em 1em;
+    margin: 0px;
+    box-sizing: border-box;
+    background-color: #666;
+    background-image: url("/images/black-linen.png");
+    --border-col: #669;
+    --border-lighter: #66669991;
+    --background: #f9f9ff;
+}
+
+p, li, dd {
+    font-family: Open Sans, sans-serif;
+}
+
+code.block {
+    background-color: white;
+    border-left: 1px solid #999;
+    border-right: 1px solid #999;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.errors {
+    border: #660000;
+    background: #990000;
+    color: white;
+    margin: 20px;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.messages {
+    border: #060;
+    background: rgb(100, 240, 100);
+    color: black;
+    margin: 20px;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.content {
+    max-width: 800px;
+    margin: auto;
+    background: var(--background);
+    padding: 2em;
+    border-radius: 2em;
+    border: 2px solid var(--border-col);
+        box-shadow: 0 5px 10px 6px rgba(0,0,0,0.4);
+}
+.content + .content { margin-top: 2em; }
+
+.sidebar {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    padding: 1em;
+    background: var(--background);
+    overflow-y: scroll;
+}
+
+.menus {
+    margin-left: 2em;
+}
+@media screen and (min-width: 630px) {
+    .menus {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .home_Export {
+        grid-row: 2/4;
+        grid-column: 2;
+    }
+}
+
+.form-row {
+    display: block;
+    padding: 10px;
+}
+
+.form-row label {
+    font-weight: bold;
+}
+
+.form-row input[type=text], .form-row textarea {
+    width: 100%;
+}
+
+.fieldset {
+    border: 2px solid var(--border-lighter);
+    border-radius: 1em;
+    background: rgba(255, 255, 255, 0.4);
+    position: relative;
+    margin-top: 35px;
+    box-shadow: inset 2px 2px 1px 1px rgba(0,0,0,0.1);
+    padding: 0.5em;
+}
+.fieldset + .fieldset {
+    margin-top: calc(2em + 35px);
+}
+.legend {
+    position: absolute;
+    top: -30px;
+    left: 0px;
+    color: var(--border-col);
+    font-weight: bold;
+    font-size: 16px;
+}
+
+dl {
+    margin-left: 2em;
+}
+dt {
+    font-weight: bold;
+}
+dd + dt {
+    margin-top: 1em;
+}
+dd {
+    margin: 0.5em 0;
+}
+
+.tabnav {
+    display: flex;
+    padding: 0px;
+}
+.tabnav li {
+    list-style-type: none;
+    margin: 0px;
+    padding: 4px;
+    border: 1px solid #b7b7b7;
+    background: #eee;
+    color: #333;
+    cursor: pointer;
+}
+.tabnav li.active {
+    font-weight: bold;
+    background: orange;
+    border-color: #a25900;
+}
+.tabnav li + li {
+    border-left-width: 0px;
+}
+.tabnav li + li.active {
+    border-left-width: 1px;
+}
+.tabnav li:first-child {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+.tabnav li:last-child {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.tabs {
+    border-radius: 3px;
+    border: 1px solid #b7b7b7;
+    background: #eee;
+}
+
+.md {
+    margin-left:2em;
+}
+.md tr td:first-child {
+    width: 100px;
+}

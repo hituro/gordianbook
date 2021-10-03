@@ -1,0 +1,38 @@
+<h1>Workflows & Techniques</h1>
+<h2>Twine to PDF</h2>
+<p>The simplest workflow is to go directly from Twine to a PDF as explained on the home page. This is a one-way workflow. You export your game from Twine (either by using the normal "Save a Copy" function, or using a story format such as Twison or Entweedke), load it into Gordian, and then produce the PDF. In this workflow, passages are numbered once, when the game is first converted. Converting again would change the numbering, so each time you make changes in Twine and re-export you will get a different order. This is especially relevant to page breaks, and the placement of images.</p>
+<p>To place images in this workflow, first import and convert the game, then look at the PDF to see where your images would sit best. Then edit individual passages in Gordian to add the images to them. If you need to absoloutely place images on the page, they cannot be contained in a passage (this is a limitation of MPDF, which we use to produce the PDF). To deal with this, place the image in an <code>&lt;after></code> tag to place it outside the passage container. When you do this, make sure to give your image an id, so that you can target it in your custom CSS.</p>
+
+<h2>Twine to Twine</h2>
+<p>Once exported from Twine to Gordian, you can export from Gordian back to Twine, using the <b>Export Twine Archive</b> link. Then, in Twine, choose <b>Import From File</b> to re-import your story. Note that, unless you rename your story in Gordian (or in the exported file) first, it will entirely replace the story you have in Twine. Be careful.</p>
+
+<h2>Twine to Twee</h2>
+<p>Once exported from Twine to Gordian, you can export from Gordian to Twee3, a human-readable format for interactive fiction. Gordian uses tags to number the paragraphs in Twee, and includes your custom settings and covers in special passages (such as gb-front-cover, and gb-settings). You should be able to export from Gordian to Twee, and then re-import that Twee and get the same results.</p>
+<p>If you should want to get your Twee file back into Twine (e.g. after spell-checking it, or working on it in a text editor), you will need to use <a href='http://www.motoslave.net/tweego/'>tweego</a> to convert the Twee to a Twine archive.</p>
+<p><code>tweego -a -o archive.html exported.twee</code></p>
+<p>Then import the archive into Twine. Note that this will replace your existing game unless you rename the game in the twee file first.</p>
+
+<h2>PDF Formatting</h2>
+<p>PDFs are created using <a href='https://mpdf.github.io/'>MPDF</a>. You can read the manual to find special tags (such as page breaks, headers, and footers) that you can include in your <code>gb-introduction</code> or other passages.</p>
+<h3>Covers</h3>
+<p>If you enable covers in settings, GBF will add a front cover page to your PDF containing the game title. This ends with a page break and resets page numbering (so the first page after the title is page 1). If you provide a passage named <code>gb-front-cover</code> then this will override the automatic cover. Gordian provides some utility classes to help lay out your cover as follows:</p>
+<ul>
+    <li><code>.cover_back</code>: an absolutely positioned div that covers the whole printable area, set its background image to provide a cover image. Change its position to <code>static</code> if you want to go edge to edge (e.g. for bleed, or for a web PDF).</li>
+    <li><code>.cover_top</code>: an absolutely positioned div that sits towards the top of the page. Change its position with <code>top, left, right</code>.</li>
+    <li><code>.cover_image</code>: an absolutely positioned div for holding an image. Change its position with <code>top, bottom, left, right</code>.</li>
+    <li><code>.cover_bottom</code>: an absolutely positioned div that sits towards the bottom of the page. Change its position with <code>bottom, left, right</code>.</li>
+    <li><code>.cover_title</code>: sets margin to zero and font-size to 7em</li>
+</ul>
+<p>Note that, due to restrictions in MPDF, nested elements cannot be absolutely positioned, and you cannot use descendent selectors in CSS to target the immediate children of an absolutely positioned element. So, in the example below, you cannot style the title with <code class='block'>.cover_top .cover_title</code>, you must use just <code>.cover_title</code></p>
+<code style='white-space:pre'>
+    &lt;div class='cover_top'>
+        &lt;h1 class='cover_title'>Book Name&lt;/h1>
+    &lt;/div>
+    &lt;div class='cover_image'>&lt;/div>
+    &lt;div class='cover_bottom'>
+        &lt;h2>By&lt;br>N. N. Author&lt;/h2>
+    &lt;/div>
+</code>
+
+<h2>Custom CSS</h2>
+<p>Custom CSS can be entered in the <a href='gordian.php?mode=settings'>Settings</a>. In addition, any User Stylesheet created in Twine, or any passage tagged <code>stylesheet</code> will be appended to the CSS from settings.</p>

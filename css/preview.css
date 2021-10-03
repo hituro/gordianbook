@@ -1,0 +1,8 @@
+.checkboxes .box {
+    display: inline-block;
+    width: 4mm;
+    cursor:pointer;
+}
+.checkboxes .box[data-checked] {
+    background: #666;
+}

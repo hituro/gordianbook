@@ -1,0 +1,57 @@
+<h1>Supported Text Formatting</h1>
+<h2>Basic Formatting</h2>
+<table class='md'>
+    <tr><td><code>**text**</code></td>     <td><b>bold</b></td></tr>
+    <tr><td><code>''text''</code></td>     <td><b>bold</b></td></tr>
+    <tr><td><code>*text*</code></td>       <td><i>italic</i></td></tr>
+    <tr><td><code>//text//</code></td>     <td><i>italic</i></td></tr>
+    <tr><td><code>__text__</code></td>     <td><u>underline</u></td></tr>
+    <tr><td><code>--text--</code></td>     <td><del>strikethrough</del></td></tr>
+    <tr><td><code>^^text^^</code></td>     <td><sup>superscript</sup></td></tr>
+    <tr><td><code>~~text~~</code></td>     <td><sup>subscript</sup></td></tr>
+    <tr><td><code>---</code></td>          <td>horizontal rule<hr> (4 dashes for sugarcube)</td></tr>
+    <tr><td><code>/* text */</code></td>     <td>comment</td></tr>
+    <tr><td><code>/% text %/</code></td>     <td>comment</td></tr>
+</table>
+<h2>Alignment (Harlowe)</h2>
+<table class='md'>
+    <tr><td><code>&lt;==</code></td>       <td>left align</td></tr>
+    <tr><td><code>==></code></td>          <td>right align</td></tr>
+    <tr><td><code>&lt;==></code></td>      <td>justified</td></tr>
+    <tr><td><code>==>&lt;==</code></td>    <td>centered, use more = on either side to adjust margins</td></tr>
+</table>
+<h2>Blockquote (Sugarcube)</h2>
+<table class='md'>
+    <tr><td><code>> </code></td>        <td><blockquote>blockquote</blockquote></td></tr>
+    <tr><td><code>>> </code></td>    <td><blockquote><blockquote>blockquote (nested)</blockquote></blockquote></td></tr>
+</table>
+<h2>Lists (Harlowe)</h2>
+<table class='md'>
+    <tr><td><code>* </code></td>           <td><ul><li>unordered list</li></ul></td></tr>
+    <tr><td><code>** </code></td>           <td><ul><ul><li>unordered list (nested)</li></ul></ul></td></tr>
+    <tr><td><code>0. </code></td>          <td><ol><li>ordered list</li></ol></td></tr>
+    <tr><td><code>0.0. </code></td>           <td><ol><ol><li>ordered list (nested)</li></ol></ol></td></tr>
+</table>
+<h2>Lists (Sugarcube)</h2>
+<table class='md'>
+    <tr><td><code>* </code></td>           <td><ul><li>unordered list</li></ul></td></tr>
+    <tr><td><code>** </code></td>           <td><ul><ul><li>unordered list (nested)</li></ul></ul></td></tr>
+    <tr><td><code># </code></td>          <td><ol><li>ordered list</li></ol></td></tr>
+    <tr><td><code>## </code></td>           <td><ol><ol><li>ordered list (nested)</li></ol></ol></td></tr>
+</table>
+<h2>Headings (Harlowe)</h2>
+<table class='md'>
+    <tr><td><code># </code></td>           <td><h2>Heading 3</h2></td></tr>
+    <tr><td><code>## </code></td>           <td><h2>Heading 4</h2></td></tr>
+    <tr><td><code>### </code></td>           <td><h2>Heading 5</h2></td></tr>
+    <tr><td><code>#### </code></td>           <td><h2>Heading 6</h2></td></tr>
+</table>
+<h2>Headings (Sugarcube)</h2>
+<table class='md'>
+    <tr><td><code>! </code></td>           <td><h2>Heading 3</h2></td></tr>
+    <tr><td><code>!! </code></td>           <td><h2>Heading 4</h2></td></tr>
+    <tr><td><code>!!! </code></td>           <td><h2>Heading 5</h2></td></tr>
+    <tr><td><code>!!!! </code></td>           <td><h2>Heading 6</h2></td></tr>
+</table>
+<h2>No-Markup (Harlowe)</h2>
+<p>Enclose text in one or more backticks <code>`</code> to turn off formatting in that text. You can include backticks <i>inside</i> the text by using more backticks to surround it (e.g. <code>`` no `processing` here``</code>).</p>

@@ -1,0 +1,180 @@
+body {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.paragraph, .rules {
+    page-break-inside: avoid;
+}
+.paragraph.long {
+    page-break-inside: auto;
+}
+
+h1, h2 {
+    margin: 1em 0px;
+}
+
+img {
+    max-width: 100%;
+}
+.center {
+    text-align: center;
+}
+.cut {
+    margin-top: 3em;
+    margin-bottom: 1em;
+}
+
+.cover_full {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+.cover_back {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+.cover_top {
+    position: absolute;
+    top: 4cm;
+    left: 3cm;
+    right: 3cm;
+    text-align: center;
+}
+.cover_image {
+    position: absolute;
+}
+.cover_title {
+    font-size: 7em;
+    margin: 0em;
+}
+.cover_bottom {
+    position: absolute;
+    bottom: 4cm;
+    left: 3cm;
+    right: 3cm;
+    text-align: center;
+}
+
+.introduction {
+    font-size: 1.1em;
+    page: introduction;
+    page-break-inside: auto;
+}
+
+.game_divider {
+    width: 80%;
+    margin: 1.5em auto;
+    height: 1px;
+    background: #6F1616;
+    background: radial-gradient(black, rgba(0,0,0,0));
+}
+
+:target {
+    background: yellow;
+}
+
+.footer {
+    text-align: center;
+}
+
+.end {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5em;
+    margin: 1em;
+}
+
+/* Inline rules, renders as a span */
+
+.check {
+    display: inline;
+    border-radius: 0.5mm;
+    padding: 1px 2px;
+    /*border: var(--check-border);
+    background: var(--check-background);
+    color: var(--check-color); */
+    border: none;
+    background: rgb(205, 250, 255);
+    color: black;
+}
+
+/* Stats block */
+
+.stats {
+    display: block;
+    margin: 1em 0px;
+    padding: 0px;
+}
+.stats p { margin: 0px; }
+.stats p + p { margin-top: 1em; }
+.stats .special {
+    font-style: italic;
+    margin-top: 1em;
+}
+
+/* Rules block, renders as a paragraph-like div */
+
+.rules {
+    display: block;
+    border-radius: 1mm;
+    margin: 1em 0px;
+    padding: 0.5em;
+    border: 1px solid #999;
+    background: #f4f4f4;
+    color: black;
+}
+
+.disclaimer {
+    font-size: 8pt;
+    padding-top: 6cm;
+}
+
+.checkboxes {
+    text-align: center;
+    height: 4mm;
+    margin: 1em auto;
+}
+.checkboxes .box {
+    display: inline-block;
+    width: 6mm;
+    height: 4mm;
+    border: 0.2mm solid black;
+    background: white;
+}
+
+@media print {
+    body {
+        font-size: 9pt;
+    }
+    p {
+        margin : 0.5em 0px;
+    }
+}
+
+/*
+@page {
+    header: otherpageheader;
+    footer: otherpagefooter;
+}
+@page :first {
+    header: firstpageheader;
+    footer: firstpagefooter;
+}
+@page body {
+    header: otherpageheader;
+    footer: otherpagefooter;
+}
+@page introduction {
+    header: firstpageheader;
+    footer: firstpagefooter;
+}
+@page :last {
+    header: firstpageheader;
+    footer: firstpagefooter;
+}
+*/

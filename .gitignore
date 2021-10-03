@@ -1,0 +1,4 @@
+composer.phar
+images/*
+!images/app/
+vendor/

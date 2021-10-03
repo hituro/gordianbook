@@ -1,0 +1,86 @@
+</div>
+<div class="content">
+<h2>About</h2>
+<p>Gordian Book imports a Twine game (either a Twine Archive, or a Twison/Twee version), and converts it to a gamebook output by numbering and shuffling the paragraphs, and converting links to the appropriate "turn to page x" form. Once converted, you can view the game in the browser, download as a standalone HTML file (e.g. for further editing), or export it as a simple PDF. (See <a href='gordian.php?mode=workflow'>Workflow notes</a>).</p>
+<p><a href="gordian.php?mode=changelog">Changelog</a></p>
+
+<h2>Example Story</h2>
+<p>Learn better from an example? Download the following and open it in Twine: <a href="skeleton_passage.html" download>Skeleton Passage</a></p>
+<p>Or, if you just want a blank starting point: <a href="blank_twine.html" download>Blank Story</a></p>
+
+<h2>Instructions</h2>
+<dl>
+    <dt>Create your Adventure</dt>
+    <dd>Create your adventure in Twine (<a href='http://twinery.org/'>twinery.org</a>) using the format of your choice (Gordian supports formatting for Harlowe 3, Sugarcube 2, and WritingFantasy), or write it in <a href='https://github.com/iftechfoundation/twine-specs/blob/master/twee-3-specification.md'>Twee format</a>. This export is intended for a paper output, so avoid using variables, javascript and the like. </dd>
+    <dd>Links will be formatted as "Link name (turn to X)". If you just want "turn to X" us the special link name <code>turnto</code>. To just get the number as a link, use the link name <code>#</code>.</dd>
+    <dl>
+        <dt>Special Passages</dt>
+            <dd>The following special passages will be extracted:
+            <ul>
+                <li><b>gb-settings</b>: Used to store your Gordian settings in JSON (see <a href='gordian.php?mode=export-settings'>Export Settings</a>)</li>
+                <li><b>gb-front-cover</b>: Used to create the PDF front cover</li>
+                <li><b>gb-introduction</b>: Placed before the first numbered entry</li>
+                <li><b>gb-rear</b>: Placed at the end of the PDF, after a page break</li>
+                <li><b>gb-rear-cover</b>: Used to create the PDF rear cover</li>
+            </ul></dd>
+        <dt>Special Tags</dt>
+            <dd>You can tag your passages with the following special tags:
+            <ul>
+                <li><b>backmatter</b>: Appears between the last numbered passage and <code>gb-rear</code>. Use <code>backmatter_1</code> (etc.) to order multiple tagged passages.</li>
+                <li><b>breakbefore</b>: The game will insert a pagebreak before this passage</li>
+                <li><b>breakafter</b>: The game will insert a pagebreak after this passage.</li>
+                <li><b>death</b>: The game will show 'YOU DIED'. You can customise the text in settings</li>
+                <li><b>end</b>: The game will show 'THE END'. You can customise the text in settings</li>
+                <li><b>frontmatter</b>: Appears between the front cover and <code>gb-introduction</code>. Use <code>frontmatter_1</code> (etc.) to order multiple tagged passages.</li>
+                <li><b>last</b>: The game will put this passage at the end of the numbered passages. If multiple <i>last</i> passages exist they will end up at the end in the order encountered. (Synonym: <code>ending</code>,)</li>
+                <li><b>long</b>: The game will not try to avoid page breaks in this passage</li>
+                <li><b>skip</b>: The game will skip this passage. (Synonym: <code>hidden</code>)</li>
+            </ul></dd>
+            <dd>You can tag a passage with a number to reserve that paragraph number in the final game — make sure to pick a valid number. (Synonym: <code>fixednumber_&lt;number&gt;</code>)</dd>
+            <dd>Certain alternatives are supported for compatibility with <a href='gordian.php?mode=wf'>WritingFantasy</a>.</dd>
+        <dt>Special HTML</dt>
+            <dd>The following html-tags will get special styling:
+            <ul>
+                <li><code>&lt;after></code> Content placed following the passage (e.g. an image) (see <a href='gordian.php?mode=workflow'>Workflow notes</a>)</li>
+                <li><code>&lt;before></code> Content placed preceeding the passage number</li>
+                <li><code>&lt;check></code> For inline rules text and checks</li>
+                <li><code>&lt;rules></code> For boxed out rules text</li>
+                <li><code>&lt;special></code> Use inside &lt;stats> for special abilities</li>
+                <li><code>&lt;stats></code> For monster or NPC stat blocks</li>
+            </ul>
+        <dt>Macros</dt>
+            <dd>Macros are not supported with the exception of <code>(display: "passage name")</code> and <code>&lt;&lt;include "passage name">></code>, which cannot be nested.</dd>
+        <dt>Text Formatting</dt>
+            <dd>The majority of Harlow Markdown and Sugarcube Wiki-Formatting is supported, see <a href='gordian.php?mode=markdown'>Supported Text Formatting</a>.</dd>
+    </dl>
+
+    <dt>Export from Twine</dt>
+    <dd>Export your adventure, by using Twine's "Publish to File", or using a format such as <a href='https://github.com/lazerwalker/twison'>Twison</a> or <a href='https://www.maximumverbosity.net/twine/Entweedle/'>Entweedle</a>, or by authoring it in Twee. Then, copy or save the resulting file. (You can use Twee created outside Twine if you wish, as long as you use Harlowe 3, Sugarcube 2, or plain HTML for your formatting.)</dd>
+
+    <dt>Import into Gordian</dt>
+    <dd>Click the <a href='gordian.php?mode=load-json'>Import Game</a> link, and paste your game into the import window, or upload your exported file, and click <b>Import</b>, your game is now loaded into the Gordian. All further steps work on this imported copy, so if you change your Twine original you'll have to export it and import it again.</dd>
+
+    <dt>Convert</dt>
+    <dd>Before viewing or exporting your game, you must convert it, by clicking the <a href='gordian.php?mode=convert'>Convert to Gamebook</a> link. This will do the following:
+        <ul>
+            <li>Extract the Introduction, if any.</li>
+            <li>Number each paragraph, except the start, randomly</li>
+            <li>Order the newly numbered paragraphs</li>
+            <li>Trace any links and add numbers to them</li>
+            <li>Process your Markdown, Harlowe styling, tags, and markup</li>
+        </ul>
+    If you don't like the random order produced, you can convert again until you do.</dd>
+
+    <dt>Export</dt>
+    <dd>Use the <b>Play Gamebook</b> link to view the gamebook in the browser. Use <b>Export Settings</b> to save a copy of the game settings only. User <b>Print</b> to get your PDF for printing or downloading.</dd>
+    <dd>Other formats:
+        <ul>
+            <li>Gordian JSON — a complete dump of the converted game, use to re-import later</li>
+            <li>Twine Archive — use to re-import into Twine</li>
+            <li>HTML — an HTML version of the game suitable for proofreading (can be imported to Google Docs)</li>
+            <li>Twee — a Twee3 version of the game, use to import elsewhere</li>
+        </ul>
+    </dd>
+</dl>
+<h3>Note</h3>
+<p>Gordian doesn't store your game long-term. If you close the window, or even leave it idle too long, Gordian will forget your game — make sure you export it if you want to keep it. If you plan to keep tweaking it in Gordian later, export it as Gordian JSON.</p>

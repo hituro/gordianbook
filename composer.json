@@ -1,0 +1,6 @@
+{
+    "require": {
+        "mpdf/mpdf": "^8.0",
+        "voku/simple_html_dom": "^4.7"
+    }
+}
