@@ -88,7 +88,7 @@
                     if ($pass['tags'] && in_array('breakbefore',$pass['tags'])) {
                         $out .= "<pagebreak suppress='off'/>";
                     }
-                    $out    .= "<sethtmlpagefooter name='otherpagefooter' page='ALL' value='on'></sethtmlpagefooter>";
+                    $out .= "<sethtmlpagefooter name='otherpagefooter' page='ALL' value='on'></sethtmlpagefooter>";
                     $out .= "<div class='paragraph $long' id='para_$number'>
                             <bookmark content='$number'></bookmark>
                             <h2 id='$number'><a name='$number'>$number.</a>{$edit}</h2>
@@ -153,11 +153,11 @@
             //echo "<pre>template match found</pre>";
             $text   = templates($text,$templatematch);
         }
-        if (preg_match("|<after>(.*?)</after>|",$text,$aftermatch)) {
+        if (preg_match("|<after>(.*?)</after>|s",$text,$aftermatch)) {
             $after  = $aftermatch[1];
             $text   = str_replace($aftermatch[0],'',$text);
         }
-        if (preg_match("|<before>(.*?)</before>|",$text,$beforematch)) {
+        if (preg_match("|<before>(.*?)</before>|s",$text,$beforematch)) {
             $before = $beforematch[1];
             $text   = str_replace($beforematch[0],'',$text);
         }
