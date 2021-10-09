@@ -281,7 +281,6 @@
         foreach ($splices AS $splice) {
             $text = str_splice($text,$splice['rep'],$splice['start'],$splice['length']);
         }
-        //echo "<pre style='background:white;'>"; print_r($blocks); print_r($splices);echo "</pre>";
         return [$text,$splices];
     }
 
@@ -538,9 +537,12 @@
             $number = $_SESSION['gb']['numbering'][$pid['pid']]['number'];
             $number = $number ?? "X";
             $name   = trim($name);
-            if ($name == 'turnto' || $name === '') {
+            if ($name == 'Turnto') {
                 $debug .= " TURNTO LINK ";
-                $pattern = "/\.\s+\[\[".str_replace('|','\|',$link)."/"; 
+                $ltext = "Turn to $number";
+            } else if ($name == 'turnto' || $name === '') {
+                $debug .= " TURNTO LINK ";
+                $pattern = "/[.?!]\s+\[\[".str_replace('|','\|',$link)."/"; 
                 if (preg_match($pattern,$passage['text'],$lmatches)) {
                     $ltext = "Turn to $number";
                 } else {
