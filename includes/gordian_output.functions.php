@@ -30,7 +30,8 @@
     }
 
     function htmlise($print=false,$settings) {
-        $out = '';
+        $out  = '';
+        $only = $_REQUEST['only'] ? explode('-',$_REQUEST['only']) : false;
         if ($print && $_SESSION['gb']['settings']['cover'] && ($settings['covers'] || !$settings['print'])) {
             // use a cover page
             $text = $_SESSION['gb']['gb-front-cover'] ? process_para($_SESSION['gb']['gb-front-cover'])['text'] : "<div class='cover_top'><h1>{$_SESSION['gb']['story']['name']}</h1></div>";
@@ -78,6 +79,7 @@
                 $total   = count($_SESSION['gb']['numbering']);
                 $count   = 0;
                 foreach ($_SESSION['gb']['number_order'] AS $number => $pid) {
+                    if ($only && !in_array($number,$only)) { continue; }
                     if ($number == $total) { $divider = ''; }
                     $para = $_SESSION['gb']['numbering'][$pid];
                     $pass = $_SESSION['gb']['story']['passages'][$para['index']];
@@ -89,7 +91,9 @@
                         $out .= "<pagebreak suppress='off'/>";
                     }
                     $out .= "<sethtmlpagefooter name='otherpagefooter' page='ALL' value='on'></sethtmlpagefooter>";
-                    $out .= "<div class='paragraph $long' id='para_$number'>
+                    $out .= "
+                            {$pp['before']}
+                            <div class='paragraph $long' id='para_$number'>
                             <bookmark content='$number'></bookmark>
                             <h2 id='$number'><a name='$number'>$number.</a>{$edit}</h2>
                             {$pp['text']}
@@ -540,6 +544,8 @@
             if ($name == 'Turnto') {
                 $debug .= " TURNTO LINK ";
                 $ltext = "Turn to $number";
+            } else if ($name == 't_urnto') {
+                $ltext = "turn to $number";
             } else if ($name == 'turnto' || $name === '') {
                 $debug .= " TURNTO LINK ";
                 $pattern = "/[.?!]\s+\[\[".str_replace('|','\|',$link)."/"; 
