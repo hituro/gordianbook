@@ -6,6 +6,7 @@
     require "includes/gordian_interface.functions.php";
     require "includes/gordian_output.functions.php";
     $mode = $_REQUEST['mode'] ?? 'home';
+    $root = __DIR__;
 
     $defaults = [
         'story'         => [],

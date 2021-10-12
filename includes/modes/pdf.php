@@ -1,6 +1,6 @@
 <?php
 
-    require_once __DIR__ . '/vendor/autoload.php';
+    require_once $root . '/vendor/autoload.php';
 
     $defaultConfig = (new Mpdf\Config\ConfigVariables())->getDefaults();
     $fontDirs = $defaultConfig['fontDir'];
@@ -17,7 +17,7 @@
     $config = [
         'format' => $_SESSION['gb']['settings']['page_size'],
         'fontDir' => array_merge($fontDirs, [
-            __DIR__ . '/fonts',
+            $root . '/fonts',
         ]),
         'fontdata' => $fontData + [
             'fell' => [
