@@ -33,6 +33,7 @@
             $idx     = $idx ? $idx : $_SESSION['gb']['pids'][$pid];
             $passage = $_SESSION['gb']['story']['passages'][$idx];
             $tags    = $passage['tags'] ? implode(' ',$passage['tags']) : '';
+            $saved   = $_REQUEST['saved'] ? '<p><i>Saved: ' . date('Y-m-d G:i:s') . '</i></p>' : '';
             echo page("
                 <h2>Editing: #{$_SESSION['gb']['numbering'][$pid]['number']} — {$passage['name']} (pid {$passage['pid']})</h2>
                 <form action='gordian.php' method='post'>
@@ -49,6 +50,7 @@
                     <div class='form-row'>
                         <label for='text'>Edit Passage Text</label>
                         <textarea name='text' rows='20'>{$passage['text']}</textarea>
+                        $saved
                     </div>
                     <div class='form-row'>
                         <input type='submit' value='Save'>

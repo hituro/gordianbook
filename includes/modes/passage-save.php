@@ -31,7 +31,7 @@
                 }
                 msg("Passage number swapped from $currnum to $newnum");
             }
-            go('passage-edit',"pid={$_REQUEST['pid']}");
+            go('passage-edit',"pid={$_REQUEST['pid']}&saved=1");
         }
 
 ?>
