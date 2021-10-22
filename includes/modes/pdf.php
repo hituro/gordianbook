@@ -1,5 +1,7 @@
 <?php
 
+    error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE & ~E_USER_WARNING & ~ E_NOTICE);
+
     require_once $root . '/vendor/autoload.php';
 
     $defaultConfig = (new Mpdf\Config\ConfigVariables())->getDefaults();
