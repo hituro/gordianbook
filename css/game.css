@@ -23,6 +23,12 @@ img {
     margin-top: 3em;
     margin-bottom: 1em;
 }
+.cut.tight {
+    margin-top: 1em;
+}
+.cut.next {
+    margin-bottom: 0em;
+}
 
 .cover_full {
     position: absolute;
@@ -145,6 +151,16 @@ img {
     height: 4mm;
     border: 0.2mm solid black;
     background: white;
+}
+
+.placeholder {
+    display: block;
+    border: 2px solid rgb(146, 6, 6);
+    background: rgb(255, 159, 159);
+    height: 1cm;
+    box-sizing: border-box;
+    padding:1em;
+    text-align: center;
 }
 
 @media print {
