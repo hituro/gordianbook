@@ -45,6 +45,9 @@
     if ($_SESSION['gb']['gb-rear-cover']) {
         echo twine_passage($_SESSION['gb']['gb-rear-cover']);
     }
+    if ($_SESSION['gb']['gb-templates']) {
+        echo twine_passage($_SESSION['gb']['gb-templates']['passage']);
+    }
     echo "</tw-storydata>";
 
 ?>

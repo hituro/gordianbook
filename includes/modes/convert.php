@@ -91,7 +91,10 @@
                         $templates[$match[1]] = $match[2];
                     }
                     $debug .= "TEMPLATES : " . print_r($templates,1);
-                    $_SESSION['gb'][$pname] = $templates;
+                    $_SESSION['gb'][$pname] = [
+                        'passage' => $passage,
+                        'templates' => $templates
+                    ];
                     unset($_SESSION['gb']['story']['passages'][$idx]);
                     $passage_count --;
                     $debug .= "REMOVING $pname, PASSAGE COUNT $passage_count\n";
