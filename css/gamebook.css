@@ -4,7 +4,7 @@ body {
     margin: 0px;
     box-sizing: border-box;
     background-color: #666;
-    background-image: url("/images/black-linen.png");
+    background-image: url("/images/app/black-linen.png");
     --border-col: #669;
     --border-lighter: #66669991;
     --background: #f9f9ff;
@@ -165,4 +165,21 @@ dd {
 }
 .md tr td:first-child {
     width: 100px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    margin-top: 2em;
+    gap: 1em;
+}
+.gallery a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+.gallery img {
+    max-width: 100%;
 }
