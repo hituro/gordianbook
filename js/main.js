@@ -1,6 +1,6 @@
 setInterval(function() {
     var httpRequest = new XMLHttpRequest();
-    httpRequest.open('GET', 'https://ddonachie.virga.invertech.co.uk/keepalive.php');
+    httpRequest.open('GET', '/keepalive.php');
     httpRequest.send(null);
 }, 30000);
 
