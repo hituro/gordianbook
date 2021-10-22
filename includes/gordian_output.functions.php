@@ -31,8 +31,8 @@
 
     function htmlise($print=false,$settings) {
         $out  = '';
-        $only = $_REQUEST['only'] ? explode('-',$_REQUEST['only']) : false;
-        if ($print && $_SESSION['gb']['settings']['cover'] && ($settings['covers'] || !$settings['print'])) {
+        $only = get_only();
+        if ($print && $_SESSION['gb']['settings']['cover'] && !$only && ($settings['covers'] || !$settings['print'])) {
             // use a cover page
             $text = $_SESSION['gb']['gb-front-cover'] ? process_para($_SESSION['gb']['gb-front-cover'])['text'] : "<div class='cover_top'><h1>{$_SESSION['gb']['story']['name']}</h1></div>";
             $out .= "<div class='cover_back front'></div>
@@ -43,13 +43,13 @@
             } else {
                 $out .= "<pagebreak type='next-odd' resetpagenum='1'></pagebreak>";
             }
-        } else if (!$settings['print'] && !$settings['covers']) {
+        } else if (!$settings['print'] && !$settings['covers'] && !$only) {
             $out = "<h1>{$_SESSION['gb']['story']['name']}</h1>";
         }
         if (!$settings['covers']) {
 
             /* First output any frontmatter from WF style frontmatter_X tags */
-            if ($_SESSION['gb']['frontmatter']) {
+            if ($_SESSION['gb']['frontmatter'] && !$only) {
                 foreach ($_SESSION['gb']['frontmatter'] AS $front_pid) {
                     $front = $_SESSION['gb']['story']['passages'][$_SESSION['gb']['pids'][$front_pid]];
                     $out .= "<div class='paragraph frontmatter long'>".process_para($front)['text']."</div>
@@ -61,7 +61,7 @@
             }
 
             /* Then is gb-introduction */
-            if ($_SESSION['gb']['gb-introduction']) {
+            if ($_SESSION['gb']['gb-introduction'] && !$only) {
                 $out .= "<div class='paragraph introduction long'>".process_para($_SESSION['gb']['gb-introduction'])['text']."</div>
                          <div class='body_headers'></div>";
                 if ($_SESSION['gb']['gb-introduction']['tags'] && in_array('breakafter',$_SESSION['gb']['gb-introduction']['tags'])) {
@@ -110,7 +110,7 @@
             }
 
             /* Then output any backmatter from WF style backmatter_X tags */
-            if ($_SESSION['gb']['backmatter']) {
+            if ($_SESSION['gb']['backmatter'] && !$only) {
                 $out .= "<pagebreak suppress='off'></pagebreak>";
                 foreach ($_SESSION['gb']['backmatter'] AS $back_pid) {
                     $back = $_SESSION['gb']['story']['passages'][$_SESSION['gb']['pids'][$back_pid]];
@@ -124,11 +124,11 @@
 
             /* Finally, output gb-rear */
 
-            if ($_SESSION['gb']['gb-rear']) {
+            if ($_SESSION['gb']['gb-rear'] && !$only) {
                 $out .= "<pagebreak suppress='off'></pagebreak><div class='paragraph rear'>".process_para($_SESSION['gb']['gb-rear'])['text']."</div>";
             }
         }
-        if ($print && $_SESSION['gb']['settings']['cover'] && ($_SESSION['gb']['gb-rear-cover'])['text'] && ($settings['covers'] || !$settings['print'])) {
+        if ($print && $_SESSION['gb']['settings']['cover'] && ($_SESSION['gb']['gb-rear-cover'])['text'] && !$only && ($settings['covers'] || !$settings['print'])) {
             // use a cover page
             if ($settings['covers'] && !$settings['simplex']) {
                 $out .= "<pagebreak type='next-odd' suppress='on' resetpagenum='1'></pagebreak>";
@@ -187,7 +187,7 @@
 
     function template($name,$data) {
         //echo "<pre>Processing template $name\n\n</pre>";
-        $template = $_SESSION['gb']['gb-templates'][$name];
+        $template = $_SESSION['gb']['gb-templates']['templates'][$name];
         $data     = json_decode($data,true);
         //echo "<pre>".print_r($data,1)."</pre>";
         foreach ($data AS $k => $v) {
@@ -267,7 +267,7 @@
         $text = preg_replace("/<rules>(.+?)<\/rules>/s","<div class='rules'>$1</div>",$text);
         $text = preg_replace("/<stats>(.+?)<\/stats>/s","<div class='stats'>$1</div>",$text);
         $text = preg_replace("/<special>(.+?)<\/special>/s","<div class='special'>$1</div>",$text);
-        $text = preg_replace_callback("/<checkboxes>(.+?)<\/checkboxes>/s",md_boxes,$text);
+        $text = preg_replace_callback("/<checkboxes>(.+?)<\/checkboxes>/s","md_boxes",$text);
         // comments 
         $text = preg_replace("|<comment>(.*?)</comment>|s","<!-- $1 -->",$text);
         // restore no-process sections
@@ -620,6 +620,22 @@
 
     function gb_matter($tag) {
         return (substr($tag,0,11) == 'frontmatter' || substr($tag,0,11) == 'backmatter');
+    }
+
+    function get_only() {
+        if (!$_REQUEST['only']) { return false; }
+        $only = explode(',',$_REQUEST['only']);
+        $ret  = [];
+        foreach ($only AS $o) {
+            if (is_numeric($o)) { $ret[] = $o; }
+            else {
+                list($start,$end) = explode('-',$_REQUEST['only']);
+                for ($i = $start;$i<=$end;$i++) {
+                    $ret[] = $i;
+                }
+            }
+        }
+        return $ret;
     }
 
 ?>
