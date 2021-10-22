@@ -72,14 +72,14 @@
               <meta name='twitter:card' content='summary_large_image'>
               <link rel='preconnect' href='https://fonts.gstatic.com'>
               <link href='https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&family=IM+Fell+DW+Pica&display=swap' rel='stylesheet'> 
-              <link rel='stylesheet' type='text/css' href='css/gamebook.css'>
+              <link rel='stylesheet' type='text/css' href='/css/gamebook.css'>
               <script
 			    src='https://code.jquery.com/jquery-3.6.0.min.js'
 			    integrity='sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4='
 			    crossorigin='anonymous'></script>
               $css
               $js
-              <script type='text/javascript' src='js/main.js'></script>
+              <script type='text/javascript' src='/js/main.js'></script>
               </head>
               <body>
               $errors
