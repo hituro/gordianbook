@@ -76,7 +76,7 @@ img {
     width: 80%;
     margin: 1.5em auto;
     height: 1px;
-    background: #6F1616;
+    background: black;
     background: radial-gradient(black, rgba(0,0,0,0));
 }
 
@@ -101,9 +101,6 @@ img {
     display: inline;
     border-radius: 0.5mm;
     padding: 1px 2px;
-    /*border: var(--check-border);
-    background: var(--check-background);
-    color: var(--check-color); */
     border: none;
     background: rgb(205, 250, 255);
     color: black;
