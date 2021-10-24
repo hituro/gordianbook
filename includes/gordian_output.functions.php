@@ -561,7 +561,7 @@
             }
             $debug .= " $ltext \n\n";
             //$ltext  = ($name == 'turnto') ? "turn to $number" : "$name (turn to $number)";
-            $tlink  = "<a href='#{$number}'>$ltext</a>";
+            $tlink  = "<a href='#{$number}' class='passage-link'>$ltext</a>";
             $passage['text'] = str_replace($matches[0][$lidx],$tlink,$passage['text']);
         }
         //echo "========================================\n</pre>";
