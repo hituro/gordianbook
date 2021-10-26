@@ -18,7 +18,9 @@
         $lists['Print'][] = "<a href='gordian.php?mode=pdf' target='_new'>Export Gamebook PDF</a>";
         $lists['Print'][] = "PDF: <a href='gordian.php?mode=pdf&print=1' target='_new'>print</a> - 
                                 <a href='gordian.php?mode=pdf&covers=1&simplex=1' target='_new'>cover</a> - 
-                                <a href='gordian.php?mode=pdf&covers=1' target='_new'>cover (duplex)</a>";
+                                <a href='gordian.php?mode=pdf&covers=1' target='_new'>cover (duplex)</a> - 
+                                <a href='gordian.php?mode=pdf&skip_content=1' target='_new'>cover/matter</a>";
+        $lists['Print'][] = "PDF: <a href='gordian.php?mode=pdf-range' target='_new'>page range</a>";
 
         $lists['Export'][] = "<a href='gordian.php?mode=export-settings'>Export Settings</a>";
         $lists['Export'][] = "<a href='gordian.php?mode=export-json'>Export Gordian JSON</a>";
