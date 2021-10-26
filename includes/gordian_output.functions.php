@@ -153,7 +153,7 @@
         }
         $text = $passage['text'];
         $text = process_links($passage); 
-        if (preg_match_all("|<template name=\"(.*)\">(.*)</template>|sU",$text,$templatematch,PREG_SET_ORDER)) {
+        if (preg_match_all("|<template name=\"(.*)\"[^>]*>(.*)</template>|sU",$text,$templatematch,PREG_SET_ORDER)) {
             //echo "<pre>template match found</pre>";
             $text   = templates($text,$templatematch);
         }
