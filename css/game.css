@@ -75,7 +75,7 @@ img {
 .game_divider {
     width: 80%;
     margin: 1.5em auto;
-    height: 1px;
+    height: 0.2mm;
     background: black;
     background: radial-gradient(black, rgba(0,0,0,0));
 }
