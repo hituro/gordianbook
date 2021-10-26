@@ -1,7 +1,6 @@
 <h1>Workflows & Techniques</h1>
 <h2>Twine to PDF</h2>
 <p>The simplest workflow is to go directly from Twine to a PDF as explained on the home page. This is a one-way workflow. You export your game from Twine (either by using the normal "Save a Copy" function, or using a story format such as Twison or Entweedke), load it into Gordian, and then produce the PDF. In this workflow, passages are numbered once, when the game is first converted. Converting again would change the numbering, so each time you make changes in Twine and re-export you will get a different order. This is especially relevant to page breaks, and the placement of images.</p>
-<p>To place images in this workflow, first import and convert the game, then look at the PDF to see where your images would sit best. Then edit individual passages in Gordian to add the images to them. If you need to absoloutely place images on the page, they cannot be contained in a passage (this is a limitation of MPDF, which we use to produce the PDF). To deal with this, place the image in an <code>&lt;after></code> tag to place it outside the passage container. When you do this, make sure to give your image an id, so that you can target it in your custom CSS.</p>
 
 <h2>Twine to Twine</h2>
 <p>Once exported from Twine to Gordian, you can export from Gordian back to Twine, using the <b>Export Twine Archive</b> link. Then, in Twine, choose <b>Import From File</b> to re-import your story. Note that, unless you rename your story in Gordian (or in the exported file) first, it will entirely replace the story you have in Twine. Be careful.</p>
@@ -14,6 +13,16 @@
 
 <h2>PDF Formatting</h2>
 <p>PDFs are created using <a href='https://mpdf.github.io/'>MPDF</a>. You can read the manual to find special tags (such as page breaks, headers, and footers) that you can include in your <code>gb-introduction</code> or other passages.</p>
+
+<h3>Passage order</h3>
+<p>When you convert your game with Gordian, your passages are randomly ordered and numbered. Sometimes this will result in awkward juxtapositions of passages (a choice followed immediately on the same page by the result), or unsightly gaps in the PDF where passages don't fit very well. While you can convert multiple times to get an order you like, there will inevitably come a stage where you just wish to tweak the exact placement of certain passages.</p>
+<p>By default, passages will not run over multiple pages (unless they are longer than a full page), and may leave gaps. You can add the <b>long</b> tag to a passage to allow it to break. If this doesn't fix your issues, you can swap the position of individual passages using the <a href='gordian.php?mode=passage-edit'>Edit Passage</a> link. Bring up the passage you want to move and use the <b>Change number</b> box to swap it with another passage that will fill the page better. You can check how your alterations affect individual pages by using the <a href='gordian.php?mode=pdf-range' target='_new'>page range</a> link to display just the page in question.</p>
+
+<h3>Images</h3>
+<p>If you wish to include images in your PDF, you will need to place them online and use absolute paths to include them in your game, otherwise MPDF will not be able to import them.</p>
+<p>Getting image placement correct can take some trial and error - since Gordian does not allow you to reposition images directly in your PDF. First import and convert the game, then look at the PDF to see where your images would sit best. Then edit individual passages in Gordian to add the images to them. If you need to absoloutely place images on the page, they cannot be contained in a passage (this is a limitation of MPDF, which we use to produce the PDF). To deal with this, place the image in an <code>&lt;after></code> tag to place it outside the passage container. When you do this, make sure to give your image an id, so that you can target it in your custom CSS.</p>
+<p>When adding images to an existing game you may wish to fill gaps in the PDF with small 'cut' images (in the style of Fighting Fantasy games). A handy way to do this is to use the <a href='gordian.php?mode=pdf-range' target='_new'>page range</a> link to display just the page in question, and then expiriment with adding images to fill up the space.</p>
+
 <h3>Covers</h3>
 <p>If you enable covers in settings, GBF will add a front cover page to your PDF containing the game title. This ends with a page break and resets page numbering (so the first page after the title is page 1). If you provide a passage named <code>gb-front-cover</code> then this will override the automatic cover. Gordian provides some utility classes to help lay out your cover as follows:</p>
 <ul>
