@@ -79,12 +79,16 @@ code.block {
     display: block;
     padding: 10px;
 }
+.form-row.flex {
+    display: flex;
+    gap: 1em;
+}
 
 .form-row label {
     font-weight: bold;
 }
 
-.form-row input[type=text], .form-row textarea {
+.form-row input[type=text]:not(.auto), .form-row textarea {
     width: 100%;
 }
 
