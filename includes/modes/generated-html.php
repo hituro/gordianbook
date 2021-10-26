@@ -55,6 +55,13 @@
         <!-- if breakafter -->
         <pagebreak type='next-odd' suppress='off'></pagebreak>
         </script></code></pre>
+        <pre><code class='language-css'>
+        .paragraph, .rules {
+            page-break-inside: avoid;
+        }
+        .paragraph.long {
+            page-break-inside: auto;
+        }</code></pre>
 
         <h3>Rear page (gb-rear)</h3>
         <pre><code class='language-markup'><script type='prism-html-markup'>
