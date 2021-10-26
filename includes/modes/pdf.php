@@ -27,8 +27,8 @@
                 'I' => 'IMFellDWPica-Italic.ttf',
             ]
         ],
-        'dpi'   => 300,
-        'img_dpi' => 300,
+        'dpi'   => $_SESSION['gb']['settings']['resolution'],
+        'img_dpi' => $_SESSION['gb']['settings']['image_resolution'],
         'list_auto_mode' => 'mpdf',
         'list_marker_offset' => '1em',
         'list_symbol_size' =>'0.31em',

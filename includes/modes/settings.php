@@ -50,6 +50,15 @@
                     <input name='cover' type='radio' value='0' ".($_SESSION['gb']['settings']['cover']?'':'CHECKED')."> Don't Show
                 </div>
                 <div class='form-row'>
+                    <label for='resolution'>Resolution</label>
+                    <input name='resolution' type='text' value='{$_SESSION['gb']['settings']['resolution']}' class='auto'> dpi
+                </div>
+                <div class='form-row'>
+                    <label for='image_resolution'>Image Resolution</label>
+                    <p><i>Set a different resolution for images, images will be treated as if they are at this resolution, not resized</i></p>
+                    <input name='image_resolution' type='text' value='{$_SESSION['gb']['settings']['image_resolution']}' class='auto'> dpi
+                </div>
+                <div class='form-row'>
                     <label for='death_text'>Custom CSS</label>
                     <p><i>Custom CSS to override the Game view</i></p>
                     <textarea name='css' rows='10'>{$_SESSION['gb']['settings']['css']}</textarea>

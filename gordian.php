@@ -17,14 +17,16 @@
         'frontmatter'   => [],
         'backmatter'    => [],
         'settings'      => [
-            'end_text'      => 'THE END',
-            'death_text'    => 'YOU DIED',
-            'separator'     => false,
-            'break'         => false,
-            'css'           => '',
-            'page_size'     => 'A4-P',
-            'cover'         => false,
-            'mdtype'        => 'harlowe'
+            'end_text'          => 'THE END',
+            'death_text'        => 'YOU DIED',
+            'separator'         => false,
+            'break'             => false,
+            'css'               => '',
+            'page_size'         => 'A4-P',
+            'cover'             => false,
+            'mdtype'            => 'harlowe',
+            'resolution'        => 300,
+            'image_resolution'  => 300
         ],
         'stats'         => [
             'passages'  => 0,
