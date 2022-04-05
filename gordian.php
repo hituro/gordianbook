@@ -26,12 +26,14 @@
             'cover'             => false,
             'mdtype'            => 'harlowe',
             'resolution'        => 300,
-            'image_resolution'  => 300
+            'image_resolution'  => 300,
+            'low_res'           => false
         ],
         'stats'         => [
             'passages'  => 0,
             'links'     => 0,
-        ]
+        ],
+        'story_css'     => ''
     ];
     if (!$_SESSION['gb']) {
         $_SESSION['gb'] = $defaults;
