@@ -52,7 +52,7 @@ code.block {
 .content + .content { margin-top: 2em; }
 
 .sidebar {
-    position: absolute;
+    position: fixed;
     top: 0px;
     right: 0px;
     bottom: 0px;
@@ -73,6 +73,13 @@ code.block {
         grid-row: 2/4;
         grid-column: 2;
     }
+    .sidebar {
+        width: 260px;
+    }
+    .sidebar + .content {
+        margin-right: calc(max(50% - 400px,300px));
+        margin-left: calc(50% - 400px);
+    }
 }
 
 .form-row {
@@ -86,10 +93,16 @@ code.block {
 
 .form-row label {
     font-weight: bold;
+    flex-grow: 1;
 }
 
 .form-row input[type=text]:not(.auto), .form-row textarea {
     width: 100%;
+}
+
+.form-row .form-row {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 .fieldset {
@@ -111,6 +124,12 @@ code.block {
     color: var(--border-col);
     font-weight: bold;
     font-size: 16px;
+}
+.fieldset .title {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-top: 0px;
+    margin-bottom: 0.5em;
 }
 
 dl {
