@@ -14,7 +14,7 @@
     }
     $attrs = implode(' ',$attrs);
     echo "<tw-storydata $attrs hidden>";
-    echo "<style role=\"stylesheet\" id=\"twine-user-stylesheet\" type=\"text/twine-css\">{$_SESSION['gb']['settings']['css']}</style>";
+    echo "<style role=\"stylesheet\" id=\"twine-user-stylesheet\" type=\"text/twine-css\">{$_SESSION['gb']['story_css']}</style>";
     echo '<script role="script" id="twine-user-script" type="text/twine-javascript"></script>';
     if ($_SESSION['gb']['story']['tag-colors']) {
         foreach ($_SESSION['gb']['story']['tag-colors'] AS $tag => $col) { echo "<tw-tag name=\"$tag\" color=\"{$col}\"></tw-tag>"; }
