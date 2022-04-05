@@ -6,3 +6,6 @@
 .checkboxes .box[data-checked] {
     background: #666;
 }
+.cover_full, .cover_image {
+    position: initial;
+}
