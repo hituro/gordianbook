@@ -149,6 +149,9 @@ img {
     border: 0.2mm solid black;
     background: white;
 }
+td .checkboxes {
+    margin: 0px;
+}
 
 .placeholder {
     display: block;
