@@ -16,8 +16,10 @@
         'simplex'   => $_REQUEST['simplex'] ? true : false,
     ];
 
+    $format = (strstr($_SESSION['gb']['settings']['page_size'],',')) ? explode(',',$_SESSION['gb']['settings']['page_size']) : $_SESSION['gb']['settings']['page_size'];
+
     $config = [
-        'format' => $_SESSION['gb']['settings']['page_size'],
+        'format' => $format,
         'fontDir' => array_merge($fontDirs, [
             $root . '/fonts',
         ]),
@@ -25,26 +27,30 @@
             'fell' => [
                 'R' => 'IMFellDWPica-Regular.ttf',
                 'I' => 'IMFellDWPica-Italic.ttf',
+            ],
+            'eater' => [
+                'R' => 'Eater-Regular.ttf',
             ]
         ],
-        'dpi'   => $_SESSION['gb']['settings']['resolution'],
-        'img_dpi' => $_SESSION['gb']['settings']['image_resolution'],
+        'dpi'     => $_SESSION['gb']['settings']['low_res'] ? 72 : $_SESSION['gb']['settings']['resolution'],
+        'img_dpi' => $_SESSION['gb']['settings']['low_res'] ? 72 : $_SESSION['gb']['settings']['image_resolution'],
         'list_auto_mode' => 'mpdf',
         'list_marker_offset' => '1em',
         'list_symbol_size' =>'0.31em',
-        'margin_top'    => 15,
-        'margin_bottom' => 15,
-        'margin_left'   => 10,
-        'margin_right'  => 10
+        'margin_top'    => $_SESSION['gb']['settings']['margin_top'] ?? 15,
+        'margin_bottom' => $_SESSION['gb']['settings']['margin_bottom'] ?? 15,
+        'margin_left'   => $_SESSION['gb']['settings']['margin_left'] ?? 10,
+        'margin_right'  => $_SESSION['gb']['settings']['margin_right'] ?? 10
     ];
     if ($_REQUEST['print'] && !$settings['covers']) {
-        $config += [
-            'margin_left'   => 20,
-            'margin_right'  => 10,
+        $config = array_merge($config,[
+            'margin_left'   => $_SESSION['gb']['settings']['margin_print_left'] ?? 20,
+            'margin_right'  => $_SESSION['gb']['settings']['margin_print_right'] ?? 10,
             'mirrorMargins' => true
-        ];
+        ]);
     }
     $mpdf = new \Mpdf\Mpdf($config);
+    $mpdf->SetCompression(true);
     $mpdf->WriteHTML(htmldoc(true,$settings));
     $mpdf->Output();
 

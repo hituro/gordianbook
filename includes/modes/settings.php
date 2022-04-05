@@ -1,5 +1,12 @@
 <?php
 
+    $mt = $_SESSION['gb']['settings']['margin_top'] ?? 15;
+    $mb = $_SESSION['gb']['settings']['margin_bottom'] ?? 15;
+    $ml = $_SESSION['gb']['settings']['margin_left'] ?? 10;
+    $mr = $_SESSION['gb']['settings']['margin_right'] ?? 10;
+    $mpl = $_SESSION['gb']['settings']['margin_print_left'] ?? 20;
+    $mpr = $_SESSION['gb']['settings']['margin_print_right'] ?? 10;
+
     echo page("
         <form action='gordian.php' method='post'>
             <input type='hidden' name='mode' value='settings-save'>
@@ -57,6 +64,23 @@
                     <label for='image_resolution'>Image Resolution</label>
                     <p><i>Set a different resolution for images, images will be treated as if they are at this resolution, not resized</i></p>
                     <input name='image_resolution' type='text' value='{$_SESSION['gb']['settings']['image_resolution']}' class='auto'> dpi
+                </div>
+                <div class='form-row'>
+                    <label for='cover'>Enable low-res mode for screen PDF?</label>
+                    <p><i>Use low-res 72dpi images for the screen mode?</i></p>
+                    <input name='low_res' type='radio' value='1' ".($_SESSION['gb']['settings']['low_res']?'CHECKED':'')."> Enable
+                    <input name='low_res' type='radio' value='0' ".($_SESSION['gb']['settings']['low_res']?'':'CHECKED')."> Disable
+                </div>
+                <div class='form-row'>
+                    <label>Page Margins</label>
+                    <p><i>Set the page margins, in mm</i></p>
+                    Top <input name='margin_top'    type='text' value='{$mt}' class='auto' style='width:2em'>
+                    Left <input name='margin_left'   type='text' value='{$ml}' class='auto' style='width:2em'>
+                    Right <input name='margin_right'  type='text' value='{$mr}' class='auto' style='width:2em'>
+                    Bottom <input name='margin_bottom' type='text' value='{$mb}' class='auto' style='width:2em'>
+                    <p><i>Print margins, in mm (mirrored on facing pages)</i></p>
+                    Left <input name='margin_print_left' type='text' value='{$mpl}' class='auto' style='width:2em'>
+                    Right <input name='margin_print_right'  type='text' value='{$mpr}' class='auto' style='width:2em'>
                 </div>
                 <div class='form-row'>
                     <label for='death_text'>Custom CSS</label>
