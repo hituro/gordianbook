@@ -40,7 +40,7 @@
         <pre><code class='language-markup'><script type='prism-html-markup'>
         <!-- if breakbefore -->
         <pagebreak suppress='off'/>
-        <!-- optionally contents of <before> -->
+        <!-- optionally contents of <before> or <page-before> -->
         <div class='paragraph' id='para_[NUMBER]'>
             <bookmark content='[NUMBER]'></bookmark>
             <h2 id='[NUMBER]'><a name='[NUMBER]'>[NUMBER].</a></h2>
@@ -62,6 +62,13 @@
         .paragraph.long {
             page-break-inside: auto;
         }</code></pre>
+
+        <p>&lt;page-before></p>
+        <pre><code class='language-markup'><script type='prism-html-markup'>
+        <pagebreak></pagebreak>
+        <sethtmlpagefooter name='otherpagefooter' page='ALL' value='on'></sethtmlpagefooter>
+        [TEXT]
+        </script></code></pre>
 
         <h3>Rear page (gb-rear)</h3>
         <pre><code class='language-markup'><script type='prism-html-markup'>

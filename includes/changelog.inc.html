@@ -1,5 +1,21 @@
 <H1>Changelog</h1>
     <dl>
+        <dt>2022-03-14</dt>
+        <dd>Added the <code>&lt;page-before></code> tag to force a page of content before a passage.</dd>
+
+        <dt>2021-11-28</dt>
+        <dd>Fixed a bug where importing directly from a Twine save file did not convert <code>&amp;#039;</code> into single quotes.</dd>
+        <dd>Fixed a bug where <code>''text''</code> did not convert to bold</dd>
+    
+        <dt>2021-11-02</dt>
+        <dd>Fixed a bug where exported passage text encoded apostrophes as <code>&amp;#039;</code>, but passage titles encoded it as <code>&amp;#39;</code>, which could cause a link to fail if the Twine export was re-imported into Gordian without going through Twine first.</dd>
+        <dd>Fixed a bug where passages with two external links could add an <code>i</code> to the start of the link address.</dd>
+
+        <dt>2021-10-26</dt>
+        <dd>You can now view passage ranges in PDF mode indvidually, or view just the front and back matter without the contents.</dd>
+        <dd>Added a page on <a href="gordian.php?mode=generated-html">generated html</a>, describing all the html output by GB and its default styles.</dd>
+        <dd>Added notes to the <a href="gordian.php?mode=workflow">workflow page</a> about how to fine tune PDF layout and image placement.</dd>
+
         <dt>2021-10-10</dt>
         <dd>Major internal change to the application structure — no effects should be visible to users.</dd>
         <dd>Improved regex for automatic capitalisation of <code>turnto</code> links.</dd>
@@ -12,7 +28,7 @@
         <dd>Added support for Harlowe's "no-formatting" marker (one or more backticks).</dd>
 
         <dt>2021-09-02</dt>
-        <dd>Gordian can now directly import Twine Archive exports.</dd>
+        <dd>Gordian can now directly import Twine Archive exports, Twine game files, and Twine saves.</dd>
 
         <dt>2021-09-01</dt>
         <dd>Now supports the 'last' tag, which causes a passage to be placed at the end of the story. Multiple tagged passages will be placed at the end in the order encountered.</dd>
