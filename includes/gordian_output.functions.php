@@ -7,12 +7,13 @@
     /* =================================================================================== */
 
     function htmldoc($print=true,$settings) {
-        $link_css = $settings['print'] ? "<style>".file_get_contents('print.css')."</style>" : '';
+        $link_css = $settings['print'] ? "<style>".file_get_contents('css/print.css')."</style>" : '';
         return "<!DOCTYPE html>
                 <head>
                 <title>{$_SESSION['gb']['story']['name']}</title>
                 <style>".file_get_contents('css/game.css')."</style>
                 $link_css
+                <style>{$_SESSION['gb']['story_css']}</style>
                 <style>{$_SESSION['gb']['settings']['css']}</style>
                 </head>
                 <body>
@@ -153,8 +154,7 @@
         }
         $text = $passage['text'];
         $text = process_links($passage); 
-        if (preg_match_all("|<template name=\"(.*)\"[^>]*>(.*)</template>|sU",$text,$templatematch,PREG_SET_ORDER)) {
-            //echo "<pre>template match found</pre>";
+        if (preg_match_all("/(?:<template name=\"(.*)\"[^>]*>(.*)<\/template>|<t:(.*)>(.*)<\/t>)/sU",$text,$templatematch,PREG_SET_ORDER)) {
             $text   = templates($text,$templatematch);
         }
         if (preg_match("|<after>(.*?)</after>|s",$text,$aftermatch)) {
@@ -163,6 +163,10 @@
         }
         if (preg_match("|<before>(.*?)</before>|s",$text,$beforematch)) {
             $before = $beforematch[1];
+            $text   = str_replace($beforematch[0],'',$text);
+        }
+        if (preg_match("|<page-before>(.*?)</page-before>|s",$text,$beforematch)) {
+            $before = "<pagebreak></pagebreak><sethtmlpagefooter name='otherpagefooter' page='ALL' value='on'></sethtmlpagefooter>" . $beforematch[1];
             $text   = str_replace($beforematch[0],'',$text);
         }
         if ($process_markdown) {
@@ -176,42 +180,39 @@
     }
 
     function templates($text,$templatematches) {
-        //echo "<pre>".print_r($templatematches,1)."</pre>";
         foreach ($templatematches AS $t) {
-            $r    = template($t[1],$t[2]);
+            $r    = template($t[3] ? $t[3] : $t[1],$t[4] ? $t[4] : $t[2]);
             $text = str_replace($t[0],$r,$text);
-            //echo "<pre>replacing ".htmlspecialchars($t[0])." with " . htmlspecialchars($r) . "</pre>";
         }
         return $text;
     }
 
-    function template($name,$data) {
-        //echo "<pre>Processing template $name\n\n</pre>";
-        $template = $_SESSION['gb']['gb-templates']['templates'][$name];
-        $data     = json_decode($data,true);
-        //echo "<pre>".print_r($data,1)."</pre>";
-        foreach ($data AS $k => $v) {
-            $template = str_replace("{{" . $k. "}}",$v,$template);
+    function template($name,$data,$template=null,$prefix='') {
+        //echo "<pre>template($name,".print_r($data,1).",".htmlspecialchars($template).",$prefix)</pre>";
+        $template = $template ? $template : $_SESSION['gb']['gb-templates']['templates'][$name];
+        //echo htmlspecialchars($template);
+        if (!is_array($data)) {
+            $data     = trim($data);
+            $data     = substr($data,0,1) == '{' ? json_decode($data,true) : ['default' => $data];
         }
-        //echo "<pre>".htmlspecialchars($template)."</pre>";
-        if (preg_match_all("|<repeat (.*) AS (.*)>(.*)</repeat>|sU",$template,$rmatches,PREG_SET_ORDER)) {
-            //echo "<pre>RMATCHES: ".print_r($rmatches,1)."</pre>";
+        foreach ($data AS $k => $v) {
+            //echo "<pre>replacing {$prefix}{$k}</pre>";
+            $template = str_replace("{{" . $prefix . $k . "}}",$v,$template);
+        }
+        if (preg_match_all("|<repeat (.*) AS (.*)>(.*)</repeat \\1>|sU",$template,$rmatches,PREG_SET_ORDER)) {
             foreach ($rmatches AS $rep) {
                 $rname = $rep[1];
                 $ritem = $rep[2];
                 $rbody = $rep[3];
+            //echo "<pre>Now matching repeat $rname</pre>";
                 $rout  = '';
                 foreach ($data[$rname] AS $ditem) {
-                    $out = $rbody;
-                    foreach ($ditem AS $k => $v) {
-                        $out = str_replace("{{" . $ritem . "." . $k ."}}",$v,$out);
-                    }
-                    $rout .= $out;
+                    $rout .= template('',$ditem,$rbody,"{$ritem}.");
                 }
                 $template = str_replace($rep[0],$rout,$template);
             }
-        } 
-        return $template;
+        }
+        return trim($template);
     }
 
     function markdown($text,$mode='harlowe') {
@@ -243,11 +244,11 @@
         $text = preg_replace("/^\s*-{{$hr},}\s*$/m","<hr>",$text);
         // bold
         $text = preg_replace("/\*\*(.+?)\*\*/s","<b>$1</b>",$text);
-        $text = preg_replace("/\''(.+?)\''/s","<b>$1</b>",$text);
+        $text = preg_replace("/''(.+?)''/s","<b>$1</b>",$text);
         // italic
         $text = preg_replace("/\*(.+?)\*/s","<i>$1</i>",$text);
         $text = preg_replace("|//(.+?)//|s","<i>$1</i>",$text);
-        $text = preg_replace("|http(s*):(?!//)|s","http$1://",$text);
+        $text = preg_replace("/http(s){0,1}:(<\/i>|<i>)/s","http$1://",$text);
         // underline
         $text = preg_replace("/__(.+?)__/s","<u>$1</u>",$text);
         // strikethrough
@@ -258,18 +259,20 @@
         $text = preg_replace("/~~(.+?)~~/s","<sub>$1</sub>",$text);
         // headings
         $h    = ($mode == 'harlowe') ? '#' : '!';
-        $text = preg_replace_callback("/^\s*{$h}{$h}{$h}{$h}(.*)$/m",function($m) { return "<h6>".trim($m[1])."</h6>"; },$text);
-        $text = preg_replace_callback("/^\s*{$h}{$h}{$h}(.*)$/m",function($m) { return "<h5>".trim($m[1])."</h5>"; },$text);
-        $text = preg_replace_callback("/^\s*{$h}{$h}(.*)$/m",function($m) { return "<h4>".trim($m[1])."</h4>"; },$text);
-        $text = preg_replace_callback("/^\s*{$h}(.*)$/m",function($m) { return "<h3>".trim($m[1])."</h3>"; },$text);
+        $text = preg_replace_callback("/^\s*{$h}{$h}{$h}{$h}(.*)$/m",function($m) { return "\n<h6>".trim($m[1])."</h6>"; },$text);
+        $text = preg_replace_callback("/^\s*{$h}{$h}{$h}(.*)$/m",function($m) { return "\n<h5>".trim($m[1])."</h5>"; },$text);
+        $text = preg_replace_callback("/^\s*{$h}{$h}(.*)$/m",function($m) { return "\n<h4>".trim($m[1])."</h4>"; },$text);
+        $text = preg_replace_callback("/^\s*{$h}(.*)$/m",function($m) { return "\n<h3>".trim($m[1])."</h3>"; },$text);
         // rules
-        $text = preg_replace("/<check>(.+?)<\/check>/s","<span class='check'>&nbsp;$1&nbsp;</span>",$text);
+        $text = preg_replace("/<check>(.+?)<\/check>/s","<span class='check'>$1</span>",$text);
         $text = preg_replace("/<rules>(.+?)<\/rules>/s","<div class='rules'>$1</div>",$text);
         $text = preg_replace("/<stats>(.+?)<\/stats>/s","<div class='stats'>$1</div>",$text);
         $text = preg_replace("/<special>(.+?)<\/special>/s","<div class='special'>$1</div>",$text);
         $text = preg_replace_callback("/<checkboxes>(.+?)<\/checkboxes>/s","md_boxes",$text);
         // comments 
         $text = preg_replace("|<comment>(.*?)</comment>|s","<!-- $1 -->",$text);
+        // image resolution
+        $text = str_replace("{RES}",$_SESSION['gb']['settings']['low_res'] ? 72 :  $_SESSION['gb']['settings']['image_resolution'],$text);
         // restore no-process sections
         $text = md_restore_placeholders($text,$ncplaceholders);
         return $text;
@@ -433,8 +436,7 @@
         // then add styles and js
         $style = $dom->findOne('#twine-user-stylesheet');
         if ($style) {
-            //$out['settings']['css'] = $style->innerHTML();
-            $_SESSION['gb']['settings']['css'] .= $style->innerHTML();
+            $_SESSION['gb']['story_css'] .= $style->innerHTML();
         }
         // then add tags to tag-colours
         $tags  = $dom->find('tw-tag');
@@ -452,7 +454,7 @@
                 "tags"      => explode(' ',$passage->getAttribute('tags')),
                 "position"  => $passage->getAttribute('position'),
                 "size"      => $passage->getAttribute('size'),
-                "text"      => html_entity_decode($passage->innerHTML()),
+                "text"      => html_entity_decode($passage->innerHTML(),ENT_QUOTES),
             ];
             $out['passages'][] = $new;
         }
@@ -524,20 +526,25 @@
         $debug = "<pre>"; 
         $debug .= print_r($matches,1);
         foreach ($matches[1] AS $lidx => $link) {
+            $link  = html_entity_decode($link,ENT_QUOTES | ENT_HTML5);
             $parts = preg_split("/(->|<-|\|)/",$link,-1,PREG_SPLIT_DELIM_CAPTURE);
             $debug .= print_r($parts,1);
             if ($parts[1] == '<-') {
                 // reversed style
                 $name   = $parts[2];
                 $pid    = $_SESSION['gb']['passage_names'][$parts[0]];
+                $debug .= " LINK PATTERN 1 ";
             } else if ($parts[1]) {
                 $name   = $parts[0];
                 $pid    = $_SESSION['gb']['passage_names'][$parts[2]];
+                $debug .= " LINK PATTERN 2 $name -> {$parts[2]} ($pid)\n";
             } else {
                 $name   = $parts[0];
                 $pid    = $_SESSION['gb']['passage_names'][$parts[0]];
+                $debug .= " LINK PATTERN 3 ";
             }
-            $debug .= "\$pid = {$pid['pid']} ".print_r($_SESSION['gb']['numbering'][$pid['pid']],1);
+            $debug .= print_r($_SESSION['gb']['passage_names'],1);
+            $debug .= "\$name = '$name' \$pid = '{$pid['pid']}' ".print_r($_SESSION['gb']['numbering'][$pid['pid']],1);
             $number = $_SESSION['gb']['numbering'][$pid['pid']]['number'];
             $number = $number ?? "X";
             $name   = trim($name);
@@ -564,8 +571,8 @@
             $tlink  = "<a href='#{$number}' class='passage-link'>$ltext</a>";
             $passage['text'] = str_replace($matches[0][$lidx],$tlink,$passage['text']);
         }
-        //echo "========================================\n</pre>";
         $debug .= "</pre>";
+        //echo $debug;
         return $passage['text'];
     }
 
@@ -602,8 +609,8 @@
         }
         $tag = [
             'pid'       => $p['pid'],
-            'name'      => $p['name'],
-            'tags'      => $p['tags'] ? implode(' ',$p['tags']) : '',
+            'name'      => htmlspecialchars(html_entity_decode($p['name'],ENT_QUOTES),ENT_QUOTES),
+            'tags'      => $p['tags'] ? htmlspecialchars(html_entity_decode(implode(' ',$p['tags']),ENT_QUOTES),ENT_QUOTES) : '',
             'position'  => $p['position'] ? $p['position'] : 100+(100*$p['pid']).',100',
             'size'      => $p['size'] ? $p['size'] : '100,100'
         ];
