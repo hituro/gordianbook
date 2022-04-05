@@ -118,4 +118,30 @@
         return $out;
     }
 
+    function gb_set_passage_number($pid,$currnum,$newnum) {
+        //echo "CALLED gb_set_passage_number($pid,$currnum,$newnum)\n";
+        $idx = $_SESSION['gb']['pids'][$pid];
+        //echo "UPDATING Passgage $pid, from $currnum -> $newnum, index = $idx\n";
+
+        // change "number_order"
+        $_SESSION['gb']['number_order'][$newnum]  = $pid;
+        //echo "Set ['number_order'][$newnum]  = $pid\n";
+
+        // change "numbering" (pid => [index, number])
+        $_SESSION['gb']['numbering'][$pid] = ['index' => $idx, 'number' => $newnum];
+        //echo "Ordering $currord, set ['numbering'][$pid] = ['index' => $idx, 'number' => $newnum]\n";
+
+        // change tag
+        if ($_SESSION['gb']['story']['passages'][$idx]['tags'] && in_array($currnum,$_SESSION['gb']['story']['passages'][$idx]['tags'])) {
+            $aidx = array_search($currnum,$_SESSION['gb']['story']['passages'][$idx]['tags']);
+            $_SESSION['gb']['story']['passages'][$idx]['tags'][$aidx] = $newnum;
+            //echo "Updated tags: set ['gb']['story']['passages'][$idx]['tags'][$aidx] = $newnum\n";
+        }
+        //echo "\n\n";
+    }
+
+    function gb_get_passage($pid) {
+        return $_SESSION['gb']['story']['passages'][$_SESSION['gb']['pids'][$pid]];
+    }
+
 ?>
