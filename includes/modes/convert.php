@@ -35,7 +35,7 @@
             $_SESSION['gb']['frontmatter'] = $_SESSION['gb']['backmatter'] = ['numbered' => [], 'unnumbered' => []];
             // first look for introduction and pull it out
             foreach ($_SESSION['gb']['story']['passages'] AS $idx => $passage) {
-                $pname = strtolower($passage['name']);
+                $pname = strtolower(html_entity_decode($passage['name'],ENT_QUOTES | ENT_HTML5));
                 if ($pname == 'gb-introduction' || $pname == 'gb-rear' || $pname == 'gb-front-cover' || $pname == 'gb-rear-cover') {
                     $_SESSION['gb'][$pname] = $passage;
                     unset($_SESSION['gb']['story']['passages'][$idx]);
@@ -112,8 +112,9 @@
             //echo "<pre>";
             // loop again to look for prenumbered paragraphs
             foreach ($_SESSION['gb']['story']['passages'] AS $idx => $passage) {
+                $pname = html_entity_decode($passage['name'],ENT_QUOTES | ENT_HTML5);
                 $pids[$passage['pid']] = $idx;
-                $pnames[$passage['name']] = ['idx' => $idx, 'pid' => $passage['pid']];
+                $pnames[$pname] = ['idx' => $idx, 'pid' => $passage['pid']];
                 if ($passage['tags'] && ($num = array_filter($passage['tags'],'gb_passage_number'))) {
                     // a numeric tag
                     $num = (int) str_replace('fixednumber_','',array_pop($num));
