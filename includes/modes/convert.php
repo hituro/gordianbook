@@ -56,9 +56,9 @@
                     } else if ($matter == 'backmatter') {
                         $debug .= "matter option 3\n";
                         $_SESSION['gb']['backmatter']['unnumbered'][] = $passage['pid'];
-                    } else if (substr($matter,0,12) == 'backmatter_') {
+                    } else if (substr($matter,0,11) == 'backmatter_') {
                         $debug .= "matter option 4\n";
-                        $matter_idx = substr($matter,12);
+                        $matter_idx = substr($matter,11);
                         $_SESSION['gb']['backmatter']['numbered'][$matter_idx] = $passage['pid'];
                     }
                     $debug .= "REMOVING $pname ({$passage['pid']}) AS FRONT/BACK MATTER\n".$matter." PLACING it in $mater_idx\n".print_r($_SESSION['gb']['frontmatter'],1).print_r($_SESSION['gb']['backmatter'],1);

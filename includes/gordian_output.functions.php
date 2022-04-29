@@ -109,7 +109,7 @@
                     if ($_REQUEST['limit'] && $count >= $_REQUEST['limit']) { break; }
                 }
             }
-
+            
             /* Then output any backmatter from WF style backmatter_X tags */
             if ($_SESSION['gb']['backmatter'] && !$only) {
                 $out .= "<pagebreak suppress='off'></pagebreak>";
@@ -626,7 +626,7 @@
     }
 
     function gb_matter($tag) {
-        return (substr($tag,0,11) == 'frontmatter' || substr($tag,0,11) == 'backmatter');
+        return (substr($tag,0,11) == 'frontmatter' || substr($tag,0,10) == 'backmatter');
     }
 
     function get_only() {
