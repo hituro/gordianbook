@@ -30,6 +30,9 @@
             ],
             'eater' => [
                 'R' => 'Eater-Regular.ttf',
+            ],
+            'forum' => [
+                'R' => 'Forum-Regular.ttf',
             ]
         ],
         'dpi'     => $_SESSION['gb']['settings']['low_res'] ? 72 : $_SESSION['gb']['settings']['resolution'],
