@@ -32,5 +32,8 @@
     if ($_SESSION['gb']['gb-rear-cover']) {
         echo twee_passage($_SESSION['gb']['gb-rear-cover']);
     }
+    if ($_SESSION['gb']['gb-templates']) {
+        echo twee_passage($_SESSION['gb']['gb-templates']['passage']);
+    }
 
 ?>
