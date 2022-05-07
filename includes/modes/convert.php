@@ -67,7 +67,7 @@
                     $passage_count --;
                     $debug .= "SKIPPING $pname, PASSAGE COUNT $passage_count\n";
                 } else if ($passage['tags'] && in_array('stylesheet',$passage['tags'])) {
-                    $_SESSION['gb']['settings']['css'] .= $passage['text'];
+                    $_SESSION['gb']['settings']['story_css'] .= $passage['text'];
                     unset($_SESSION['gb']['story']['passages'][$idx]);
                     $passage_count --;
                 } else if ($pname == 'gb-settings') {

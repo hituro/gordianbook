@@ -10,6 +10,7 @@
     if ($_SESSION['gb']['numbering']) {
         $lists['Edit'][]  = "<a href='gordian.php?mode=intro-edit'>Edit Introduction/Cover</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=settings'>Edit Settings</a>";
+        $lists['Edit'][]  = "<a href='gordian.php?mode=css-edit'>Edit CSS</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=passage-edit'>Edit Passage</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=renumber'>Renumber</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=load-settings'>Import Settings</a>";
