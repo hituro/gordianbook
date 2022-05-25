@@ -35,15 +35,15 @@
                 'R' => 'Forum-Regular.ttf',
             ]
         ],
-        'dpi'     => $_SESSION['gb']['settings']['low_res'] ? 72 : $_SESSION['gb']['settings']['resolution'],
-        'img_dpi' => $_SESSION['gb']['settings']['low_res'] ? 72 : $_SESSION['gb']['settings']['image_resolution'],
-        'list_auto_mode' => 'mpdf',
+        'dpi'                => $_SESSION['gb']['settings']['low_res'] ? 72 : $_SESSION['gb']['settings']['resolution'],
+        'img_dpi'            => $_SESSION['gb']['settings']['low_res'] ? 72 : $_SESSION['gb']['settings']['image_resolution'],
+        'list_auto_mode'     => 'mpdf',
         'list_marker_offset' => '1em',
-        'list_symbol_size' =>'0.31em',
-        'margin_top'    => $_SESSION['gb']['settings']['margin_top'] ?? 15,
-        'margin_bottom' => $_SESSION['gb']['settings']['margin_bottom'] ?? 15,
-        'margin_left'   => $_SESSION['gb']['settings']['margin_left'] ?? 10,
-        'margin_right'  => $_SESSION['gb']['settings']['margin_right'] ?? 10
+        'list_symbol_size'   =>'0.31em',
+        'margin_top'         => $_SESSION['gb']['settings']['margin_top']    ?? 15,
+        'margin_bottom'      => $_SESSION['gb']['settings']['margin_bottom'] ?? 15,
+        'margin_left'        => $_SESSION['gb']['settings']['margin_left']   ?? 10,
+        'margin_right'       => $_SESSION['gb']['settings']['margin_right']  ?? 10
     ];
     if ($_REQUEST['print'] && !$settings['covers']) {
         $config = array_merge($config,[
