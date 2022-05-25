@@ -1,7 +1,11 @@
 <?php
 
         if ($_REQUEST['mdtest']) {
-            $md   = markdown($_REQUEST['mdtest'],$_REQUEST['mdmode']);
+            $t    = $_REQUEST['mdtest'];
+            if (preg_match_all("/(?:<template name=\"(.*)\"[^>]*>(.*)<\/template>|<t:(.*)>(.*)<\/t>)/sU",$t,$templatematch,PREG_SET_ORDER)) {
+                $t   = templates($t,$templatematch);
+            }
+            $md   = markdown($t,$_REQUEST['mdmode']);
             $esc  = htmlspecialchars($md);
             $p    = autop(process_links(['text' => $md]),0);
             $para = htmlspecialchars($p);

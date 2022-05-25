@@ -1,0 +1,219 @@
+<h1>Gordian Templating</h1>
+
+<p>You may find yourself frequently reusing a block of layout, such as a monster stat block, skill check, or shop. In this case you can use a <code>template</code> to store the layout and reusse it.</p>
+
+<h2>Defining a Template</h2>
+<p>Templates are declared inside the <code>gb-templates</code> passage. The passage can contain one or more <code>&lt;template></code> tags. For example:</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <template name="test">
+        [CONTENT]
+    </template>
+    <template name="test2">
+        [CONTENT]
+    </template>
+</script></code></pre>
+
+<p>To use a template in a passage, use the <code>&lt;t></code> tag:</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <t:test></t>
+</script></code></pre>
+
+<p>This would outout whatever the content of the template <code>test</code> is (in this case <code>[CONTENT]</code>).</p>
+
+<div class="example">
+    <h3>For example</h3>
+    <p>Given a template, 'dead':</p>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+        <template name="dead">YOU ARE DEAD!</template>
+    </script></code></pre>
+    <p>And a passage content of:</p>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+        He shouts, "<t:dead></t>"
+    </script></code></pre>
+    <p>You would see:</p>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+        He shouts, "YOU ARE DEAD!"
+    </script></code></pre>
+</div>
+
+<p>If you prefer you can use the syntax <code>&lt;template name="template_name">&lt;/template></code>.</p>
+
+<h2>Passing Content to a Template</h2>
+<p>A template with fixed text has limited uses (though not none). More often you will want to pass some content to a template. For example imagine you have a specially styled div in your game for notes, and want to use that frequently. You could set up a template and pass the content of the note.</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <template name="note">
+        <div class="notes curved">
+            <h3>NOTE!</h3>
+            {{default}}
+        </div>
+    </template>
+</script></code></pre>
+<p>In this template the text <code>{{default}}</code> is going to be replaced with the <i>default content</i> of the template, which is everything between the <code>&lt;t></code> and <code>&lt;/t></code> tags.</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <t:note>This is the content of the note</t>
+</script></code></pre>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+        <div class="notes curved">
+            <h3>NOTE!</h3>
+            This is the content of the note
+        </div>
+</script></code></pre>
+
+<p><code>{{default}}</code> is actually a specical case variable, supplied when there are no other variables inside the data passed to the template. Instead of just passing some text, you can pass a JSON object of values.</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <template name="note">
+        <div class="notes curved">
+            <h3>{{title}}!</h3>
+            {{content}}
+        </div>
+    </template>
+    <t:note>{"title": "NOTE", "content": "This is the content of the note"}</t>
+</script></code></pre>
+<p>You can access values from the object by putting the key in <code>{{}}</code> as shown above. If your data has nested values (arrays, or other objects) you can access them with "dot notation", for example: <code>{{weapon.damage}} {{weapons.0}}</code>.</p>
+
+<h2>Conditionals in Templates</h2>
+<p>You may wish to vary the layout of your template depending on the data passed — if X then Y, for example. You can do that using the <code>&lt;if></code> tag inside your template.</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <template name="test">
+        <if title == "NOTE">This is a note<else>This is not a note</if>
+        {{content}}
+    </template>
+    <t:note>{"title": "NOTE", "content": "This is the content of the note"}</t>
+</script></code></pre>
+<p>You can use the following for comparisons:</p>
+<table cellpadding="5px" style="margin-left:5em;">
+    <tr><td><code>==</code></td>     <td>equals</td></td></tr>
+    <tr><td><code>>=</code></td>     <td>greater than or equals</td></td></tr>
+    <tr><td><code>&lt;=</code></td>  <td>less than or equals</td></td></tr>
+    <tr><td><code>></code></td>      <td>greater than</td></td></tr>
+    <tr><td><code>&lt;</code></td>   <td>less than</td></td></tr>
+    <tr><td><code>!=</code></td>     <td>not equals</td></td></tr>
+</table>
+<p>The following logical operations are also available: <code>or, and, not</code>. So this is valid:</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <template name="test">
+        <if title == "NOTE" or title == "DIARY">This is a note<else>This is not a note</if>
+        {{content}}
+    </template>
+</script></code></pre>
+
+<h2>Repeating Content</h2>
+<p>One of the best features of a template is repeating layout. For example, you might lay out images in a gallery, or lines of information in a shop. You can do this using the <code>&lt;repeat></code> tag. The simplest form of this repeats its contents a fixed number of times.</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <repeat 5>Hello! </repeat>
+</script></code></pre>
+<p>The number of repeats can come from a variable, as usual.</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <template name="test">
+        <repeat hellos>Hello! </repeat>
+    </template>
+    <t:test>{ "hellos" : 5 }</t>
+</script></code></pre>
+<p>Alternatively you can loop over the contents of a variable doing something for each value.</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <template name="test">
+        <repeat names as name>Hello {{name}}! </repeat>
+    </template>
+    <t:test>{ "names" : [ "Bob", "James", "Clive" ] }</t>
+</script></code></pre>
+<p>In this sort of loop (<code>&lt;repeat ARRAY as VARIABLE></code>) <code>ARRAY</code> is the think you are looping through and <code>VARIABLE</code> is a name assigned to it.</p>
+
+<div class="example">
+    <h3>For example</h3>
+    <p>Given a template, 'gallery':</p>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+        <template name="gallery">
+            <repeat pictures as picture>
+                <img src="http://myimagesite.com/{{picture.url}}" title="{{picture.title}}">
+            </repeat>
+        </template>
+    </script></code></pre>
+    <p>And a passage content of:</p>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+       <t:gallery>{
+           "pictures" : [
+                { "url" : "Bob.png", "title" : "Bob" },
+                { "url" : "James.png", "title" : "James" }
+           ]
+       }</t>
+    </script></code></pre>
+    <p>You would see:</p>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+        <img src="http://myimagesite.com/Bob.png" title="Bob">
+        <img src="http://myimagesite.com/James.png" title="James">
+    </script></code></pre>
+</div>
+
+<p>When working with <code>&lt;repeat></code> some special variables are available.</p>
+<ul>
+    <li><code>{{last}}</code> is true when you are on the last repeat of the loop</li>
+    <li><code>{{LOOPNAME_length}}</code> is a number indicating the length of the item you are repeating over</li>
+    <li><code>{{LOOPNAME_index}}</code> is a number indicating the current repeat you are on</li>
+</ul>
+<p><code>LOOPNAME</code> is the name of the repeat, which is the same as the variable you are repeating over, with any dots replaced by underscores. For example <code>&lt;repeat bags as bag></code> generates <code>bags_length</code> and <code>bags_index</code>. <code>&lt;repeat items.bags as bag></code> generates <code>items_bags_length</code> and <code>items_bags_index</code>.</p>
+
+<h1>Examples</h1>
+
+<div class="example">
+    <h3>In-game shop</h3>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+        <template name="market">
+            <div class="market">
+            <repeat sections AS section>
+               <h3>{{section.name}}</h3>
+               <table>
+               <tr><th></th><th>buy</th><th>sell</th></tr>
+               <repeat section.goods AS good>
+                 <tr><td>{{good.item}}</td><td>{{good.buy}}</td><td>{{good.sell}}</td></tr>
+               </repeat>
+               </table>
+            </repeat>
+            </div>
+        </template>
+    </script></code></pre>
+    <p>Data looks like:</p>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+        <t:market>{"sections": [
+            { "name": "Treyvik's Goods", "goods":
+              [
+                {"item": "An old bow (ranged weapon)", "buy": "25gp", "sell": "-"},
+                {"item": "Shield", "buy": "25gp", "sell": "-"},
+                {"item": "Light Armour (protection 1)", "buy": "50gp", "sell": "-"},
+                {"item": "Rations (maximum of 4)", "buy": "7gp", "sell": "-"}
+              ]
+        }]}</t>
+    </script></code></pre>
+</div>
+
+<div class="example">
+    <h3>Image Gallery</h3>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+        <template name="gallery">
+            <div>
+                <table style="margin:auto"><tr>
+                <repeat data AS item><td class="center"><img src="{{item.img}}"><br>
+                    <b>{{item.name}}</b></td></repeat>
+                </tr></table>
+            </div>
+        </template>
+    </script></code></pre>
+    <p>Data looks like:</p>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+        <t:gallery>{
+            "data":[
+                {"img":"/images/iod/iskander_circle.png", "name":"Iskander"},
+                {"img":"/images/iod/mehmet_circle.png","name":"Mehmet"}
+            ]
+        }</t>
+    </script></code></pre>
+</div>
+
+<div class="example">
+    <h3>Full page image</h3>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+        <template name="fullpic">
+            <page-before><div class="cover_full"><img src="/images/gok/{{default}}.jpg" class="cover_image"></div><pagebreak></pagebreak></page-before>
+        </template>
+    </script></code></pre>
+</div>
+

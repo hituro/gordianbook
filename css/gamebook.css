@@ -206,3 +206,18 @@ dd {
 .gallery img {
     max-width: 100%;
 }
+
+.CodeMirror {
+    height: auto;
+}
+
+.example {
+    margin: 1em;
+    padding: 1em;
+    border: 1px solid var(--border-lighter);
+}
+.example h3 {
+    font-style: italic;
+}
+.example > *:first-child { margin-top: 0; }
+.example > *:last-child { margin-bottom: 0; }

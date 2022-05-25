@@ -1,7 +1,5 @@
 <?php
 
-
-
     /* =================================================================================== */
     /* GAMEBOOK OUTPUT FUNCTIONS                                                           */
     /* =================================================================================== */
@@ -53,6 +51,9 @@
             if ($_SESSION['gb']['frontmatter'] && !$only) {
                 foreach ($_SESSION['gb']['frontmatter'] AS $front_pid) {
                     $front = $_SESSION['gb']['story']['passages'][$_SESSION['gb']['pids'][$front_pid]];
+                    if ($front['tags'] && in_array('breakbefore',$front['tags'])) {
+                        $out .= "<pagebreak type='next-odd' suppress='off'></pagebreak>";
+                    }
                     $out .= "<div class='paragraph frontmatter long'>".process_para($front)['text']."</div>
                              <div class='body_headers'></div>";
                     if ($front['tags'] && in_array('breakafter',$front['tags'])) {
@@ -115,9 +116,12 @@
                 $out .= "<pagebreak suppress='off'></pagebreak>";
                 foreach ($_SESSION['gb']['backmatter'] AS $back_pid) {
                     $back = $_SESSION['gb']['story']['passages'][$_SESSION['gb']['pids'][$back_pid]];
+                    if ($back['tags'] && in_array('breakbefore',$back['tags'])) {
+                        $out .= "<pagebreak type='next-odd' suppress='off'></pagebreak>";
+                    }
                     $out .= "<div class='paragraph backmatter long'>".process_para($back)['text']."</div>
                             <div class='body_headers'></div>";
-                    if ($front['tags'] && in_array('breakafter',$back['tags'])) {
+                    if ($back['tags'] && in_array('breakafter',$back['tags'])) {
                         $out .= "<pagebreak type='next-odd' suppress='off'></pagebreak>";
                     }
                 }
@@ -155,7 +159,7 @@
         $text = $passage['text'];
         $text = process_links($passage); 
         if (preg_match_all("/(?:<template name=\"(.*)\"[^>]*>(.*)<\/template>|<t:(.*)>(.*)<\/t>)/sU",$text,$templatematch,PREG_SET_ORDER)) {
-            $text   = templates($text,$templatematch);
+            $text   = templates($text,$templatematch,$print);
         }
         if (preg_match("|<after>(.*?)</after>|s",$text,$aftermatch)) {
             $after  = $aftermatch[1];
@@ -179,41 +183,172 @@
         return ['text' => $text, 'after' => $after, 'before' => $before];
     }
 
-    function templates($text,$templatematches) {
+    /* TEMPLATE FUNCTIONS */
+
+    function templates($text,$templatematches,$print=false) {
         foreach ($templatematches AS $t) {
-            $r    = template($t[3] ? $t[3] : $t[1],$t[4] ? $t[4] : $t[2]);
+            $r    = template($t[3] ? $t[3] : $t[1],$t[4] ? $t[4] : $t[2],$print);
             $text = str_replace($t[0],$r,$text);
         }
         return $text;
     }
 
-    function template($name,$data,$template=null,$prefix='') {
-        //echo "<pre>template($name,".print_r($data,1).",".htmlspecialchars($template).",$prefix)</pre>";
+    function template($name,$data,$template=null,$prefix='',$print=false) {
         $template = $template ? $template : $_SESSION['gb']['gb-templates']['templates'][$name];
-        //echo htmlspecialchars($template);
         if (!is_array($data)) {
             $data     = trim($data);
             $data     = substr($data,0,1) == '{' ? json_decode($data,true) : ['default' => $data];
         }
-        foreach ($data AS $k => $v) {
-            //echo "<pre>replacing {$prefix}{$k}</pre>";
-            $template = str_replace("{{" . $prefix . $k . "}}",$v,$template);
-        }
-        if (preg_match_all("|<repeat (.*) AS (.*)>(.*)</repeat \\1>|sU",$template,$rmatches,PREG_SET_ORDER)) {
-            foreach ($rmatches AS $rep) {
-                $rname = $rep[1];
-                $ritem = $rep[2];
-                $rbody = $rep[3];
-            //echo "<pre>Now matching repeat $rname</pre>";
-                $rout  = '';
-                foreach ($data[$rname] AS $ditem) {
-                    $rout .= template('',$ditem,$rbody,"{$ritem}.");
+        $data['gb_print'] = $print;
+        $parsed    = template_parse($template);
+        $processed = template_execute($parsed,$data);
+        return trim($processed);
+    }
+
+    /**
+     * Turn a template into interpolated PHP code
+     */
+    function template_parse($t) {
+        // take template and replace all tokens with PHP callable versions, then eval the result
+        // first clean template of possible code
+        $t = str_replace(['<?php','<?=','<?','?>'],'',$t);
+        $t = str_replace('$','\$',$t);
+        // replace variables with echos
+        $t = preg_replace_callback_array(["/{{([a-zA-Z_.0-9]+)}}/" => 'template_var'],$t);
+        // replace <repeat> with foreach loops
+        $t = preg_replace_callback_array(["/<repeat (\S+) as (\w+)>/i" => 'template_repeat'],$t);
+        $t = preg_replace_callback_array(["/<repeat (\S+)>/iU" => 'template_repeat'],$t);
+        $t = preg_replace("/<\/repeat.*>/i",'<?php } ?>',$t);
+        // replace <if> with if
+        $t = preg_replace_callback_array(["/<if (.+)>/iU" => 'template_if'],$t);
+        $t = preg_replace("/<else>/i",'<?php } else { ?>',$t);
+        $t = preg_replace("/<\/if>/i",'<?php } ?>',$t);
+        return $t;
+    }
+
+    /**
+     * Process an <if> tag inside a template
+     */
+    function template_if($var) {
+        // split the content of the tag on spaces and word boundaries to tokenise it
+        $tokens  = preg_split("/(\b|\s)/",$var[1],-1,PREG_SPLIT_DELIM_CAPTURE + PREG_SPLIT_NO_EMPTY);
+        $t       = [];
+        $consume = 0;
+        $token   = '';
+        $opmap   = ['or' => '||', 'and' => '&&', 'not' => '!'];
+        foreach ($tokens AS $i => $to) {
+            //echo "TOKEN $i |$to|\n";
+            // if $consume is non-zero it means we are consuming elements from the token steam
+            // to construct a multi-part token, such as a delimited string, or an arrray access
+            if ($consume) {
+                if ($consume == 'var') {
+                    //echo "    + CONSUMING FOR var\n";
+                    // consume until we see something that is not a . or valid variable -> used for var.var.var
+                    if ($to != '.' && !preg_match("/[a-zA-Z_0-9]/",$to)) {
+                        //echo "    + |$to| is not a valid part of our var, so write out token\n";
+                        $t[] = template_var(['',$token],false);
+                        $consume = 0; $token = '';
+                    } else {
+                        //echo "    + ADDING |$to| to token\n";
+                        $token .= $to;
+                        continue;
+                    }
+                } else if (is_numeric($consume)) {
+                    // consuming N tokens -> used for var.var syntax
+                    $consume --;
+                    $token .= $to;
+                    if ($consume > 0) { continue; } else {
+                        $t[] = template_var(['',$token],false);
+                        $consume = 0; $token = '';
+                    }
+                    continue;
+                } else if ($to == $consume) {
+                    // consuming until we hit a specific token -> used for delimiters
+                    $t[]     = $token . $to;
+                    $consume = 0; $token = '';
+                    continue;
+                } else {
+                    $token  .= $to;
+                    continue;
                 }
-                $template = str_replace($rep[0],$rout,$template);
+            }
+            if ($to == ' ') {
+                // if we have whitespace and are not in a string, skip it
+                continue;
+            }
+            if ($tokens[$i +1] == '.' ) {
+                // start consuming for a dot-notation variable
+                $token   = $to;
+                $consume = 'var';
+                //echo "    + START CONSUMING FOR var\n";
+            } else if ($to == '"' || $to == "'") {
+                // start consuming for a delimited string
+                $token   = $to;
+                $consume = $to;
+            } else if (is_numeric($to)) {
+                $t[] = $to;
+            } else if (array_key_exists($to,$opmap)) {
+                // convert nice operators to PHP versions
+                $t[] = $opmap[$to];
+            } else if (preg_match("/[a-zA-Z_0-9]/",$to)) {
+                $t[] = template_var(['',$to],false);
+            } else {
+                $t[] = $to;
             }
         }
-        return trim($template);
+        // a token may be left at the end of the tokenisation pass, which should be added
+        if ($token && $consume == 'var') { 
+            // echo "APPENDING $token\n";
+            $t[] = template_var(['',$token],false);
+        }
+        $expr = implode(' ',$t);
+        return "<?php if($expr) { ?>";
     }
+
+    /**
+     * Process a <repeat> tag inside a template
+     */
+    function template_repeat($var) {
+        if ($var[2]) {
+            // foreach loops
+            $v1 = template_var(['',$var[1]],false);
+            $v2 = "\${$var[2]}";
+            $vn = str_replace('.','_',$var[1]);
+            return "<?php \${$vn}_length = count($v1); \${$vn}_index = 0; foreach($v1 AS \$idx => $v2) { \${$vn}_index ++; \$last = (\${$vn}_length == \${$vn}_index); ?>";
+        } else {
+            // simple for loops
+            $v1 = is_numeric($var[1]) ? $var[1] : template_var(['',$var[1]],false);
+            return "<?php for(\$idx = 1;\$idx <= $v1;\$idx ++) { \$last = (\$idx == $v1); ?>";
+        }
+    }
+
+    /**
+     * Process a {{variable}} inside a template
+     */
+    function template_var($var,$enclose=true) {
+        if (strpos($var[1],'.')) {
+            $parts = explode('.',$var[1]);
+            $out   = "\$" . array_shift($parts);
+            foreach ($parts AS $part) {
+                $out .= "['$part']";
+            }
+        } else {
+            $out   = "\${$var[1]}";
+        }
+        return $enclose ? "<?=$out?>" : $out;
+    }
+
+    /**
+     * Take a compiled template (from template_parse()) and use eval() to execute it
+     */
+    function template_execute($t,$data) {
+        extract($data);
+        ob_start();
+        eval("?>$t<?php ");
+        return ob_get_clean();
+    }
+
+    /* MARKDOWN FUNCTIONS */
 
     function markdown($text,$mode='harlowe') {
         // very basic markdown parse
@@ -419,6 +554,63 @@
         return str_replace(["<p><div","/div></p>","<p><table","/ul></p>"],['<div','/div>','<table','/ul>'],$out);
     }
 
+    function process_links($passage) {
+        preg_match_all("/\[\[(.*?)\]\]/",$passage['text'],$matches);
+        $debug = "<pre>"; 
+        $debug .= print_r($matches,1);
+        foreach ($matches[1] AS $lidx => $link) {
+            $link  = html_entity_decode($link,ENT_QUOTES | ENT_HTML5);
+            $parts = preg_split("/(->|<-|\|)/",$link,-1,PREG_SPLIT_DELIM_CAPTURE);
+            $debug .= print_r($parts,1);
+            if ($parts[1] == '<-') {
+                // reversed style
+                $name   = $parts[2];
+                $pid    = $_SESSION['gb']['passage_names'][$parts[0]];
+                $debug .= " LINK PATTERN 1 ";
+            } else if ($parts[1]) {
+                $name   = $parts[0];
+                $pid    = $_SESSION['gb']['passage_names'][$parts[2]];
+                $debug .= " LINK PATTERN 2 $name -> {$parts[2]} ($pid)\n";
+            } else {
+                $name   = $parts[0];
+                $pid    = $_SESSION['gb']['passage_names'][$parts[0]];
+                $debug .= " LINK PATTERN 3 ";
+            }
+            $debug .= print_r($_SESSION['gb']['passage_names'],1);
+            $debug .= "\$name = '$name' \$pid = '{$pid['pid']}' ".print_r($_SESSION['gb']['numbering'][$pid['pid']],1);
+            $number = $_SESSION['gb']['numbering'][$pid['pid']]['number'];
+            $number = $number ?? "X";
+            $name   = trim($name);
+            if ($name == 'Turnto') {
+                $debug .= " TURNTO LINK ";
+                $ltext = "Turn to $number";
+            } else if ($name == 't_urnto') {
+                $ltext = "turn to $number";
+            } else if ($name == 'turnto' || $name === '') {
+                $debug .= " TURNTO LINK ";
+                $pattern = "/[.?!]\s+\[\[".str_replace('|','\|',$link)."/"; 
+                if (preg_match($pattern,$passage['text'],$lmatches)) {
+                    $ltext = "Turn to $number";
+                } else {
+                    $ltext = "turn to $number";
+                }
+            } else if ($name == '#') {
+                $ltext = "$number";
+            } else {
+                $ltext = "$name (turn to $number)";
+            }
+            $debug .= " $ltext \n\n";
+            //$ltext  = ($name == 'turnto') ? "turn to $number" : "$name (turn to $number)";
+            $tlink  = "<a href='#{$number}' class='passage-link'>$ltext</a>";
+            $passage['text'] = str_replace($matches[0][$lidx],$tlink,$passage['text']);
+        }
+        $debug .= "</pre>";
+        //echo $debug;
+        return $passage['text'];
+    }
+
+    /* CONVERSION FUNCTIONS */
+
     function convert_from_twine($twine) {
         ini_set('display_errors',1);
         require_once __DIR__ . '/../vendor/autoload.php';
@@ -521,61 +713,6 @@
         return $out;
     }
 
-    function process_links($passage) {
-        preg_match_all("/\[\[(.*?)\]\]/",$passage['text'],$matches);
-        $debug = "<pre>"; 
-        $debug .= print_r($matches,1);
-        foreach ($matches[1] AS $lidx => $link) {
-            $link  = html_entity_decode($link,ENT_QUOTES | ENT_HTML5);
-            $parts = preg_split("/(->|<-|\|)/",$link,-1,PREG_SPLIT_DELIM_CAPTURE);
-            $debug .= print_r($parts,1);
-            if ($parts[1] == '<-') {
-                // reversed style
-                $name   = $parts[2];
-                $pid    = $_SESSION['gb']['passage_names'][$parts[0]];
-                $debug .= " LINK PATTERN 1 ";
-            } else if ($parts[1]) {
-                $name   = $parts[0];
-                $pid    = $_SESSION['gb']['passage_names'][$parts[2]];
-                $debug .= " LINK PATTERN 2 $name -> {$parts[2]} ($pid)\n";
-            } else {
-                $name   = $parts[0];
-                $pid    = $_SESSION['gb']['passage_names'][$parts[0]];
-                $debug .= " LINK PATTERN 3 ";
-            }
-            $debug .= print_r($_SESSION['gb']['passage_names'],1);
-            $debug .= "\$name = '$name' \$pid = '{$pid['pid']}' ".print_r($_SESSION['gb']['numbering'][$pid['pid']],1);
-            $number = $_SESSION['gb']['numbering'][$pid['pid']]['number'];
-            $number = $number ?? "X";
-            $name   = trim($name);
-            if ($name == 'Turnto') {
-                $debug .= " TURNTO LINK ";
-                $ltext = "Turn to $number";
-            } else if ($name == 't_urnto') {
-                $ltext = "turn to $number";
-            } else if ($name == 'turnto' || $name === '') {
-                $debug .= " TURNTO LINK ";
-                $pattern = "/[.?!]\s+\[\[".str_replace('|','\|',$link)."/"; 
-                if (preg_match($pattern,$passage['text'],$lmatches)) {
-                    $ltext = "Turn to $number";
-                } else {
-                    $ltext = "turn to $number";
-                }
-            } else if ($name == '#') {
-                $ltext = "$number";
-            } else {
-                $ltext = "$name (turn to $number)";
-            }
-            $debug .= " $ltext \n\n";
-            //$ltext  = ($name == 'turnto') ? "turn to $number" : "$name (turn to $number)";
-            $tlink  = "<a href='#{$number}' class='passage-link'>$ltext</a>";
-            $passage['text'] = str_replace($matches[0][$lidx],$tlink,$passage['text']);
-        }
-        $debug .= "</pre>";
-        //echo $debug;
-        return $passage['text'];
-    }
-
     function twee_passage($p) {
         $pid    = $_SESSION['gb']['passage_names'][$p['name']]['pid'];
         if ($pid) {
@@ -620,6 +757,8 @@
         $attrs = implode(' ',$attrs);
         return "<tw-passagedata $attrs>".htmlspecialchars(html_entity_decode($p['text'],ENT_QUOTES),ENT_QUOTES)."</tw-passagedata>";
     }
+
+    /* UTILITY */
 
     function gb_passage_number($tag) {
         return (is_numeric($tag) || preg_match('/fixednumber_[0-9]+/',$tag));
