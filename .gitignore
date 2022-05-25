@@ -3,3 +3,4 @@ images/*
 !images/app/
 vendor/
 includes/modes/dev*
+js/codemirror/*

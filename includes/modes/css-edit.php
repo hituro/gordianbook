@@ -9,12 +9,12 @@
 
             <div class='form-row'>
                 <label for='story_css'>Story Stylesheet</label>
-                <textarea name='story_css' rows='20'>{$_SESSION['gb']['story_css']}</textarea>
+                <textarea name='story_css' class='codemirror css' rows='30'>{$_SESSION['gb']['story_css']}</textarea>
             </div>
 
             <div class='form-row'>
                 <label for='settings_css'>Settings CSS</label>
-                <textarea name='settings_css' rows='10'>{$_SESSION['gb']['settings']['css']}</textarea>
+                <textarea name='settings_css' class='codemirror css' rows='10'>{$_SESSION['gb']['settings']['css']}</textarea>
             </div>
 
             <div class='form-row'>

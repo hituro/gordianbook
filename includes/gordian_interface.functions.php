@@ -39,6 +39,7 @@
         if ($options['css']) {
             foreach ($options['css'] AS $link) {
                 if ($link == 'custom') {
+                    $css .= "<style>{$_SESSION['gb']['story_css']}</style>\n";
                     $css .= "<style>{$_SESSION['gb']['settings']['css']}</style>\n";
                 } else {
                     $css .= "<link rel='stylesheet' type='text/css' href='$link'>\n";
@@ -72,6 +73,7 @@
               <meta name='twitter:card' content='summary_large_image'>
               <link rel='preconnect' href='https://fonts.gstatic.com'>
               <link href='https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&family=IM+Fell+DW+Pica&display=swap' rel='stylesheet'> 
+              <link rel='stylesheet' type='text/css' href='/js/codemirror/lib/codemirror.css'>
               <link rel='stylesheet' type='text/css' href='/css/gamebook.css'>
               <script
 			    src='https://code.jquery.com/jquery-3.6.0.min.js'
@@ -79,6 +81,8 @@
 			    crossorigin='anonymous'></script>
               $css
               $js
+              <script type='text/javascript' src='/js/codemirror/lib/codemirror.js'></script>
+              <script type='text/javascript' src='/js/codemirror/mode/css/css.js'></script>
               <script type='text/javascript' src='/js/main.js'></script>
               </head>
               <body>

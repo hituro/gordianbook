@@ -5,3 +5,5 @@ Gordian Book imports a Twine game (either a Twine Archive, or a Twison/Twee vers
 # Installation
 
 Gordian Book requires a PHP environment with Composer to install dependencies. Install this repo, and then run composer install to get your dependencies.
+
+It also uses codemirror to provide syntax highlighting while editing. Install a copy of codemirror in js/codemirror
