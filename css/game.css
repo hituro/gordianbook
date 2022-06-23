@@ -9,7 +9,7 @@ body {
     page-break-inside: auto;
 }
 
-h1, h2 {
+.paragraph h1, .paragraph h2 {
     margin: 1em 0px;
 }
 
@@ -80,10 +80,6 @@ img {
     background: radial-gradient(black, rgba(0,0,0,0));
 }
 
-:target {
-    background: yellow;
-}
-
 .footer {
     text-align: center;
 }
@@ -99,8 +95,8 @@ img {
 
 .check {
     display: inline;
-    border-radius: 0.5mm;
-    padding: 1px 2px;
+    border-radius: 1mm;
+    padding: 1px 4px;
     border: none;
     background: rgb(205, 250, 255);
     color: black;
