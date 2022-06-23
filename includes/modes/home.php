@@ -12,16 +12,19 @@
         $lists['Edit'][]  = "<a href='gordian.php?mode=settings'>Edit Settings</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=css-edit'>Edit CSS</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=passage-edit'>Edit Passage</a>";
+        $lists['Edit'][]  = "<a href='gordian.php?mode=templates-edit'>Edit Templates</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=renumber'>Renumber</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=load-settings'>Import Settings</a>";
 
         $lists['Play'][]  = "<a href='gordian.php?mode=show'>Preview Gamebook</a>";
+        $lists['Play'][]  = "<a href='gordian.php?mode=show&playable=1#introduction'>Play Gamebook</a>";
 
         $lists['Print'][] = "<a href='gordian.php?mode=pdf' target='_new'>Export Gamebook PDF</a>";
         $lists['Print'][] = "PDF: <a href='gordian.php?mode=pdf&print=1' target='_new'>print</a> - 
-                                <a href='gordian.php?mode=pdf&covers=1&simplex=1' target='_new'>cover</a> - 
-                                <a href='gordian.php?mode=pdf&covers=1' target='_new'>cover (duplex)</a> - 
-                                <a href='gordian.php?mode=pdf&skip_content=1' target='_new'>cover/matter</a>";
+                                  <a href='gordian.php?mode=pdf&print=1&covers=1' target='_new'>print + cover</a> - 
+                                  <a href='gordian.php?mode=pdf&covers=1&simplex=1&cover-only=1' target='_new'>cover</a> - 
+                                  <a href='gordian.php?mode=pdf&covers=1&cover-only=1' target='_new'>cover (duplex)</a> - 
+                                  <a href='gordian.php?mode=pdf&skip_content=1' target='_new'>cover/matter</a>";
         $lists['Print'][] = "PDF: <a href='gordian.php?mode=pdf-range' target='_new'>page range</a>";
 
         $lists['Export'][] = "<a href='gordian.php?mode=export-settings'>Export Settings</a>";
