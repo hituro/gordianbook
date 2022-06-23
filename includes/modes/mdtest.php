@@ -10,14 +10,16 @@
             $p    = autop(process_links(['text' => $md]),0);
             $para = htmlspecialchars($p);
         }
+        $h = ($_REQUEST['mdmode'] == 'harlowe')   ? 'selected' : '';
+        $s = ($_REQUEST['mdmode'] == 'sugarcube') ? 'selected' : '';
         echo page("
             <form action='gordian.php' method='post'>
                 <input type='hidden' name='mode' value='mdtest'>
                 <div class='form-row'>
                     <label for='mdmode'>Mode</label>
                     <select name='mdmode'>
-                        <option>harlowe</option>
-                        <option>sugarcube</option>
+                        <option $h>harlowe</option>
+                        <option $s>sugarcube</option>
                     </select>
                 </div>
                 <div class='form-row'>
