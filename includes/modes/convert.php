@@ -85,12 +85,13 @@
                         $_SESSION['gb']['settings'] = array_merge($defaults['settings'],$content); 
                     }
                 } else if ($pname == 'gb-templates') {
-                    preg_match_all("|<template name=\"(.*)\">(.*)</template>|sU",$passage['text'],$matches,PREG_SET_ORDER);
-                    $debug .= "MATCHES : " . print_r($matches,1);
-                    foreach ($matches AS $match) {
-                        $templates[$match[1]] = $match[2];
-                    }
-                    $debug .= "TEMPLATES : " . print_r($templates,1);
+                    // preg_match_all("|<template name=\"(.*)\">(.*)</template>|sU",$passage['text'],$matches,PREG_SET_ORDER);
+                    // $debug .= "MATCHES : " . print_r($matches,1);
+                    // foreach ($matches AS $match) {
+                    //     $templates[$match[1]] = $match[2];
+                    // }
+                    // $debug .= "TEMPLATES : " . print_r($templates,1);
+                    $templates = convert_templates($passage['text']);
                     $_SESSION['gb'][$pname] = [
                         'passage' => $passage,
                         'templates' => $templates

@@ -4,7 +4,7 @@
     /* GAMEBOOK OUTPUT FUNCTIONS                                                           */
     /* =================================================================================== */
 
-    function htmldoc($print=true,$settings) {
+    function htmldoc($print=true,$settings,$only=false) {
         $link_css = $settings['print'] ? "<style>".file_get_contents('css/print.css')."</style>" : '';
         return "<!DOCTYPE html>
                 <head>
@@ -24,28 +24,30 @@
                 <htmlpagefooter name=\"otherpagefooter\" style=\"display:none\">
                     <div class='footer'>{PAGENO}</div>
                 </htmlpagefooter>"
-                .htmlise($print,$settings)."</body>
+                .htmlise($print,$settings,$only)."</body>
                 </html>";
     }
 
-    function htmlise($print=false,$settings) {
+    function htmlise($print=false,$settings,$only=false) {
         $out  = '';
-        $only = get_only();
+        $only = get_only($only);
         if ($print && $_SESSION['gb']['settings']['cover'] && !$only && ($settings['covers'] || !$settings['print'])) {
             // use a cover page
             $text = $_SESSION['gb']['gb-front-cover'] ? process_para($_SESSION['gb']['gb-front-cover'])['text'] : "<div class='cover_top'><h1>{$_SESSION['gb']['story']['name']}</h1></div>";
             $out .= "<div class='cover_back front'></div>
                      $text";
             if ($settings['covers'] && $settings['simplex']) {
-            } else if ($settings['covers']) {
+            } else if ($settings['covers'] && $settings['covers-only']) {
                 $out .= "<pagebreak type='next-odd' suppress='on' resetpagenum='1'></pagebreak>";
+            } else if ($settings['covers']) {
+                $out .= "<pagebreak resetpagenum='1'></pagebreak>";
             } else {
                 $out .= "<pagebreak type='next-odd' resetpagenum='1'></pagebreak>";
             }
         } else if (!$settings['print'] && !$settings['covers'] && !$only) {
             $out = "<h1>{$_SESSION['gb']['story']['name']}</h1>";
         }
-        if (!$settings['covers']) {
+        if (!$settings['covers'] || ($settings['print'] && $settings['covers'])) {
 
             /* First output any frontmatter from WF style frontmatter_X tags */
             if ($_SESSION['gb']['frontmatter'] && !$only) {
@@ -54,7 +56,7 @@
                     if ($front['tags'] && in_array('breakbefore',$front['tags'])) {
                         $out .= "<pagebreak type='next-odd' suppress='off'></pagebreak>";
                     }
-                    $out .= "<div class='paragraph frontmatter long'>".process_para($front)['text']."</div>
+                    $out .= "<div class='paragraph frontmatter long'>".process_para($front,true,$print,$settings)['text']."</div>
                              <div class='body_headers'></div>";
                     if ($front['tags'] && in_array('breakafter',$front['tags'])) {
                         $out .= "<pagebreak type='next-odd' suppress='off'></pagebreak>";
@@ -64,7 +66,7 @@
 
             /* Then is gb-introduction */
             if ($_SESSION['gb']['gb-introduction'] && !$only) {
-                $out .= "<div class='paragraph introduction long'>".process_para($_SESSION['gb']['gb-introduction'])['text']."</div>
+                $out .= "<div class='paragraph introduction long' id='introduction'>".process_para($_SESSION['gb']['gb-introduction'],true,$print,$settings)['text']."</div>
                          <div class='body_headers'></div>";
                 if ($_SESSION['gb']['gb-introduction']['tags'] && in_array('breakafter',$_SESSION['gb']['gb-introduction']['tags'])) {
                     $out .= "<pagebreak type='next-odd' suppress='off'></pagebreak>";
@@ -88,16 +90,23 @@
                     if ($pass['tags'] && in_array('skip',$pass['tags'])) { continue; }
                     $long = ($pass['tags'] && in_array('long',$pass['tags'])) ? 'long' : '';
                     $edit = ($print || $settings['proof']) ? '' : " (<a href='gordian.php?mode=passage-edit&pid=$pid' target='_new'>edit</a>)";
-                    $pp   = process_para($pass,true,$print);
+                    $pp   = process_para($pass,true,$print,$settings);
                     if ($pass['tags'] && in_array('breakbefore',$pass['tags'])) {
                         $out .= "<pagebreak suppress='off'/>";
                     }
-                    $out .= "<sethtmlpagefooter name='otherpagefooter' page='ALL' value='on'></sethtmlpagefooter>";
+                    /*
+                    $r = rand(1,100);
+                    $out .= "
+                    <htmlpagefooter name=\"{$number}_footer\" style=\"display:none\">
+                        <div class='footer'>{PAGENO} [$r]</div>
+                    </htmlpagefooter>";
+                    $out .= "<sethtmlpagefooter name='{$number}_footer' page='ALL' value='on'></sethtmlpagefooter>";
+                    */
                     $out .= "
                             {$pp['before']}
                             <div class='paragraph $long' id='para_$number'>
                             <bookmark content='$number'></bookmark>
-                            <h2 id='$number'><a name='$number'>$number.</a>{$edit}</h2>
+                            <h2 id='$number'><a name='$number'>$number.</a> $r{$edit}</h2>
                             {$pp['text']}
                             $tag
                             </div>
@@ -119,8 +128,8 @@
                     if ($back['tags'] && in_array('breakbefore',$back['tags'])) {
                         $out .= "<pagebreak type='next-odd' suppress='off'></pagebreak>";
                     }
-                    $out .= "<div class='paragraph backmatter long'>".process_para($back)['text']."</div>
-                            <div class='body_headers'></div>";
+                    $out .= "<div class='paragraph backmatter long'>".process_para($back,true,$print,$settings)['text']."</div>
+                             <div class='body_headers'></div>";
                     if ($back['tags'] && in_array('breakafter',$back['tags'])) {
                         $out .= "<pagebreak type='next-odd' suppress='off'></pagebreak>";
                     }
@@ -146,7 +155,7 @@
         return $out;
     }
 
-    function process_para($passage,$process_markdown=true,$print=false) {
+    function process_para($passage,$process_markdown=true,$print=false,$settings=[]) {
         // need to turn each link in [[]] into a link to the correct paragraph
         //echo "<pre>".print_r($passage,1)."</pre>";
         if ($passage['tags'] && in_array('death',$passage['tags'])) {
@@ -157,7 +166,7 @@
             $tag = '';
         }
         $text = $passage['text'];
-        $text = process_links($passage); 
+        $text = process_links($passage,$settings); 
         if (preg_match_all("/(?:<template name=\"(.*)\"[^>]*>(.*)<\/template>|<t:(.*)>(.*)<\/t>)/sU",$text,$templatematch,PREG_SET_ORDER)) {
             $text   = templates($text,$templatematch,$print);
         }
@@ -187,21 +196,27 @@
 
     function templates($text,$templatematches,$print=false) {
         foreach ($templatematches AS $t) {
-            $r    = template($t[3] ? $t[3] : $t[1],$t[4] ? $t[4] : $t[2],$print);
+            //echo "<pre>TEMPLATE MATCH ".htmlspecialchars(print_r($t,1))."</pre>";
+            $r    = template($t[3] ? $t[3] : $t[1],$t[4] ? $t[4] : $t[2],null,'',$print);
             $text = str_replace($t[0],$r,$text);
         }
         return $text;
     }
 
     function template($name,$data,$template=null,$prefix='',$print=false) {
+       //echo "<pre>CALLED templates with $name/$template, ".htmlspecialchars(print_r($data,1)).htmlspecialchars(print_r($_SESSION['gb']['gb-templates']['templates'],1))."</pre>";
         $template = $template ? $template : $_SESSION['gb']['gb-templates']['templates'][$name];
         if (!is_array($data)) {
-            $data     = trim($data);
+            $data     = trim(preg_replace_callback('/("[^"]*")/',function($matches) {  return str_replace(["\r\n","\n","\r"],'\\n',$matches[1]); },$data));
+            //echo "<pre>" . htmlspecialchars(($data)) . "</pre>";
             $data     = substr($data,0,1) == '{' ? json_decode($data,true) : ['default' => $data];
         }
-        $data['gb_print'] = $print;
+        //echo "<pre>" . htmlspecialchars(($template)) . "</pre>";
         $parsed    = template_parse($template);
-        $processed = template_execute($parsed,$data);
+        //echo "<pre>" . htmlspecialchars(($parsed)) . "</pre>";
+        //echo "<pre>" . htmlspecialchars(($data)) . "</pre>";
+        $processed = template_execute($parsed,$data,$print);
+        //echo "<pre>" . htmlspecialchars(($processed)) . "</pre>";
         return trim($processed);
     }
 
@@ -216,8 +231,9 @@
         // replace variables with echos
         $t = preg_replace_callback_array(["/{{([a-zA-Z_.0-9]+)}}/" => 'template_var'],$t);
         // replace <repeat> with foreach loops
-        $t = preg_replace_callback_array(["/<repeat (\S+) as (\w+)>/i" => 'template_repeat'],$t);
-        $t = preg_replace_callback_array(["/<repeat (\S+)>/iU" => 'template_repeat'],$t);
+        $t = preg_replace_callback_array(["/<repeat *(\S+) *as *(\w+), *(\w+)>/i" => 'template_repeat'],$t);
+        $t = preg_replace_callback_array(["/<repeat *(\S+) *as *(\w+)>/i" => 'template_repeat'],$t);
+        $t = preg_replace_callback_array(["/<repeat *(\S+)>/iU" => 'template_repeat'],$t);
         $t = preg_replace("/<\/repeat.*>/i",'<?php } ?>',$t);
         // replace <if> with if
         $t = preg_replace_callback_array(["/<if (.+)>/iU" => 'template_if'],$t);
@@ -310,6 +326,13 @@
      */
     function template_repeat($var) {
         if ($var[2]) {
+            // foreach loops with key
+            $v1 = template_var(['',$var[1]],false);
+            $v2 = "\${$var[3]}";
+            $v3 = "\${$var[2]}";
+            $vn = str_replace('.','_',$var[1]);
+            return "<?php \${$vn}_length = count($v1); \${$vn}_index = 0; foreach($v1 AS $v3 => $v2) { \${$vn}_index ++; \$last = (\${$vn}_length == \${$vn}_index); ?>";
+        } else if ($var[2]) {
             // foreach loops
             $v1 = template_var(['',$var[1]],false);
             $v2 = "\${$var[2]}";
@@ -341,7 +364,7 @@
     /**
      * Take a compiled template (from template_parse()) and use eval() to execute it
      */
-    function template_execute($t,$data) {
+    function template_execute($t,$data,$gb_print=false) {
         extract($data);
         ob_start();
         eval("?>$t<?php ");
@@ -353,10 +376,10 @@
     function markdown($text,$mode='harlowe') {
         // very basic markdown parse
         // includes
-        $include = ($mode=="harlowe") ? "/\(display: *\"(.*?)\"\)/" : "/<<include *\"(.*?)\">>/";
+        $include = "/(\(display: *\"(.*?)\"\)|<<include *\"(.*?)\">>)/";
         $text = preg_replace_callback($include, 
                     function($m) { 
-                        $idx = $_SESSION['gb']['passage_names'][$m[1]]['idx'];
+                        $idx = $_SESSION['gb']['passage_names'][$m[2]]['idx'];
                         return process_para($_SESSION['gb']['story']['passages'][$idx],false)['text']; 
                     },$text);
         $text = preg_replace("/(\r\n|\n|\r)/", "\n", $text); // cross-platform newlines
@@ -371,7 +394,7 @@
         // lists
         $text = md_list($text,'*','ul');
         $text = ($mode == 'harlowe') ? md_list($text,'0.','ol') : md_list($text,'#','ol');
-        $text = ($mode == 'harlowe') ? $text : md_list($text,'>','blockquote','','');
+        $text = ($mode == 'harlowe') ? $text : md_list($text,'>','blockquote','',"<br>");
         // alignment
         $text = ($mode == 'harlowe') ? md_align($text) : $text;
         // hr
@@ -471,6 +494,7 @@
         $lists['splices'] = array_reverse($lists['splices']);
         foreach ($lists['splices'] AS $splice) {
             //echo "<pre>    insert ".htmlspecialchars($splice['rep'])." at {$splice['start']} for {$splice['length']}</pre>";
+            //if ($list_type == 'blockquote') { $splice['rep'] = str_replace("\n",'<br>',$splice['rep']); }
             $text = str_splice($text,$splice['rep'],$splice['start'],$splice['length']);
         }
         return $text;
@@ -554,7 +578,8 @@
         return str_replace(["<p><div","/div></p>","<p><table","/ul></p>"],['<div','/div>','<table','/ul>'],$out);
     }
 
-    function process_links($passage) {
+    function process_links($passage,$settings=[]) {
+        $prefix = $settings['para_links'] ? 'para_' : '';
         preg_match_all("/\[\[(.*?)\]\]/",$passage['text'],$matches);
         $debug = "<pre>"; 
         $debug .= print_r($matches,1);
@@ -601,7 +626,7 @@
             }
             $debug .= " $ltext \n\n";
             //$ltext  = ($name == 'turnto') ? "turn to $number" : "$name (turn to $number)";
-            $tlink  = "<a href='#{$number}' class='passage-link'>$ltext</a>";
+            $tlink  = "<a href='#{$prefix}{$number}' class='passage-link'>$ltext</a>";
             $passage['text'] = str_replace($matches[0][$lidx],$tlink,$passage['text']);
         }
         $debug .= "</pre>";
@@ -747,7 +772,7 @@
         $tag = [
             'pid'       => $p['pid'],
             'name'      => htmlspecialchars(html_entity_decode($p['name'],ENT_QUOTES),ENT_QUOTES),
-            'tags'      => $p['tags'] ? htmlspecialchars(html_entity_decode(implode(' ',$p['tags']),ENT_QUOTES),ENT_QUOTES) : '',
+            'tags'      => $p['tags'] ? htmlspecialchars(html_entity_decode(trim(implode(' ',$p['tags'])),ENT_QUOTES),ENT_QUOTES) : '',
             'position'  => $p['position'] ? $p['position'] : 100+(100*$p['pid']).',100',
             'size'      => $p['size'] ? $p['size'] : '100,100'
         ];
@@ -756,6 +781,16 @@
         }
         $attrs = implode(' ',$attrs);
         return "<tw-passagedata $attrs>".htmlspecialchars(html_entity_decode($p['text'],ENT_QUOTES),ENT_QUOTES)."</tw-passagedata>";
+    }
+
+    function create_templates($source) {
+        preg_match_all("|<template name=\"(.*)\">(.*)</template>|sU",$source,$matches,PREG_SET_ORDER);
+        $debug .= "MATCHES : " . print_r($matches,1);
+        foreach ($matches AS $match) {
+            $templates[$match[1]] = $match[2];
+        }
+        $debug .= "TEMPLATES : " . print_r($templates,1);
+        return $templates;
     }
 
     /* UTILITY */
@@ -768,20 +803,93 @@
         return (substr($tag,0,11) == 'frontmatter' || substr($tag,0,10) == 'backmatter');
     }
 
-    function get_only() {
-        if (!$_REQUEST['only']) { return false; }
-        $only = explode(',',$_REQUEST['only']);
+    function get_only($only=false) {
+        if (!$only && !$_REQUEST['only']) { return false; }
+        $only = $only ? $only : explode(',',$_REQUEST['only']);
         $ret  = [];
         foreach ($only AS $o) {
             if (is_numeric($o)) { $ret[] = $o; }
             else {
-                list($start,$end) = explode('-',$_REQUEST['only']);
+                list($start,$end) = explode('-',$o);
                 for ($i = $start;$i<=$end;$i++) {
                     $ret[] = $i;
                 }
             }
         }
         return $ret;
+    }
+
+    function config_mpdf($root,&$settings = []) {
+
+        require_once $root . '/vendor/autoload.php';
+
+        $defaultConfig = (new Mpdf\Config\ConfigVariables())->getDefaults();
+        $fontDirs = $defaultConfig['fontDir'];
+
+        $defaultFontConfig = (new Mpdf\Config\FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+
+        $settings = $settings ?? [
+            'print'       => $_REQUEST['print'] ? true : false,
+            'covers'      => $_REQUEST['covers'] ? true : false,
+            'simplex'     => $_REQUEST['simplex'] ? true : false,
+            'covers-only' => $_REQUEST['cover-only'] ? true : false,
+        ];
+
+        $format = (strstr($_SESSION['gb']['settings']['page_size'],',')) ? explode(',',$_SESSION['gb']['settings']['page_size']) : $_SESSION['gb']['settings']['page_size'];
+
+        $config = [
+            'format' => $format,
+            'fontDir' => array_merge($fontDirs, [
+                $root . '/fonts',
+            ]),
+            'fontdata' => $fontData + [
+                'fell' => [
+                    'R' => 'IMFellDWPica-Regular.ttf',
+                    'I' => 'IMFellDWPica-Italic.ttf',
+                ],
+                'eater' => [
+                    'R' => 'Eater-Regular.ttf',
+                ],
+                'forum' => [
+                    'R' => 'Forum-Regular.ttf',
+                ]
+            ],
+            'dpi'                => $_SESSION['gb']['settings']['low_res'] ? 72 : $_SESSION['gb']['settings']['resolution'],
+            'img_dpi'            => $_SESSION['gb']['settings']['low_res'] ? 72 : $_SESSION['gb']['settings']['image_resolution'],
+            'list_auto_mode'     => 'mpdf',
+            'list_marker_offset' => '1em',
+            'list_symbol_size'   =>'0.31em',
+            'margin_top'         => $_SESSION['gb']['settings']['margin_top']    ?? 15,
+            'margin_bottom'      => $_SESSION['gb']['settings']['margin_bottom'] ?? 15,
+            'margin_left'        => $_SESSION['gb']['settings']['margin_left']   ?? 10,
+            'margin_right'       => $_SESSION['gb']['settings']['margin_right']  ?? 10
+        ];
+        if ($_REQUEST['print'] && !$_REQUEST['cover-only']) {
+            $config = array_merge($config,[
+                'margin_left'   => $_SESSION['gb']['settings']['margin_print_left'] ?? 20,
+                'margin_right'  => $_SESSION['gb']['settings']['margin_print_right'] ?? 10,
+                'mirrorMargins' => true
+            ]);
+        }
+        return $config;
+    }
+
+    function render_one($passage,$number) {
+        $pp      = process_para($passage,true,$print);
+        return "
+        <style>".file_get_contents('css/game.css')."</style>
+        <style>".file_get_contents('css/preview.css')."</style>
+        <style>{$_SESSION['gb']['story_css']}</style>
+        <style>{$_SESSION['gb']['settings']['css']}</style>
+        {$pp['before']}
+        <div class='paragraph $long' id='para_$number'>
+        <bookmark content='{$_SESSION['gb']['numbering'][$pid]['number']}'></bookmark>
+        <h2 id=''><a name='$number'>$number.</a>{$edit}</h2>
+        {$pp['text']}
+        $tag
+        </div>
+        {$pp['after']}";
     }
 
 ?>
