@@ -3,7 +3,7 @@
     width: 4mm;
     cursor:pointer;
 }
-.checkboxes .box[data-checked] {
+.checkboxes .box[data-checked=true] {
     background: #666;
 }
 .cover_full, .cover_image {

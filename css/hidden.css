@@ -1,0 +1,8 @@
+
+    .paragraph, .cover_full, .cut_image {
+        display                 : none;
+    }
+    :target, .show, :target + .cut_image {
+        background              : inherit;
+        display                 : block;
+    }
