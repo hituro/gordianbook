@@ -14,8 +14,10 @@ p, li, dd {
     font-family: Open Sans, sans-serif;
 }
 
-code.block {
+code {
     background-color: white;
+}
+code.block {
     border-left: 1px solid #999;
     border-right: 1px solid #999;
     padding-left: 3px;
@@ -61,13 +63,25 @@ code.block {
     overflow-y: scroll;
 }
 
+pre {
+    background: white;
+    max-width: 100%;
+    overflow: scroll;
+    max-height: 500px;
+    padding: 0.5em;
+}
+
+:target {
+    background: yellow;
+}
+
 .menus {
     margin-left: 2em;
 }
 @media screen and (min-width: 630px) {
     .menus {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 3fr 2fr;
     }
     .home_Export {
         grid-row: 2/4;
@@ -76,7 +90,7 @@ code.block {
     .sidebar {
         width: 260px;
     }
-    .sidebar + .content {
+    .sidebar ~ .content {
         margin-right: calc(max(50% - 400px,300px));
         margin-left: calc(50% - 400px);
     }
@@ -106,7 +120,7 @@ code.block {
 }
 
 .fieldset {
-    border: 2px solid var(--border-lighter);
+    border: 1px solid var(--border-lighter);
     border-radius: 1em;
     background: rgba(255, 255, 255, 0.4);
     position: relative;
@@ -207,10 +221,19 @@ dd {
     max-width: 100%;
 }
 
-.CodeMirror {
+.cm-auto .CodeMirror {
     height: auto;
 }
-
+.cm-padded .CodeMirror {
+    border: 1px solid black;
+    padding: 0.8em;
+    margin-top: 2px;
+    min-height: 18ex;
+}
+.cm-padded .CodeMirror-scroll {
+    overflow-x: auto !important;
+    margin-bottom: 0px;
+}
 .example {
     margin: 1em;
     padding: 1em;
@@ -221,3 +244,17 @@ dd {
 }
 .example > *:first-child { margin-top: 0; }
 .example > *:last-child { margin-bottom: 0; }
+
+.passage_example {
+    border: 1px dashed black;
+    background: white;
+    padding: 1em;
+    position: relative;
+}
+.passage_example .cover_full {
+    width: 200px;
+    position: relative;
+}
+.passage_example .cover_full .cover_image {
+    position: relative;
+}

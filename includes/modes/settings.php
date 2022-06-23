@@ -82,20 +82,6 @@
                     Left <input name='margin_print_left' type='text' value='{$mpl}' class='auto' style='width:2em'>
                     Right <input name='margin_print_right'  type='text' value='{$mpr}' class='auto' style='width:2em'>
                 </div>
-                <div class='form-row'>
-                    <label for='death_text'>Custom CSS</label>
-                    <p><i>Custom CSS to override the Game view</i></p>
-                    <textarea name='css' rows='10'>{$_SESSION['gb']['settings']['css']}</textarea>
-                    <ul>
-                        <li>Style <code>.paragraph</code> to change each entry</li>
-                        <li>Style <code>.game-divider</code> to change the inter-paragraph rules</li>
-                        <li>Style <code>.stats</code> to change stat rows</li>
-                        <li>Style <code>.check</code> to change rules text</li>
-                        <li>Style <code>.rules</code> to change rules text</li>
-                        <li>Style <code>.cover</code> to change the cover page</li>
-                        <li>Style <code>.cover_title</code> to change the cover page text container</li>
-                    </ul>
-                </div>
             </div>
             <div class='form-row'>
                 <input type='submit' value='Save'>

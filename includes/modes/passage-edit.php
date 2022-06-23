@@ -30,6 +30,19 @@
             $passage = $_SESSION['gb']['story']['passages'][$idx];
             $tags    = $passage['tags'] ? implode(' ',$passage['tags']) : '';
             $saved   = $_REQUEST['saved'] ? '<p><i>Saved: ' . date('Y-m-d G:i:s') . '</i></p>' : '';
+
+            // render the passage
+            $number  = $_SESSION['gb']['numbering'][$pid]['number'];
+            $render  = render_one($passage,$number);
+
+            // pdf calculations
+            $config = config_mpdf($root);
+            $mpdf = new \Mpdf\Mpdf($config);
+            $mpdf->WriteHTML(htmldoc(false,[],[$number]));
+            $height = $mpdf->y - $mpdf->tMargin;
+
+            //echo "<pre>"; print_r($mpdf); echo "</pre>";
+
             echo page("
                 $form
                 <h2>Editing: #{$_SESSION['gb']['numbering'][$pid]['number']} — {$passage['name']} (pid {$passage['pid']})</h2>
@@ -44,15 +57,25 @@
                         <label for='tags'>Edit Tags</label>
                         <input type='text' name='tags' value='{$tags}'>
                     </div>
-                    <div class='form-row'>
+                    <div class='form-row cm-padded cm-auto'>
                         <label for='text'>Edit Passage Text</label>
-                        <textarea name='text' rows='20'>{$passage['text']}</textarea>
+                        <textarea name='text' class='codemirror html' rows='20'>{$passage['text']}</textarea>
                         $saved
                     </div>
                     <div class='form-row'>
                         <input type='submit' value='Save'>
                     </div>
                 </form>
+                </div><div class='content'>
+                <h2>Preview</h2>
+                <div class='passage_example'>
+                $render
+                </div>
+
+                <p><a href='gordian.php?mode=pdf&only=$number'>Preview as PDF</a></p>
+
+                <p>{$mpdf->page} page; {$height} mm</p>
+
             ",['title' => "Edit Passage : {$passage['name']}", 'sidebar' => gb_passage_edit_list()]);
         } else {
             echo page($form,['title' => "Edit Passage", 'sidebar' => gb_passage_edit_list()]);

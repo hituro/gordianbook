@@ -83,6 +83,10 @@
               $js
               <script type='text/javascript' src='/js/codemirror/lib/codemirror.js'></script>
               <script type='text/javascript' src='/js/codemirror/mode/css/css.js'></script>
+              <script type='text/javascript' src='/js/codemirror/mode/xml/xml.js'></script>
+              <script type='text/javascript' src='/js/codemirror/mode/javascript/javascript.js'></script>
+              <script type='text/javascript' src='/js/codemirror/mode/markdown/markdown.js'></script>
+              <script type='text/javascript' src='/js/codemirror/mode/htmlmixed/htmlmixed.js'></script>
               <script type='text/javascript' src='/js/main.js'></script>
               </head>
               <body>
@@ -146,6 +150,16 @@
 
     function gb_get_passage($pid) {
         return $_SESSION['gb']['story']['passages'][$_SESSION['gb']['pids'][$pid]];
+    }
+
+    function n(...$args) {
+        if (!$args) { return true; }
+        echo "<pre class='pre_n'>";
+        foreach ($args AS $m) {
+            if (is_array($m)) { print_r($m); } else { echo $m; }
+            echo ' ';
+        }
+        echo "</pre>";
     }
 
 ?>
