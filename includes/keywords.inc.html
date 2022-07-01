@@ -1,0 +1,32 @@
+<h1>Keywords</h1>
+
+<p>Many games will use a system of <b>keywords</b> to track player progress. Keywords are like player-facing variables, the player is expected to keep a note of them. The game will instruct them <q>Gain the keyword X</q> or say <q>If you have the keyword X, turn to Y</q>.</p>
+
+<h3>The <code>&lt;keyword></code> tag</h3>
+<p>Gordian can help you keep track of your keywords using the <code>&lt;keyword></code> tag (you can abbreviate this as <code>&lt;k></code>). This will be replaced in your output with:</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <keyword>Adam</keyword>
+    <i class="keyword">Adam</i>
+</script></code></pre>
+
+<p>If you have marked up your keywords in this way you can check the <a href="gordian.php?mode=keywords">Keyword Report</a> to see a list of all your keywords and the passages they appear in. A keyword that is only used a single time will have a warning against it.</p>
+
+<h3>The <code>&lt;keywords></code> tag</h3>
+<p>You can use the <code>&lt;keywords></code> tag to generate a list of keywords to include in your game, for example in a checklist page (e.g. in <code>gb-rear</code>). There are three ways to use the tag.</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <keywords></keywords>
+</script></code></pre>
+<p>This will take the keywords from the list of marked keywords, and lay it out in columns. Gordian will pick the number of columns to fit the page.</p>
+
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <keywords>Alpha, Beta, Gama, Delta, Epsilon, etc.</keywords>
+</script></code></pre>
+<p>You can supply a list of keywords (separated by commas) in the body of the tag. In this case these keywords will be output instead of the ones in the story. You can use this if you have not marked your keywords, or if you need to include keywords that don't appear in the current game.</p>
+
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <keywords>{"cols":3,"keywords":["Alpha","Beta","Gamma","Delta","Epsilon"]}</keywords>
+</script></code></pre>
+<p>You can supply your list of keywords as valid JSON. In this case you can pass a column count using the <code>cols</code> element, in which case the resulting keyword list will use that number of columns instead of the automatically calculated number. In this case the entries will be divided as evenly as possible between the columns. You can specify the number of columns without using the JSON markup by adding a cols attribute to the tag:</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <keywords cols="3"></keywords>
+</script></code></pre>

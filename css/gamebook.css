@@ -42,6 +42,11 @@ code.block {
     border-radius: 20px;
 }
 
+.warning {
+    font-style: italic;
+    color: #e30000;
+}
+
 .content {
     max-width: 800px;
     margin: auto;
@@ -49,9 +54,12 @@ code.block {
     padding: 2em;
     border-radius: 2em;
     border: 2px solid var(--border-col);
-        box-shadow: 0 5px 10px 6px rgba(0,0,0,0.4);
+    box-shadow: 0 5px 10px 6px rgba(0,0,0,0.4);
 }
 .content + .content { margin-top: 2em; }
+.content.wide {
+    max-width: 80vw;
+}
 
 .sidebar {
     position: fixed;
@@ -69,6 +77,9 @@ pre {
     overflow: scroll;
     max-height: 500px;
     padding: 0.5em;
+}
+pre.tall {
+    max-height: calc(100vh - 20em);
 }
 
 :target {

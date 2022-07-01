@@ -32,6 +32,7 @@
             $skip   = [];
             $pnames = [];
             $pids   = [];
+            $keys   = [];
             $_SESSION['gb']['frontmatter'] = $_SESSION['gb']['backmatter'] = ['numbered' => [], 'unnumbered' => []];
             // first look for introduction and pull it out
             foreach ($_SESSION['gb']['story']['passages'] AS $idx => $passage) {
@@ -91,7 +92,7 @@
                     //     $templates[$match[1]] = $match[2];
                     // }
                     // $debug .= "TEMPLATES : " . print_r($templates,1);
-                    $templates = convert_templates($passage['text']);
+                    $templates = create_templates($passage['text']);
                     $_SESSION['gb'][$pname] = [
                         'passage' => $passage,
                         'templates' => $templates
@@ -99,6 +100,14 @@
                     unset($_SESSION['gb']['story']['passages'][$idx]);
                     $passage_count --;
                     $debug .= "REMOVING $pname, PASSAGE COUNT $passage_count\n";
+                } else {
+                    $k = find_keywords($passage['text']);
+                    $_SESSION['gb']['story']['passages'][$idx]['keywords'] = $k;
+                    if ($k) { 
+                        foreach ($k AS $key) {
+                            $keys[$key][$idx] ++;
+                        }
+                    }
                 }
             } 
 
@@ -108,9 +117,8 @@
             $_SESSION['gb']['frontmatter'] = array_merge($_SESSION['gb']['frontmatter']['numbered'],$_SESSION['gb']['frontmatter']['unnumbered']);
             $_SESSION['gb']['backmatter']  = array_merge($_SESSION['gb']['backmatter']['numbered'],$_SESSION['gb']['backmatter']['unnumbered']);
             $debug .= "Final FRONT/BACKMATTER".print_r($_SESSION['gb']['frontmatter'],1).print_r($_SESSION['gb']['backmatter'],1);
-
             $debug .=  "SETTING SKIP TO ".print_r($skip,1);
-            //echo "<pre>";
+            
             // loop again to look for prenumbered paragraphs
             foreach ($_SESSION['gb']['story']['passages'] AS $idx => $passage) {
                 $pname = html_entity_decode($passage['name'],ENT_QUOTES | ENT_HTML5);
@@ -132,7 +140,7 @@
                 }
             }
             for ($i=2;$i<=$passage_count;$i++) { $nlist[] = $i; }
-            //$debug .=  "NUMBER LIST (nlist) ".print_r($nlist,1)."\n";
+            
             foreach ($prenum AS $pid => $num) {
                 if ($num['number'] == 'last') {
                     $last = array_pop($nlist);
@@ -145,11 +153,11 @@
                 $norder[$num['number']] = $pid;
                 $nindex[$pid] = $num;
             }
-            //$debug .=  "NUMBER LIST (nlist) ".print_r($nlist,1)."\n";
+            
             shuffle($nlist);
-            // $debug .=  "NUMBER LIST SHUFFLED (nlist) ".print_r($nlist,1)."\n==================================\n";
+            
             $start  = $_SESSION['gb']['story']['startnode'];
-            //$debug .=  "START NODE: $start\n";
+            
             foreach($_SESSION['gb']['story']['passages'] AS $idx => $passage) {
                 if ($passage['pid'] != $start) { 
                     if (!array_key_exists($passage['pid'],$nindex) && !array_key_exists($passage['pid'],$skip)) {
@@ -173,6 +181,7 @@
             $_SESSION['gb']['passage_names'] = $pnames;
             $_SESSION['gb']['pids']          = $pids;
             $_SESSION['gb']['stats']['passages'] = $passage_count;
+            $_SESSION['gb']['keywords']      = $keys;
         }
         if ($_REQUEST['debug']) {
             echo "<pre>". $debug; 

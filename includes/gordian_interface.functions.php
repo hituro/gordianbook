@@ -93,7 +93,7 @@
               $errors
               $messages
               $sidebar
-              <div class='content'>
+              <div class='content {$options['content_class']}'>
               <header>
                 <a href='gordian.php'>&laquo; Home</a>
               </header>";

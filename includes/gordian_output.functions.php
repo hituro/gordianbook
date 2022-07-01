@@ -5,6 +5,7 @@
     /* =================================================================================== */
 
     function htmldoc($print=true,$settings,$only=false) {
+        ini_set('display_errors',1);
         $link_css = $settings['print'] ? "<style>".file_get_contents('css/print.css')."</style>" : '';
         return "<!DOCTYPE html>
                 <head>
@@ -426,6 +427,11 @@
         $text = preg_replace("/<rules>(.+?)<\/rules>/s","<div class='rules'>$1</div>",$text);
         $text = preg_replace("/<stats>(.+?)<\/stats>/s","<div class='stats'>$1</div>",$text);
         $text = preg_replace("/<special>(.+?)<\/special>/s","<div class='special'>$1</div>",$text);
+        $text = preg_replace("/<item>(.+?)<\/item>/s","<b class='item'>$1</b>",$text);
+        $text = preg_replace("/<it>(.+?)<\/it>/s","<b class='item'>$1</b>",$text);
+        $text = preg_replace("/<keyword>(.+?)<\/keyword>/s","<i class='keyword'>$1</i>",$text);
+        $text = preg_replace("/<k>(.+?)<\/k>/s","<i class='keyword'>$1</i>",$text);
+        $text = preg_replace_callback("/<keywords(?: +cols=['\"](?P<cols>[0-9]+)['\"])?>(?P<body>.*?)<\/keywords>/s","md_keywords",$text);
         $text = preg_replace_callback("/<checkboxes>(.+?)<\/checkboxes>/s","md_boxes",$text);
         // comments 
         $text = preg_replace("|<comment>(.*?)</comment>|s","<!-- $1 -->",$text);
@@ -540,6 +546,49 @@
         }
         if ($open) { $text .= '</div>'; }
         return $text;
+    }
+
+    function md_keywords($matches) {
+        if (substr(trim($matches['body']),0,1) == '{') {
+            $mode      = 'json';
+            $info      = json_decode($matches['body'],true);
+            $keys      = array_map('trim',$info['keywords']);
+                         sort($keys);
+            $kcount    = count($keys);
+            $colcount  = $info['cols'];
+        } else {
+            $mode      = 'body';
+            $length    = 20;
+            $keys      = $matches['body'] ? explode(',',trim($matches['body'])) : $_SESSION['gb']['keywords'];
+            $keys      = array_map('trim',$keys);
+                         sort($keys);
+            $kcount    = count($keys);
+            $colcount  = $matches['cols'] ? $matches['cols'] : ceil($kcount / $length);
+        }
+        $colheight = ceil($kcount / $colcount);
+        $cols      = array_chunk($keys,$colheight);
+
+        /*echo "<pre>
+        mode      = $mode
+        data      = " . print_r($matches,1) . "
+        info      = " . print_r($info,1) . "
+        keys      = " . print_r($keys,1) . "
+        kcount    = $kcount
+        colcount  = $colcount
+        colheight = $colheight
+        cols      = " . print_r($cols,1) . "
+        </pre>";*/
+
+        $out       = '<table class="checklist">';
+        for($row = 0;$row < $colheight;$row++) {
+            $out .= '<tr>';
+            for($col = 0;$col < $colcount;$col++) {
+                $key  = $cols[$col][$row];
+                $out .= $key ? '<td class="checkbox">' . md_boxes([0,1]) . '</td><td>' . $key . '</td>' : '<td></td>';
+            } 
+            $out .= '</tr>';
+        }
+        return $out . '</table>';
     }
 
     function md_boxes($matches) {
@@ -791,6 +840,11 @@
         }
         $debug .= "TEMPLATES : " . print_r($templates,1);
         return $templates;
+    }
+
+    function find_keywords($text) {
+        preg_match_all("/<k(?:eyword)?>(.+?)<\/k(?:eyword)?>/s",$text,$matches);
+        return $matches[1];
     }
 
     /* UTILITY */

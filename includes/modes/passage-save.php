@@ -3,39 +3,45 @@
         if (is_numeric($_REQUEST['pid'])) {
             $idx     = $_SESSION['gb']['pids'][$_REQUEST['pid']];
             $_SESSION['gb']['story']['passages'][$idx]['text'] = $_REQUEST['text'];
-            $_SESSION['gb']['story']['passages'][$idx]['tags'] = explode(' ',$_REQUEST['tags']);
+            // tags
+            if ($_REQUEST['tags']) {
+                $_SESSION['gb']['story']['passages'][$idx]['tags'] = explode(' ',$_REQUEST['tags']);
+            }
+            // keywords
+            $k = find_keywords($_REQUEST['text']);
+            if ($k != $_SESSION['gb']['story']['passages'][$idx]['keywords']) {
+                // some keywords have been removed or added
+                $removed = array_diff($_SESSION['gb']['story']['passages'][$idx]['keywords'],$k);
+                $added   = array_diff($k,$_SESSION['gb']['story']['passages'][$idx]['keywords']);
+                echo "<pre>
+                REMOVED " . print_r($removed,1) ."
+                ADDED " . print_r($added,1);
+                foreach($removed AS $r) {
+                    unset($_SESSION['gb']['keywords'][$r][$idx]); 
+                }
+                foreach($added AS $r) {
+                    $_SESSION['gb']['keywords'][$r][$idx] ++;
+                }
+                if (!$_SESSION['gb']['keywords'][$r]) {
+                    unset($_SESSION['gb']['keywords'][$r]);
+                }
+                //$_SESSION['gb']['keywords'] = array_diff($_SESSION['gb']['keywords'],$_SESSION['gb']['story']['passages'][$idx]['keywords']);
+                $_SESSION['gb']['story']['passages'][$idx]['keywords'] = $k;
+                print_r($_SESSION['gb']['keywords']);
+                exit;
+            }
+
             msg("Passage Saved");
+
             if (is_numeric($_REQUEST['swap_number']) && $_REQUEST['swap_number'] != $_SESSION['gb']['numbering'][$_REQUEST['pid']]['number']) {
                 // we are swapping numbers with another paragraph
                 // need to change "number_order" (number => pid)
                 $currnum    = $_SESSION['gb']['numbering'][$_REQUEST['pid']]['number'];
                 $newnum     = $_REQUEST['swap_number'];
                 $target_pid = $_SESSION['gb']['number_order'][$newnum];
-                //echo "<pre>";
+                
                 gb_set_passage_number($_REQUEST['pid'],$currnum,$newnum);
                 gb_set_passage_number($target_pid,$newnum,$currnum);
-                /*
-                $old_pid = $_SESSION['gb']['number_order'][$newnum];
-                           $_SESSION['gb']['number_order'][$newnum]  = $_REQUEST['pid'];
-                           $_SESSION['gb']['number_order'][$currnum] = $old_pid;
-                // need to change "numbering" (pid => [index, number])
-                $currord = $_SESSION['gb']['numbering'][$_REQUEST['pid']];
-                $old_ord = $_SESSION['gb']['numbering'][$old_pid];
-                           $_SESSION['gb']['numbering'][$_REQUEST['pid']] = ['index' => $currord['index'], 'number' => $newnum];
-                           $_SESSION['gb']['numbering'][$old_pid] = ['index' => $old_ord['index'], 'number' => $currnum];
-                // need to change tag, if it exists
-                if ($_SESSION['gb']['story']['passages'][$idx]['tags'] && in_array($currnum,$_SESSION['gb']['story']['passages'][$idx]['tags'])) {
-                    msg("Tag changed on current");
-                    $aidx = array_search($currnum,$_SESSION['gb']['story']['passages'][$idx]['tags']);
-                    $_SESSION['gb']['story']['passages'][$idx]['tags'][$aidx] = $newnum;
-                }
-                if ($_SESSION['gb']['story']['passages'][$old_ord['index']]['tags'] && in_array($newnum,$_SESSION['gb']['story']['passages'][$old_ord['index']]['tags'])) {
-                    msg("Tag changed on other");
-                    $aidx = array_search($newnum,$_SESSION['gb']['story']['passages'][$old_ord['index']]['tags']);
-                    $_SESSION['gb']['story']['passages'][$old_ord['index']]['tags'][$aidx] = $currnum;
-                }
-                */
-                //exit;
                 msg("Passage number swapped from $currnum to $newnum");
             }
             else if (is_numeric($_REQUEST['move_number']) && $_REQUEST['move_number'] != $_SESSION['gb']['numbering'][$_REQUEST['pid']]['number']) {
