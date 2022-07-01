@@ -13,6 +13,7 @@
         $lists['Edit'][]  = "<a href='gordian.php?mode=css-edit'>Edit CSS</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=passage-edit'>Edit Passage</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=templates-edit'>Edit Templates</a>";
+        $lists['Edit'][]  = "<a href='gordian.php?mode=keywords'>Keyword Report</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=renumber'>Renumber</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=load-settings'>Import Settings</a>";
 
@@ -28,7 +29,7 @@
         $lists['Print'][] = "PDF: <a href='gordian.php?mode=pdf-range' target='_new'>page range</a>";
 
         $lists['Export'][] = "<a href='gordian.php?mode=export-settings'>Export Settings</a>";
-        $lists['Export'][] = "<a href='gordian.php?mode=export-json'>Export Gordian JSON</a>";
+        $lists['Export'][] = "<a href='gordian.php?mode=export-json'>Export Gordian JSON</a> - (<a href='gordian.php?mode=show-json'>view</a>)";
         $lists['Export'][] = "<a href='gordian.php?mode=export-twine'>Export Twine Archive</a>";
         $lists['Export'][] = "<a href='gordian.php?mode=export'>Export HTML (proofing)</a>";
         $lists['Export'][] = "<a href='gordian.php?mode=export-twee'>Export Twee</a>";
