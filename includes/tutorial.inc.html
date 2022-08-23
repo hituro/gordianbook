@@ -1,0 +1,449 @@
+<h1>GordianBook Tutorial</h1>
+<p>This tutorial will take you through the process of creating a simple (and stupid) gamebook called <b>Skeleton Passage</b>, using Gordian Book. To follow the tutorial you will need a copy of Twine, which you can either download, or run in your browser. You can also get a completed copy of <a href="skeleton_passage.html" download>Skeleton Passage</a>, if you just prefer to read along rather than type.</p>
+
+<h2 id="install">Installing Twine</h2>
+<p>To begin, you need to get a copy of Twine from <a href="https://twinery.org/">twinery.org</a>. Twine is a program for writing interactive fiction (IF), created by Chris Klemas. Normally Twine produces web-page-based games using packages of Javascript called <i>Story Formats</i>, but Gordian Book can turn a Twine story into a traditional gamebook.</p>
+<p>You can download a copy of Twine for PC, Linux, or OSX, or run it in your web browser. At the time of writing the current version is 2.4.</p>
+</div>
+
+<!-- starting your story-->
+<div class="content">
+    <h2 id="start">Starting your Story</h2>
+    <p>Once you've got Twine open, create a new story and call it <b>Skeleton Passage</b>. Twine will create a blank starting passage for you in the middle of the screen. A passage is the basic building block of your game, and will translate to a single numbered section in the output.</p>
+    <figure><img src="/images/app/tutorial/new_story.png"></figure>
+    <p>Note the green rocket, this tells you that this is the <i>start passage</i>, where the story begins. Edit this passage (by double clicking on it) and change its name to <code>skeleton passage</code>. (Note the lower case. You don't have to name things in lower case, but you need to make sure that you name passages and links to them the same, and naming things all lower case can help get it right, so it's what we will do here.)</p>
+    <p>Now, put the following text into the passage:</p>
+    <x>
+    You are currently standing in the **Skeleton Passage**, a hollowed out vertebral column of an archaic and gigantic beast. The Passage provides access to various adjacent spaces of dubious value, into which (and out of which) masses of people are streaming, a veritable smorgasbord of High-Falutins, Mealy-Mouthers, Deckswabbers, Fly-by-night Cutters, and the like.
+
+    From here you can go [[somewhere]], or [[somewhere else]], or a [[third place->elsewhere]]
+    </x>
+    <p>I'm not going to describe the process of making passages and formatting text in Twine in detail, there are better guides out there, but the important things here are:</p>
+    <ul>
+        <li>You can format text with markdown tags like <code>**</code> (for bold). See <a href='gordian.php?mode=markdown'>Supported Text Formatting</a> for a full list.</li>
+        <li>You can make paragraphs by leaving blank lines.</li>
+        <li>You can make links to more passages by putting them in <code>[[ ]]</code>. If you just have text, that must be the name of the new passage. You can have different text from the name by putting <code>[[text->passage]]</code>, <code>[[passage&lt;-text]]</code> or <code>[[text|passage]]</code>.</li>
+    </ul>
+    <p>When you save this passage, you'll see that Twine automatically creates new blank passages for each of the destinations you linked to: "somewhere", "somewhere else", and "elsewhere".</p>
+
+    <h3>Opening your story in Gordian Book</h3>
+    <p>This isn't much of a game (it only really has one section), but you could already open this in Gordian. To do this, first export your story by choosing <code>Build -> Publish to File</code>. Now, open the Gordian Book website (you know, the one you are on), and click the <a href='gordian.php?mode=load-json'>Import Game</a> link. You can select your file and then upload it. It will automatically be converted into a game.</p>
+    <p>You can open the game by clicking <a href='gordian.php?mode=show'>Preview Gamebook</a>. You'll see four sections, numbered 1 to 4. The start section (skeleton passage) is always section number 1. The other three sections actually appear in a random order, not that you can tell since they all have the same text (nothing).</p>
+
+    <div class='example passage_example'>
+        <div class="paragraph " id="para_1">
+            <bookmark content=""></bookmark>
+            <h2 id=""><a name="1">1.</a></h2>
+            <p>You are currently standing in the Skeleton Passage, a hollowed out vertebral column of an archaic and gigantic beast. The Passage provides access to various adjacent spaces of dubious value, into which (and out of which) masses of people are streaming, a veritable smorgasbord of High-Falutins, Mealy-Mouthers, Deckswabbers, Fly-by-night Cutters, and the like.</p>
+            <p>From here you can go <a href="#2" class="passage-link">somewhere (turn to 2)</a>, or <a href="#4" class="passage-link">somewhere else (turn to 4)</a>, or a <a href="#3" class="passage-link">third place (turn to 3)</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- expanding your story -->
+<div class="content">
+    <h2 id="expand">Expanding your Story</h2>
+    <p>There's not much to Skeleton Passage so far, so let's fill in a few more sections. This part is just adding text and descriptions, so feel free to blindly copy and paste (or write your own). The key is just to have a few places to visit.</p>
+
+    <h4>somewhere</h4>
+    <x>This is Somewhere. Somewhere is a fine place, all the fashionable people in this adventure want to come to Somewhere. Lowlifes, cutters, and bogsnatchers are not permitted here, and will be impolitely [[turned away at the door->skeleton passage]] with barely a "Your sort don't belong here!" for your trouble.
+
+There is a lot to do in Somewhere, if, by *a lot*, you are content to mean preening, walking, swanning about, and being seen by all the other fine and fashionable people.
+        
+When you are done with Somewhere, you can [[return to Skeleton Passage->skeleton passage]]</x>
+    <p><code>somewhere</code> uses <code>* *</code> to indicate italics.</p>
+
+    <h4>somewhere else</h4>
+    <x>Somewhere Else is not the finest part of anywhere. It was once, some time deep in the past, when things were better, but it has fallen on hard times. Highly fissionable people wouldn't be seen dead here — if you are one of those you should [[return to the skeleton passage->skeleton passage]] forthwith!
+
+If your standards are a little lower, there's much to do here, especially in terms of [[shopping]], victualling, and gossipping. 
+        
+When you are done with Somewhere Else, you can [[return to Skeleton Passage->skeleton passage]]</x>
+
+    <h4>elsewhere</h4>
+    <x>This is Elsewhere. It's not a great place, far from the best. It hasn't fallen on hard times because it never had them good. It's dark, it smells, and the air doesn't taste so good. If you are upper class you should get out of here [[back to Skeleton Passage->skeleton passage]] before harm comes to you!
+
+If you aren't upper class, you can linger, but why would you want to?
+    
+One of the darkest, meanest, narrowest alleys, appears to lead to [[a place->dark alley]].
+    
+When you are done with Elsewhere, you can [[return to Skeleton Passage->skeleton passage]] </x>
+<p>If you open the story in Gordian now you'll see that these three sections appear in a random order in the game. If you click <a href='gordian.php?mode=convert'>Convert to Gamebook</a> the passages will be shuffled and appear in a new order, although always with the 'start' passage first.</p>
+<p class="note">Note: we created two new passages here, "shopping" and "dark alley". Don't worry about them, we will come back to them later.</p>
+</div>
+
+<!-- starting and ending-->
+<div class="content">
+    <h2 id="begin">Beginnings and Ending</h2>
+
+    <h3 id="introduction">Adding an Introduction</h3>
+    <p>So far we have just done some basic Twine things — written passages and linked them together. There's nothing Gordian specific in our game so far, but Gordian has many special passages — prefixed with <code>gb-</code> — to add things like covers, afterwords, and introductions. Let's add an introduction.</p>
+    <p>Create another passage and call it <code>gb-introduction</code>. This passage will appear before the start of the game. Fill it in with:</p>
+    <x>Begin your adventure (if we could dignify it with such a term) at paragraph one, and then follow the instructions as you make your choices.
+
+Items marked **in bold** can be picked up and added to your apparently limitless inventory. If an item has a cost in coins attached you must of course pay it, but your purse is also limitless, so don't let this concern you.
+        
+[[Turnto|skeleton passage]].</x>
+    <p>You don't have to link to your start passage in the introduction, but it's a good idea (and will help if you want to use the "playable HTML" format). Note that we've used a special link name here <code>Turnto</code>. This will be replaced with the phrase "Turn to X" (where X is the passage number — 1 in this case)</p>
+
+    <div class='example passage_example'>
+        <div class="paragraph introduction long" id="introduction">
+            <h1>Skeleton Passage</h1>
+            <p>Begin your adventure (if we could dignify it with such a term) at paragraph one, and then follow the instructions as you make your choices.</p>
+            <p>Items marked <b>in bold</b> can be picked up and added to your apparently limitless inventory. If an item has a cost in coins attached you must of course pay it, but your purse is also limitless, so don't let this concern you.</p>
+            <p><a href="#para_1" class="passage-link">Turn to 1</a>.</p>
+        </div>
+    </div>
+
+    <h3 id="ending">Ending your game</h3>
+    <p>If you are paying attention, you'll see that we added yet more places in the previous section; a "dark alley" and "shopping". We'll come back to shopping, but a dark alley sounds like a place to meet a sticky end, so let's add a classic gamebook ending.</p>
+    <h4>dark alley</h4>
+    <x>Oh.
+
+You shouldn't have come here.
+        
+You really shouldn't.
+        
+But the good news is, at least you save on the cost of a funeral!</x>
+<div class="tags"><span style="--col:red;">death</span><span>last</span></div>
+    <p>This alone isn't quite an ending — where's the "YOU ARE DEAD"? To add extra behavior to the passage we need to give it a <b>tag</b>, which is a Twine thing that you can add to your passages. Click the <code>+ Tag</code> button and add a tag of <code class="twine-tag">death</code>. Death (note the lower case) is a special Gordian tag which will cause the text <b>YOU DIED</b> to be shown after the passage. You can customise that death message of course — more on that later.</p>
+    <aside>
+        <p>A small aside on Twine tags. Twine tags can have colours, chosen from a fixed list. Passages with a coloured tag will show a little flash in the same colour on the passage map, to make them easy to pick out. Traditionally I like to make "death" red, so it's easy to pick out.</p>
+        <figure><img src="/images/app/tutorial/tags.png"></figure>
+    </aside>
+    <p>There's a tradition from Fighting Fantasy that the final paragraph of an adventure should come last. Since "dark alley" is our one and only ending, it would be nice to have it last. Currently there are 6 sections in the game, so we could tell Gordian that we want this to be section 6. You can do this simply by adding a tag of <code class="twine-tag">6</code> to the passage. However, if you then add some more passages, you'll have to come back and change the number. A better option is to add a tag of <code class="twine-tag">last</code>, which tells Gordian you want this section to appear at the end.</p>
+
+    <div class='example passage_example'>
+        <div class="paragraph " id="para_6">
+            <h2 id="6"><a name="6">6.</a></h2>
+            <p>Oh.</p>
+            <p>You shouldn't have come here.</p>
+            <p>You really shouldn't.</p>
+            <p>But the good news is, at least you save on the cost of a funeral!</p>
+            <div class="end death">YOU DIED</div>
+        </div>    
+    </div>
+    <p>If this is an ending, but not a death, you could use the tag "end" instead of "death".</p>
+</div>
+
+<!-- pdf -->
+<div class="content">
+    <h2 id="pdf">Making it pretty</h2>
+    <p>So far we've been putting together a game that will produce a fairly boring PDF — which is why we've not taken a look at the PDF version. Let's do that now though. Click <a href='gordian.php?mode=pdf' target='_new'>Export Gamebook PDF</a> and a PDF will open in a new window.</p>
+
+    <h3 id="page_size">Page Size</h3>
+    <p>By default your game will be printed on A4 pages, which will probably look a little daft with so little text. To change these defaults have a look at <a href='gordian.php?mode=settings'>Edit Settings</a>. (This is where we can change the death message, by the way.)</p>
+    <p>On the settings screen, change the page size from <code>A4-P</code> (A4, portrait) to <code>A5-P</code>. A full list of possible page sizes can be found in the documentation for <a href="https://mpdf.github.io/">MPDF</a>, which Gordian uses to create the PDF version. Feel free to change any of the other settings, if you like — for example you can add a separator (which looks like a tapered line) between each section with the <b>Use paragraph separator?</b> option.</p>
+    <figure><img src="/images/app/tutorial/sections.png"></figure>
+
+    <h3 id="covers">Covers</h3>
+    <p>Some covers would probably also be nice, so let's add some. Create the following passages:</p>
+    <h4>gb-front-cover</h4>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+        <div class='cover_top'>
+            <h1 class='cover_title'>Skeleton</h1>
+            <h2 class='cover_title small'>to</h2>
+            <h1 class='cover_title'>Somewhere</h1>
+            <img class='cover_image' src="/images/app/SeekPng.com_knot-png_2307422.png">
+        </div>
+        <div class='cover_bottom'>
+            <h2>By<br>Anon E. Mouse</h2>
+        </div>
+    </script></code></pre>
+    <h4>gb-rear-cover</h4>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+        <div class='cover_bottom'>
+            <h2>Produced in Gordian Book</h2>
+        </div>
+    </script></code></pre>
+    <p>These two passages are written using HTML, and take advantage of some of Gordian's built in classes (e.g. <code>cover_top</code> and <code>cover_bottom</code>). The image is one built-in to Gordian, you can use any URL to an image on the internet for your illustrations — be sure you have the rights to use them!</p>
+    <p>Now, when you preview the PDF you'll see the front and rear covers.</p>
+    <p class="note">Note: You can edit the contents of <code>gb-front-cover</code> and <code>gb-rear-cover</code> in Gordian (as well as <code>gb-introduction</code> and <code>gb-rear</code>) by clicking on <a href='gordian.php?mode=intro-edit'>Edit Introduction/Cover</a>.</p>
+
+    <h3 id="styling">Styling</h3>
+    <p>The PDF still looks a little plain. To tweak it, you can edit the <b>Stylesheet</b> in Twine. Let's spruce the game up a bit by centering the passage numbers, and using a more gothic font for them. At the same time we can add a little white-space to that cover image we added.</p>
+    <p>Open the Twine Stylesheet <code>Story -> # Stylesheet</code> and add the following:</p>
+    <pre><code class='language-css'>
+    .cover_title { font-size: 30pt; }
+
+    .cover_image {
+      margin-top: 2em;
+    }
+    
+    .paragraph h1, .paragraph h2, .end {
+        font-family: fell, "IM Fell DW Pica", serif;
+        font-weight: bold;
+    }
+    .paragraph h2 {
+        text-align: center;
+    }
+    </code></pre>
+    <p>What are we doing here? The first two rules are tweaking the cover, making the font larger, and adding some space to the top of the image. The third rule makes headings inside <code>.paragraph</code> elements (the sections of the game) bold, and in a custom font called "IM Fell DW Pica" that Gordian includes. It does the same to <code>.end</code> elements — the "death" and "end" messages. The final rule centers the <code>h2</code> elements that are used for the passage numbers.</p>
+    <p>Take a look at the <a href='gordian.php?mode=generated-html'>generated html</a> page to see all the things you might want to style.</p>
+    <p class="note">Note: You can edit the contents of the stylesheet in Gordian by clicking on <a href='gordian.php?mode=css-edit'>Edit CSS</a>.</p>
+</div>
+
+<!-- exporting -->
+<div class="content">
+    <h2 id="export">Editing in Gordian</h2>
+    <p>So here you are, playing around with covers and styles, and you suddenly realise that in <b>somewhere else</b> you wrote "highly fissionable people" when you <i>really</i> meant "highly fashionable people" (Did you copy and paste the deliberate typo? I bet you did.)</p>
+    <p>On the story preview, click the <b>(Edit)</b> link next to "somewhere else", or <a href='gordian.php?mode=passage-edit'>Edit Passage</a> and then choose "somewhere else" from the list down the side.</p>
+    <figure><img src="/images/app/tutorial/edit_passage.png"></figure>
+    <p>On this screen you can edit the passage text, and see a preview of how it will look down below. You can also click the <b>Preview as PDF</b> link to see a PDF preview of just this section. You can also move passages around from this page, swapping or changing their numbers. For more on this, see the section on <a href="#publishing">publishing</a>, below. For now, just correct the spelling mistake, and click save. You'll see that the change is now visible if you reload your PDF.</p>
+    <p>As we've alrady seen above, other links in the Edit section of the homepage let you edit other parts of your story: <a href='gordian.php?mode=intro-edit'>Edit Introduction/Cover</a>, <a href='gordian.php?mode=settings'>Edit Settings</a>, <a href='gordian.php?mode=css-edit'>Edit CSS</a>, and <a href='gordian.php?mode=templates-edit'>Edit Templates</a>, of which more later.</p>
+
+    <h3 id="managing_settings">Managing Settings</h3>
+    <p>But wait! Up until now every change has been made in Twine, and then uploaded into Gordian — now we've made a change <i>in</i> Gordian, how does that get back to Twine? In fact, back in the previous section we made a change to the settings in Gordian, and that's another thing that won't make it back to Twine unless you export it.</p>
+    <p>Let's start with settings. Settings are special, in that you can export them separately from the rest of your game. Click <a href='gordian.php?mode=export-settings'>Export Settings</a>, to download a document containing your game's settings. They are in a format called JSON. You can import a settings file into Gordian with the <a href='gordian.php?mode=load-settings'>Import Settings</a> option, which will override the settings in your current game.</p>
+    <p>You can also save those settings inside your Twine game, by creating a passage called <code>gb-settings</code> and pasting your exported settings into it.</p>
+    <p>Let's do that now.</p>
+    <h4>gb-settings</h4>
+    <pre><code class='language-json'>
+    {
+        "end_text": "THE END",
+        "death_text": "YOU DIED",
+        "separator": "1",
+        "page_size": "A5-P",
+        "cover":"1"
+    }
+    </code></pre>
+
+    <h3 id="exporting">Exporting</h3>
+    <p>You aren't limited to just exporting settings, you can also export your entire game out of Gordian. You can do this is a bunch of different formats, all of which are listed in the Export section at the top of the main page:</p>
+    <ul>
+        <li>HTML (proofing) — a simple HTML version intended for proofreading</li>
+        <li>HTML (playable) — a simple HTML version that shows one section at a time, for playing</li>
+        <li>Twee — a plain text format for import into other IF software</li>
+        <li>Gordian JSON — a sort of "snapshot" of Gordian, you can import it again as is</li>
+        <li>Twine Archive — a Twine file</li>
+    </ul>
+    <p>The most important of these is the <b>Twine Archive</b>, because you can import that directly back into Twine, along with any changes you've made to passage text, styles, or settings. In Twine go to <code>Library -> Import</code>, then select the file you exported, checking the tick-box next to the name of your story (Skeleton Passage). Once you click "Import Selected Files" your Twine story will be replaced with the exported one.</p>
+    <p class="warning"><b>Important! Since Gordian doesn't save your games when you aren't working on them, always export a copy when you've made changes!</b></p>
+
+    <h3 id="numbering">Numbering</h3>
+    <p>When you look at the Export section you'll that the Twine and Twee formats have two options, with and without numbering. When you load your game into Gordian, numbers get assigned to each passage (check back to section 3 for more on this if you missed it). Once Gordian assigns numbers, they don't change unless you click "Convert to Gamebook" again. If you export the game back to Twine, those numbers will be added as tags to each passage (e.g. "2", "3", "4" and so on). The next time you import the game, those tags will make sure the passages stay in the same order.</p>
+    <p>However, if you are still editing/writing your game, you probably don't want to finalise the numbering. Not only can it make it awkward to add new sections (they will all come at the end), but it makes the tag list in Twine 2.4 a pain to use. For this reason, until you are in the final stages of proofing and publishing your game, you are better exporting without numbers.</p>
+    <p>Note, if you added any numbers yourself, with numbered tags, they will still get saved back to Twine, only the tags that Twine has added itself will be skipped.</p>
+</div>
+
+<!-- interaction -->
+<div class="content">
+    <h2 id="interaction">Adding Interactivity</h2>
+    <p>So far the game we have been making isn't much of a <i>game</i>. You can wander from place to place, but there are no rules interactions or significant choices (other than the "gotcha" of dying when you visit the dark alley). Let's change some of that.</p>
+
+    <h3 id="items">Items</h3>
+    <p>Back in part three we created a "shopping" passage, but left it blank. Let's fill it in now.</p>
+    <h4>shopping</h4>
+    <x><script type='prism-html-markup'>You can buy all manner of stuff in Somewhere Else, and no doubt proceed to do so. You can avail yourself of some of the following:
+
+* <item>An overstuffed Giraffe</item>, 20 coins
+* <item>A disconsolate Owl</item>, 5 coins
+* <item>Snuff</item>, 7 coins
+        
+When you are done shopping, you can [[return to Somewhere Else->somewhere else]].</script></x>
+
+    <p>A couple of interesting things here. First, we have a list of items marked up with <code>*</code> at the start. A single star like this is one way of creating a bulleted list. The second thing is the use of the <code>&lt;item>&lt;/item></code> tag. This is a Gordian specific tag that will cause the item to me marked up in bold (by default), but also recorded so that Gordian can list an item's uses for you.</p>
+    <div class="example passage_example">
+        <div class="paragraph " id="para_3">
+            <bookmark content=""></bookmark>
+            <h2 id=""><a name="3">3.</a></h2>
+            <p>You can buy all manner of stuff in Somewhere Else, and no doubt proceed to do so. You can avail yourself of some of the following:
+    </p><ul><li><b class="item">An overstuffed Giraffe</b>, 20 coins</li>
+    <li><b class="item">A disconsolate Owl</b>, 5 coins</li>
+    <li><b class="item">Snuff</b>, 7 coins</li></ul>
+    <p>When you are done shopping, you can <a href="#5" class="passage-link">return to Somewhere Else (turn to 5)</a>.</p>
+            </div>
+    </div>
+    <p>You can view all the items that appear in your game by looking at the <a href='gordian.php?mode=items'>Item Report</a>, which will show you each distinct item in the game, and which passages they appear on.</p>
+
+    <h3 id="rules">Rules text</h3>
+    <p>You can buy three items now, but there isn't anything to do with them, let's add a passage where you can. Edit "somewhere else" and turn <code>[[gossiping]]</code> into a link, which will create a passage of the same name.</p>
+    <h4>gossiping</h4>
+    <x><script type='prism-html-markup'>The Hoi-Poloi like nothing better than to talk about one another, and likely you are no different. You put on your best gossiping hat and join the throng, exchanging choice morsels with the best of them. There's much to learn, though the bulk of it is scuttlebutt about the Squid Captains, and of no interest to the likes of you!
+
+You are joined at your table by a one-eyed cuttlefish broker, the corners of his downturned nose stained brown.
+        
+"Got any snuff about you?"
+        
+<rules>If you have any <item>snuff</item>, and want to give it to the broker, then remove it from your inventory and [[turnto|broker]].</rules>
+          
+When you are done, you can [[return to Somewhere Else->somewhere else]].</script></x>
+    <p>Here we use another Gordian tag <code>&lt;rules>&lt;/rules></code>. This wraps your rules text in a box so that it's called out from the text as a whole. By default it looks like this:</p>
+    <div class="example passage_example">
+        <div class="paragraph " id="para_7">
+            <bookmark content=""></bookmark>
+            <h2 id=""><a name="7">7.</a></h2>
+            <p>The Hoi-Poloi like nothing better than to talk about one another, and likely you are no different. You put on your best gossiping hat and join the throng, exchanging choice morsels with the best of them. There's much to learn, though the bulk of it is scuttlebutt about the Squid Captains, and of no interest to the likes of you!</p>
+    <p>You are joined at your table by a one-eyed cuttlefish broker, the corners of his downturned nose stained brown.</p>
+    <p>"Got any snuff about you?"</p>
+    <div class="rules">If you have any <b class="item">snuff</b>, and want to give it to the broker, then remove it from your inventory and <a href="#2" class="passage-link">turn to 2</a>.</div>
+      
+    <p>When you are done, you can <a href="#3" class="passage-link">return to Somewhere Else (turn to 3)</a></p>
+            </div>
+    </div>
+
+    <h3 id="keywords">Keywords</h3>
+    <p>We've given the broker some snuff. In return he will share some hot gossip. To track that we've done this, we can use a <code>keyword</code>.</p>
+    <h4>broker</h4>
+    <x><script type='prism-html-markup'>
+        <rules>Gain the keyword <keyword>Cully</keyword>.</rules>
+
+You slip the snuff to the broker under the ossified legs of your table and he leans in close. "You want some real gossip? You take a wander up Elsewhere way, and look out for a dark alley, that's where you want to go."
+
+Nothing more to do now but [[return to somewhere else|somewhere else]].
+    </script></x>
+    <p>A keyword tracks that something has happened in the game — think of it like a variable in a programming language, except that the player has to track them.</p>
+    <p>Keywords can be tagged with <code>&lt;keyword>&lt;/keyword></code>. By default Gordian will style these in italic, but some games prefer to have them in ALL-CAPS, or underline them — you can change these things in the stylesheet for your game by styling the <code>.keyword</code> class. You can track all the keywords in your game using the <a href='gordian.php?mode=keywords'>Keyword Report</a>, which lists all your keywords and the passages they appear in.</p>
+    <p>When you are writing a large game you can use the report to check that your keywords appear where you expect. Keywords that appear only once in the game are called out, since that's probably a bug.</p>
+    <p>Let's add a use for that keyword, by editing "elsewhere":</p>
+    <h4>elsewhere</h4>
+    <x><script type='prism-html-markup'>This is Elsewhere. It's not a great place, far from the best. It hasn't fallen on hard times because it never had them good. It's dark, it smells, and the air doesn't taste so good. If you are upper class you should get out of here [[back to Skeleton Passage->skeleton passage]] before harm comes to you!
+
+If you aren't upper class, you can linger, but why would you want to?
+        
+<rules>If you have the keyword <k>Cully</k>, you look around for the broker's dark alley, until you spot it. You can [[venture down it|dark alley]], if you wish.</rules>
+        
+When you are done with Elsewhere, you can [[return to Skeleton Passage->skeleton passage]]</script></x>
+    <p>Note the use of <code>&lt;k></code> as a shortcut for <code>&lt;keyword></code>. You can do the same with <code>&lt;it></code> instead of <code>&lt;item></code>. Also note how we send the player on a pointless quest only to have them kill themselves by visiting the alley — quality content.</p>
+
+    <h3 id="checkboxes">Checkboxes</h3>
+    <p>Keywords are good for tracking a particular yes/no event — have you met the monster, read the inscription, or bribed the guard. Items are good for things you might gain and lose over the course of a game, possibly many times, if the item is something like a ration or a torch. Sometimes, however, we want to track how many times a particular event happens. We can do this with checkboxes.</p>
+    <p>The <code>&lt;checkboxes>&lt;/checkboxes></code> tag produces a row of boxes that the player can tick. Often we will use them to track how many times a particular section has been visited — perhaps you can only ask your father for help three times before he refuses to do more. Let's add some checkboxes to "skeleton passage" by adding the following to the start of the passage.</p>
+    <x><script type='prism-html-markup'>
+<checkboxes>4</checkboxes>
+<rules>Each time you visit this section, tick one of the boxes above. If you have just ticked the last box, [[turnto|too many]] now.</rules>
+</script></x>
+    <div class="example passage_example">
+        <div class="paragraph " id="para_1">
+            <h2 id=""><a name="1">1.</a></h2>
+            <table class="checkboxes" cellspacing="1mm" align="center"><tbody><tr><td class="box" width="6mm">&nbsp;</td> <td class="box" width="6mm">&nbsp;</td> <td class="box" width="6mm">&nbsp;</td> <td class="box" width="6mm">&nbsp;</td> </tr></tbody></table>
+    <div class="rules">Each time you visit this section, tick one of the boxes above. If you have just ticked the last box, <a href="#6" class="passage-link">turn to 6</a> now.</div>
+            </div>
+    </div>
+    <p>The content of "too many" is left as an exercise for the reader, though you can always check the sample copy of <a href="skeleton_passage.html" download>Skeleton Passage</a> to see what I put.</p>
+
+    <h3 id="reference">Reference Sheets</h3>
+    <p>If your game has many keywords and checkboxes, you may wish to provide a reference sheet that your players can print out and mark things down on, rather than mar your original (which might be a PDF, or a printed book). Add the passage <code>checklist</code>, and give it the tag <code class="twine-tag">backmatter</code>, which will cause it to appear at the end of the game, after the last numbered section.</p>
+    <h4>checklist</h4>
+    <x><script type='prism-html-markup'>You can record keywords and ticked checkboxes here.
+
+<keywords></keywords>
+        
+<checkbox-list></checkbox-list></script></x>
+    <div class="tags"><span>backmatter</span></div>
+    <p>This will create a page with a list of keywords and passage numbers with checkboxes.</p>
+    <div class="example passage_example">
+        <div class="paragraph backmatter long"><p>You can record keywords and ticked checkboxes here.</p>
+            <table class="checklist"><tbody><tr><td class="checkbox"><table class="checkboxes" cellspacing="1mm" align="center"><tbody><tr><td class="box" width="6mm">&nbsp;</td> </tr></tbody></table></td><td>Cully</td></tr></tbody></table>
+            <table class="checkboxlist"><tbody><tr><td class="number">1</td><td class="checkbox"><table class="checkboxes" cellspacing="1mm" align="center"><tbody><tr><td class="box" width="6mm">&nbsp;</td> <td class="box" width="6mm">&nbsp;</td> <td class="box" width="6mm">&nbsp;</td> <td class="box" width="6mm">&nbsp;</td> </tr></tbody></table></td></tr></tbody></table>
+            </div>
+    </div>
+</div>
+
+<!-- templates -->
+<div class="content">
+    <h2 id="reuse">Reusing Code</h2>
+    <p>As your game gets larger you may find yourself writing out the same blocks of text multiple times, often with complex formatting. A classic example would be the stats for a monster, or a set of instructions about eating rations and regaining health. You can reduce the effort this takes by including one passage in another, and by creating templates.</p>
+
+    <h3 id="include">Including Passages</h3>
+    <p>You can include one passage in another using <code>(display: "passage name")</code> or <code>&lt;&lt;include "passage name">></code> (that's code from two of Twine's most popular formats, Harlowe and Sugarcube). The included passage's content replaces the tag. Links and Gordian tags in the included passage still gets processed. To prevent your included passage from also appearing in the story, give it the <code class="twine-tag">skip</code> tag.</p>
+
+    <h3 id="templates">Templates</h3>
+    <p>Included passages don't get to vary from one use to another, they will always display exactly the same text. Imagine you wanted to display a message on each of "somewhere", "somewhere else", and "somewhere" that said:</p>
+    <div class="rules">You may only enter this area if you have a <b>status</b> of at least X.</div>
+    <p>Where "X" is different for each one — an include can't help you, but a template can. A template is a piece of code that Gordian runs as it displays your passages. Crucially, it can substitute values into the text, conditionally display text, and repeat values. You could achieve the rule above with a template like:</p>
+
+    <x><script type='prism-html-markup'>
+        <template name="status">
+            <rules>You may only enter this area if you have a **status** of at least {{default}}</rules>
+        </template>
+    </script></x>
+    <p>Which you would use in your passage like:</p>
+    <x><script type='prism-html-markup'>
+        <t:status>3</t>
+    </script></x>
+
+    <p>Let's make a better example. Go back to "victualling". Do you see how we had to type out <i>all three</i> items in the shop by hand, like peasants. Let's replace this with a template.</p>
+    <p>Make a new passage called <code>gb-templates</code>, this is where all templates live.</p>
+    <h4>gb-templates</h4>
+    
+    <x><script type='prism-html-markup'>
+    <template name="shop">
+        <repeat items AS item>
+            * <item>{{item.name}}</item>, {{item.price}} coins
+        </repeat>
+    </template></script></x>
+    <p>Now, go back to "shopping" and replace the three bullet points with:</p>
+    <pre><code class='language-json'><script type='prism-html-markup'><t:shop>{"items":[
+	{"name":"An overstuffed Giraffe", "price": 20},
+	{"name":"A disconsolate Owl", "price": 5},
+	{"name":"Snuff", "price": 7}
+]}</t></script></x>
+    <p>There … isn't that better?</p>
+    <p>More details on the templating system, and some actually useful examples, can be found in the <a href="gordian.php?mode=templates-about">Templating System instructions</a>.</p>
+</div>
+
+<!-- publishing -->
+<div class="content">
+    <h2 id="publishing">Publishing</h2>
+    <p>Eventually, your game will start to reach a finished state. You've written all your content, and you start to think about proofreading, playtesting, adding illustrations, and publishing. Until this point you will work mainly in Twine, perhaps occasionally testing things in Gordian, but from this point on, you may find it easier to work primarily in Gordian.</p>
+
+    <h3 id="proofing">Proofing</h3>
+    <p>Once the game is written, but before you finalise the layout, you will likely wish to proofread and playtest the game. Ideally you will find others to help you do so. The <a href='gordian.php?mode=export&proof=1'>Export HTML (proofing)</a> link will create a simple HTML version of your game with the passage names and IDs (an internal number Twine uses) visible. You can pass this version to other people to test, and get their feedback with passage names attached, which will make it easy for you to make changes.</p>
+    <p>Before sending out proofs, it's a good idea to spellcheck your game. As of writing, Twine does not have a built-in spellchecker, but you can export your game to a file and spellcheck <i>that</i>, then import back into Twine. If you choose to do this, make sure to use a text-editor to spellcheck, rather than a word-processor, to avoid having any of the code in the file accidentally changed.</p>
+
+    <h3 id="ordering">Final Numbering</h3>
+    <p>After you get your initial feedback, and add the inevitable missing sections, it's time to finalise your number ordering. Import the game into Gordian, convert it, and then export it back to Twine — this time with numbering. You will now have a version with a numerical tag on every passage. From now on, each passage will keep its number.</p>
+    <p>Once the passages have their final order, you will undoubtedly find gaps where passages don't really fill pages, which can look ugly.</p>
+    <figure><img src="/images/app/tutorial/page.png"></figure>
+    <p>You've got three options with pages like this:</p>
+    <ol>
+        <li>Ignore the issue</li>
+        <li>Fill the gaps with images</li>
+        <li>Move passages around to fill the gaps</li>
+    </ol>
+    <p>Most likely you will do a bit of all three.</p>
+
+    <h3 id="images">Images</h3>
+    <p>You can use images from anywhere on the internet, Gordian doesn't host images for you, or allow you to upload images. If you really need to do this, consider installing Gordian from its <a href="https://github.com/hituro/gordianbook">github repo</a>. You can use a variety of formats, but your best choices are PNG or JPEG. If you are aiming for screen use only you should definitely consider JPGs, since PDF files support compression for JPG images.</p>
+    <p>You can place an image directly in a passage, but you may find it useful to make use of the <code>&lt;before></code> and <code>&lt;after></code> elements, which place content outside the passage itself. The <code>&lt;page-before></code> element puts its contents on a full page before the passage — make sure the passage it's in is placed at the top of a page or you will get very strange results.</p>
+    <p>You can switch a file dynamically between low and high resolution images using the <b>Enable low-res mode for screen PDF?</b> option in settings, and using <code>{RES}</code> somewhere in the URL of your images. Gordian will replace <code>{RES}</code> with "300" when in print PDF mode, and "72" when in screen PDF mode.</p>
+    <p>Let's add an image to Skeleton Passage. Find a passage with a smallish gap after it. For example paragraph 4</p>
+    <figure><img src="/images/app/tutorial/page4.png"></figure>
+    <p>Edit your chosen passage to add this at the bottom:</p>
+    <x><script type='prism-html-markup'>
+        <after>
+            <div class="center cut"><img src="https://gordianbook.art/images/gwcs/bones.png"></div>
+        </after>
+    </script></x>
+    <p><code>.cut</code> is a built-in Gordian class that adds some vertical padding around the image. <code>.center</code> centers it horizontally across the page. The result is:</p>
+    <figure><img src="/images/app/tutorial/page5.png"></figure>
+
+    <h3 id="moving_passages">Moving Passages</h3>
+    <p>You can move passages around from the <a href='gordian.php?mode=passage-edit'>Edit Passage</a> link, which we described in section 6, above.</p>
+    <div class="fieldset" style="margin-top:1em;">
+        <div class='form-row flex'>
+            <label>Swap with <input type='text' name='swap_number' value=''></label>
+            <label>Move to   <input type='text' name='move_number' value=''></label>
+        </div>
+    </div>
+    <p>Using this form, you can swap one passage with another directly, or move a passage to a new number — which will push all other passages up or down in number to make room. The easiest way to know what passages to swap is just to glance over the PDF for something that looks the right size, but you can see exact sizes of each passage at the bottom of the edit screen (under the preview) which may help you pick the right one.</p>
+    <p>In the example above, there's a big gap after passage 1, because passage 2 won't fit in the space.</p>
+    <figure><img src="/images/app/tutorial/page2.png"></figure>
+    <p>If we edit passage 2 and use the <b>Swap with</b> function to swap it with passage 3, things fit a lot better.</p>
+    <figure><img src="/images/app/tutorial/page3.png"></figure>
+
+    <h3>Useful Tags</h3>
+    <p>Sometimes the issue is a passage being too long. Normally, Gordian won't split a passage across pages, but you can add the <code class="twine-tag">long</code> tag to allow this to happen.</p>
+    <p>Sometimes you just need to force a page break, you can do this by tagging your passage with <code class="twine-tag">breakbefore</code> or <code class="twine-tag">breakafter</code>. In a lot of cases you'll want to place <code class="twine-tag">breakafter</code> on <b>gb-introduction</b>.</p>
+
+    <h3>Preview Page Ranges</h3>
+    <p>While swapping passages in this way you may need to refresh the PDF preview frequently. This is a pretty slow process, so you will probably find it easier to use the <a href='gordian.php?mode=pdf-range' target='_new'>PDF: page range</a> link to view a section of the document at a time.</p>
+    <p class="note">Note: this is more a "passage range" than a page range, so be sure to start with a passage that's at the top of a page, or you will get a very confusing result.</p>
+</div>
+
+<!-- finish -->
+<div class="content">
+    <h2>Conclusion</h2>
+    <p>If you've been reading along the whole way, congratulations, you've reached the end of the tutorial! Skeleton Passage has enjoyed your visit, and I hope you will go on to enjoy using Gordian Book for your game. If you have any more questions, check the detailed guides linked on the home page, or drop into the <a href="https://discord.gg/KeVV53QP">Twine Discord</a> and ask @Hituro.</p>
+</div>

@@ -1,55 +1,102 @@
-<tw-storydata name="Skeleton Passage" startnode="1" creator="Twine" creator-version="2.3.13" ifid="DDB2C0B1-0B4A-4738-AB20-CDBB80311E64" zoom="0.6" format="Entweedle" format-version="1.1.1" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">b { color: red; }</style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-tag name="end" color="blue"></tw-tag>,<tw-tag name="death" color="red"></tw-tag><tw-passagedata pid="1" name="Skeleton Passage" tags="" position="302,200.66666666666666" size="100,100">You are currently standing in the Skeleton Passage, a hollowed out vertebral column of an archaic and gigantic beast. The Passage provides access to various adjacent spaces of dubious value, into which (and out of which) masses of people are streaming, a veritable smorgasbord of High-Falutins, Mealy-Mouthers, Deckswabbers, Fly-by-night Cutters, and the like.
+<tw-storydata name="Skeleton Passage" startnode="1" format="Harlowe" format-version="3.3.1" zoom="1" ifid="DDB2C0B1-0B4A-4738-AB20-CDBB80311E64" tags="Gordian" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">.cover_title { font-size: 30pt; }
 
-  From here you can go [[somewhere]], or [[somewhere else]], or a [[third place-&gt;Elsewhere]]
+.cover_image {
+  margin-top: 2em;
+}
+
+.paragraph h1, .paragraph h2, .end {
+    font-family: fell, "IM Fell DW Pica", serif;
+    font-weight: bold;
+}
+.paragraph h2 {
+    text-align: center;
+}</style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-tag name="death" color="red"></tw-tag><tw-passagedata pid="1" name="skeleton passage" tags="1" position="302,200" size="100,100">&lt;checkboxes&gt;4&lt;/checkboxes&gt;
+&lt;rules&gt;Each time you visit this section, tick one of the boxes above. If you have just ticked the last box, [[turnto|too many]] now.&lt;/rules&gt;
+
+You are currently standing in the Skeleton Passage, a hollowed out vertebral column of an archaic and gigantic beast. The Passage provides access to various adjacent spaces of dubious value, into which (and out of which) masses of people are streaming, a veritable smorgasbord of High-Falutins, Mealy-Mouthers, Deckswabbers, Fly-by-night Cutters, and the like.
+
+From here you can go [[somewhere]], or [[somewhere else]], or a [[third place-&gt;elsewhere]]</tw-passagedata><tw-passagedata pid="2" name="somewhere" tags="8" position="152,350" size="100,100">This is Somewhere. Somewhere is a fine place, all the fashionable people in this adventure want to come to Somewhere. Lowlifes, cutters, and bogsnatchers are not permitted here, and will be imploitely [[turned away at the door-&gt;skeleton passage]] with barely a &quot;Your sort don&#039;t belong here!&quot; for your trouble.
+
+There is a lot to do in Somewhere, if, by *a lot*, you are content to mean preening, walking, swanning about, and being seen by all the other fine and fashionable people.
+
+When you are done with Somewhere, you can [[return to Skeleton Passage-&gt;skeleton passage]]</tw-passagedata><tw-passagedata pid="3" name="somewhere else" tags="3" position="302,348" size="100,100">Somewhere Else is not the finest part of anywhere. It was once, some time deep in the past, when things were better, but it has fallen on hard times. Highly fashionable people wouldn&#039;t be seen dead here — if you are one of those you should [[return to the skeleton passage-&gt;skeleton passage]] forthwith!
+
+If your standards are a little lower, there&#039;s much to do here, especially in terms of [[shopping]], victualling, and [[gossiping]]. 
+
+When you are done with Somewhere Else, you can [[return to Skeleton Passage-&gt;skeleton passage]]</tw-passagedata><tw-passagedata pid="4" name="elsewhere" tags="4" position="451,349" size="100,100">This is Elsewhere. It&#039;s not a great place, far from the best. It hasn&#039;t fallen on hard times because it never had them good. It&#039;s dark, it smells, and the air doesn&#039;t taste so good. If you are upper class you should get out of here [[back to Skeleton Passage-&gt;skeleton passage]] before harm comes to you!
+
+If you aren&#039;t upper class, you can linger, but why would you want to?
+
+&lt;rules&gt;If you have the keyword &lt;k&gt;Cully&lt;/k&gt;, you look around for the broker&#039;s dark alley, until you spot it. You can [[venture down it|dark alley]], if you wish.&lt;/rules&gt;
+
+When you are done with Elsewhere, you can [[return to Skeleton Passage-&gt;skeleton passage]]</tw-passagedata><tw-passagedata pid="5" name="shopping" tags="7" position="300,500" size="100,100">You can buy all manner of stuff in Somewhere Else, and no doubt proceed to do so. You can avail yourself of some of the following:
+
+* &lt;item&gt;An overstuffed Giraffe&lt;/item&gt;, 20 coins
+* &lt;item&gt;A disconsolate Owl&lt;/item&gt;, 5 coins
+* &lt;item&gt;Snuff&lt;/item&gt;, 7 coins
+
+When you are done shopping, you can [[return to Somewhere Else-&gt;somewhere else]].</tw-passagedata><tw-passagedata pid="6" name="dark alley" tags="death last 9" position="600,350" size="100,100">Oh.
+
+You shouldn&#039;t have come here.
+
+You really shouldn&#039;t.
+
+But the good news is, at least you save on the cost of a funeral!</tw-passagedata><tw-passagedata pid="12" name="gossiping" tags="5" position="425,500" size="100,100">The Hoi-Poloi like nothing better than to talk about one another, and likely you are no different. You put on your best gossiping hat and join the throng, exchanging choice morsels with the best of them. There&#039;s much to learn, though the bulk of it is scuttlebutt about the Squid Captains, and of no interest to the likes of you!
+
+You are joined at your table by a one-eyed cuttlefish broker, the corners of his downturned nose stained brown.
+
+&quot;Got any snuff about you?&quot;
+
+&lt;rules&gt;If you have any &lt;item&gt;snuff&lt;/item&gt;, and want to give it to the broker, then remove it from your inventory and [[turnto|broker]].&lt;/rules&gt;
   
-  (display: &quot;Wisdom&quot;)</tw-passagedata><tw-passagedata pid="2" name="somewhere" tags="" position="152,350.6666666666667" size="100,100">This is Somewhere. Somewhere is a fine place, all the fashionable people in this adventure want to come to Somewhere. Lowlifes, cutters, and bogsnatchers are not permitted here, and will be imploitely [[turned away at the door-&gt;Skeleton Passage]].
-  
-  There is a lot to do in Somewhere, if, by *a lot*, you are content to mean preening, walking, swanning about, and being seen by all the other fine and fashionable people.
-  
-  When you are done with Somewhere, you can [[return to Skeleton Passage-&gt;Skeleton Passage]] </tw-passagedata><tw-passagedata pid="3" name="somewhere else" tags="" position="302,348.6666666666667" size="100,100">Somewhere Else is not the finest part of anywhere. It was once, some time deep in the past, when things were better, but it has fallen on hard times. Highly fashionable people wouldn&#39;t be seen dead here — if you are one of those you should [[return to the skeleton passage-&gt;Skeleton Passage]] forthwith!
-  
-  If your standards are a little lower, there&#39;s much to do here, especially in terms of [[shopping]], [[victualling]], and [[gossipping]]. 
-  
-  When you are done with Somewhere Else, you can [[return to Skeleton Passage-&gt;Skeleton Passage]] </tw-passagedata><tw-passagedata pid="4" name="Elsewhere" tags="4" position="451.6666666666667,349" size="100,100">This is Elsewhere. It&#39;s not a great place, far from the best. It hasn&#39;t fallen on hard times because it never had them good. It&#39;s dark, it smells, and the air doesn&#39;t taste so good. If you are upper class you should get out of here [[back to Skeleton Passage-&gt;Skeleton Passage]] before harm comes to you!
-  
-  If you aren&#39;t upper class, you can link, but why would you want to?
-  
-  One of the darkest, meanest, narrowest alleys, appears to lead to [[a place-&gt;Dark alley]].
-  
-  When you are done with Elsewhere, you can [[return to Skeleton Passage-&gt;Skeleton Passage]] </tw-passagedata><tw-passagedata pid="5" name="shopping" tags="" position="152,500.6666666666667" size="100,100">You can buy all manner of stuff in Somewhere Else, and no doubt proceed to do so. You can avail yourself of some of the following:
-  
-  * &lt;b&gt;An overstuffed Giraffe&lt;/b&gt;, 20 coins&lt;/li&gt;
-  * &lt;b&gt;A disconsolate Owl&lt;/b&gt;, 5 coins&lt;/li&gt;
-  * &lt;b&gt;Snuff&lt;/b&gt;, 7 coins&lt;/li&gt;
-  
-  When you are done shopping, you can [[return to Somewhere Else-&gt;somewhere else]].</tw-passagedata><tw-passagedata pid="6" name="victualling" tags="" position="302,500.6666666666667" size="100,100">Somewhere Else has some of the better eateries in the place, no doubt because the ultra fashionable are too thin to eat, and the dirt poor don&#39;t come here. Many a cutter whiles away an afternoon at the cafe tables here, and you can do the same, and come out of it better fed than you went in.
-  
-  When you are done, you can [[return to Somewhere Else-&gt;somewhere else]].</tw-passagedata><tw-passagedata pid="7" name="gossipping" tags="" position="452,502.33333333333337" size="100,100">The Hoi-Poloi like nothing better than to talk about one another, and likely you are no different. You put on your best gossiping hat and join the throng, exchanging choice morsels with the best of them. There&#39;s much to learn, though the bulk of it is scuttlebut about the Squid Captains, and of no interest to the likes of you!
-  
-  When you are done, you can [[return to Somewhere Else-&gt;somewhere else]].</tw-passagedata><tw-passagedata pid="8" name="Dark alley" tags="end death" position="623.6666666666666,353.33333333333337" size="100,100">Oh.
-  
-  You shouldn&#39;t have come here.
-  
-  You really shouldn&#39;t.
-  
-  But the good news is, at least you save on the cost of a funeral!</tw-passagedata><tw-passagedata pid="9" name="gb-introduction" tags="" position="399.6666666666667,24.666666666666668" size="100,100">Begin your adventure (if we could dignify it with such a term) at paragraph one, and then follow the instructions as you make your choices.
-  
-  Items marked **in bold** can be picked up and added to your apparently limitless inventory. If an item has a cost in coins attached you must of course pay it, but your purse is also limitless, so don&#39;t let this concern you.</tw-passagedata><tw-passagedata pid="10" name="Wisdom" tags="skip" position="900.3333333333333,201.66666666666663" size="100,100">*A wise cutter would go [[nowhere at all-&gt;Nowhere]]*</tw-passagedata><tw-passagedata pid="11" name="Nowhere" tags="" position="900.3333333333333,349.66666666666663" size="100,100">This is Nowhere</tw-passagedata><tw-passagedata pid="12" name="gb-front-cover" tags="" position="250.33333333333331,25" size="100,100">&lt;div class=&#39;cover_top&#39;&gt;
-    &lt;h1 class=&#39;cover_title&#39;&gt;Skeleton&lt;/h1&gt;
-    &lt;h2 class=&#39;cover_title small&#39;&gt;to&lt;/h2&gt;
-    &lt;h1 class=&#39;cover_title&#39;&gt;Somewhere&lt;/h1&gt;
-  &lt;/div&gt;
-  &lt;div class=&#39;cover_image&#39;&gt;&lt;/div&gt;
-  &lt;div class=&#39;cover_bottom&#39;&gt;
-    &lt;h2&gt;By&lt;br&gt;David M. Donachie&lt;/h2&gt;
-  &lt;/div&gt;</tw-passagedata><tw-passagedata pid="13" name="gb-rear-cover" tags="" position="551.6666666666666,25" size="100,100">&lt;div class=&#39;cover_bottom&#39;&gt;
-    &lt;h2&gt;Produced in Gordian Book&lt;/h2&gt;
-  &lt;/div&gt;</tw-passagedata><tw-passagedata pid="14" name="gb-settings" tags="" position="100.33333333333326,24.99999999999996" size="100,100">{
-      &quot;end_text&quot;: &quot;THE END&quot;,
-      &quot;death_text&quot;: &quot;YOU DIED&quot;,
-      &quot;separator&quot;: &quot;0&quot;,
-    &quot;break&quot;: &quot;0&quot;,
-      &quot;css&quot;: &quot;b { color: red; }\r\n.cover_title { font-size: 30pt; }&quot;,
-      &quot;page_size&quot;: &quot;A5-P&quot;,
-      &quot;cover&quot;: &quot;1&quot;
-  }</tw-passagedata></tw-storydata>
+When you are done, you can [[return to Somewhere Else-&gt;somewhere else]]</tw-passagedata><tw-passagedata pid="13" name="broker" tags="2" position="425,625" size="100,100">&lt;rules&gt;Gain the keyword &lt;k&gt;Cully&lt;/k&gt;.&lt;/rules&gt;
+
+You slip the snuff to the broker under the ossified legs of your table and he leans in close. &quot;You want some real gossip? You take a wander up Elsewhere way, and look out for a dark alley, that&#039;s where you want to go.
+
+Nothing more to do now but [[return to somewhere else|somewhere else]].</tw-passagedata><tw-passagedata pid="14" name="too many" tags="end 6" position="500,200" size="100,100">Before you can take another step, you find yourself hostiley accosted by octopus-headed soldiers, done up in fustian motley.
+
+&quot;Now now then!&quot; one of them burbles. &quot;I think you&#039;ve been around here a few times too many, don&#039;t you?&quot;
+
+You protest inarticulately, gesturing dumbly at the many Sea-Legged Folk wandering back and forth in repetative gyres, but the soldiers are having none of it. They grab you under the armpits and cast you out of the Skeleton Passage with extreme prejudice.
+
+The gall of it all!</tw-passagedata><tw-passagedata pid="15" name="checklist" tags="backmatter" position="700,25" size="100,100">You can record keywords and ticked checkboxes here.
+
+&lt;keywords&gt;&lt;/keywords&gt;
+
+&lt;checkbox-list&gt;&lt;/checkbox-list&gt;</tw-passagedata><tw-passagedata pid="10" name="gb-settings" tags="" position="100,24" size="100,100">{
+    &quot;end_text&quot;: &quot;THE END&quot;,
+    &quot;death_text&quot;: &quot;YOU DIED&quot;,
+    &quot;separator&quot;: &quot;1&quot;,
+    &quot;break&quot;: false,
+    &quot;css&quot;: &quot;&quot;,
+    &quot;page_size&quot;: &quot;A5-P&quot;,
+    &quot;cover&quot;: &quot;1&quot;,
+    &quot;mdtype&quot;: &quot;harlowe&quot;,
+    &quot;resolution&quot;: 300,
+    &quot;image_resolution&quot;: 300,
+    &quot;low_res&quot;: false,
+    &quot;passage&quot;: {
+        &quot;pid&quot;: &quot;10&quot;,
+        &quot;tags&quot;: [],
+        &quot;position&quot;: &quot;100,24&quot;,
+        &quot;size&quot;: &quot;100,100&quot;
+    }
+}</tw-passagedata><tw-passagedata pid="8" name="gb-front-cover" tags="" position="250,25" size="100,100">&lt;div class=&#039;cover_top&#039;&gt;
+  &lt;h1 class=&#039;cover_title&#039;&gt;Skeleton&lt;/h1&gt;
+  &lt;h2 class=&#039;cover_title small&#039;&gt;to&lt;/h2&gt;
+  &lt;h1 class=&#039;cover_title&#039;&gt;Somewhere&lt;/h1&gt;
+  &lt;img class=&#039;cover_image&#039; src=&quot;/images/app/SeekPng.com_knot-png_2307422.png&quot;&gt;
+&lt;/div&gt;
+&lt;div class=&#039;cover_bottom&#039;&gt;
+  &lt;h2&gt;By&lt;br&gt;Anon E. Mouse&lt;/h2&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="7" name="gb-introduction" tags="" position="399,24" size="100,100">Begin your adventure (if we could dignify it with such a term) at paragraph one, and then follow the instructions as you make your choices.
+
+Items marked **in bold** can be picked up and added to your apparently limitless inventory. If an item has a cost in coins attached you must of course pay it, but your purse is also limitless, so don&#039;t let this concern you.
+
+[[Turnto|skeleton passage]].</tw-passagedata><tw-passagedata pid="9" name="gb-rear-cover" tags="" position="551,25" size="100,100">&lt;div class=&#039;cover_bottom&#039;&gt;
+  &lt;h2&gt;Produced in Gordian Book&lt;/h2&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="11" name="gb-templates" tags="" position="900,25" size="100,100">&lt;template name=&quot;shop&quot;&gt;
+&lt;repeat items AS item&gt;
+* &lt;item&gt;{{item.name}}&lt;/item&gt;, {{item.price}} coins
+&lt;/repeat&gt;
+&lt;/template&gt;</tw-passagedata></tw-storydata>
