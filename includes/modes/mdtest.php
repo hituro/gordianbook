@@ -30,9 +30,22 @@
                     <input type='submit' value='Test'>
                 </div>
             </form>
+            </div>
+            
+            <div class='content'>
+            <h2>Preview</h2>
+            <div class='passage_example'>$p</div>
+            </div>
+
+            <div class='content'>
+            <h2><code>markdown()</code></h2>
             <pre style='overflow:scroll'>$esc</pre>
             $md
+            </div>
+            
+            <div class='content'>
+            <h2><code>autop()</code> and <code>process_links()</code></h2>
             <pre style='overflow:scroll'>$para</pre>
-            $p",['title' => "Markdown Test", 'css' => ['css/game.css']]);
+            ",['title' => "Markdown Test", 'css' => ['css/game.css']]);
 
 ?>
