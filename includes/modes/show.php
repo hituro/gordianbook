@@ -10,7 +10,7 @@
             $config['css'][] = 'css/hidden.css';
         }
         echo gb_header($config);
-        echo htmlise(false,['covers' => false, 'print' => false, 'simplex' => true, 'para_links' => true]);
+        echo htmlise(false,['covers' => false, 'print' => false, 'simplex' => true, 'para_links' => true, 'playable' => $_REQUEST['playable']]);
         echo gb_footer();
 
 ?>
