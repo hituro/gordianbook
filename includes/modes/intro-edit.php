@@ -7,19 +7,19 @@
                     <input type='submit' value='Save'>
                 </div>
                 <div class='form-row'>
-                    <label for='gb-front-cover'>Edit Front Cover</label>
+                    <label for='gb-front-cover'>Edit Front Cover (gb-front-cover)</label>
                     <textarea name='gb-front-cover' class='codemirror html' rows='10'>{$_SESSION['gb']['gb-front-cover']['text']}</textarea>
                 </div>
                 <div class='form-row'>
-                    <label for='intro'>Edit Introduction</label>
+                    <label for='intro'>Edit Introduction (gb-introduction)</label>
                     <textarea name='intro' class='codemirror html' rows='10'>{$_SESSION['gb']['gb-introduction']['text']}</textarea>
                 </div>
                 <div class='form-row'>
-                    <label for='rear'>Edit Conclusion</label>
+                    <label for='rear'>Edit Conclusion (gb-rear)</label>
                     <textarea name='rear' class='codemirror html' rows='10'>{$_SESSION['gb']['gb-rear']['text']}</textarea>
                 </div>
                 <div class='form-row'>
-                    <label for='gb-rear-cover'>Edit Rear Cover</label>
+                    <label for='gb-rear-cover'>Edit Rear Cover (gb-rear-cover)</label>
                     <textarea name='gb-rear-cover' class='codemirror html' rows='10'>{$_SESSION['gb']['gb-rear-cover']['text']}</textarea>
                 </div>
                 <div class='form-row'>
