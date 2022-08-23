@@ -91,6 +91,10 @@ img {
     margin: 1em;
 }
 
+.right {
+    text-align: right;
+}
+
 /* Inline rules, renders as a span */
 
 .check {
@@ -127,6 +131,12 @@ img {
     background: #f4f4f4;
     color: black;
 }
+.rules > p:first-child {
+    margin-top: 0px;
+}
+.rules > p:last-child {
+    margin-bottom: 0px;
+}
 
 .disclaimer {
     font-size: 8pt;
@@ -162,6 +172,10 @@ td .checkboxes {
 
 .checklist { width: 100%; margin-top: 20px; }
 .checklist .checkbox { width: 30px; }
+
+.checkboxlist { width: 100%; margin-top: 20px; }
+.checkboxlist .number { width: 30px; font-weight: bold; text-align: right; }
+.checkboxlist .checkbox { text-align: left; }
 
 @media print {
     body {
