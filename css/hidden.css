@@ -9,9 +9,28 @@
     .paragraph {
         font-size: 1.1em;
     }
-    .paragraph p b {
+    .paragraph b.item {
         display: inline-block;
         background: rgba(0,0,0,0.08);
         padding: 0em 0.25em;
         border-radius: 0.25em;
+    }
+
+    .introduction {
+        background              : inherit;
+        display                 : block;
+    }
+    :target ~ .introduction {
+        display                 : none;
+    }
+
+    .checkboxes.playable {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .checkboxes.playable input:checked + .box {
+        background: #666;
     }

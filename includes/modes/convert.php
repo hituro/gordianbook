@@ -108,6 +108,7 @@
                             $keys[$key][$idx] ++;
                         }
                     }
+                    $_SESSION['gb']['story']['passages'][$idx]['items'] = find_items($passage['text']);
                 }
             } 
 
@@ -176,6 +177,7 @@
                 }
             }
             ksort($norder);
+            ksort($keys);
             $_SESSION['gb']['numbering']     = $nindex;
             $_SESSION['gb']['number_order']  = $norder;
             $_SESSION['gb']['passage_names'] = $pnames;

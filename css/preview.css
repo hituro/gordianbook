@@ -2,6 +2,8 @@
     display: inline-block;
     width: 4mm;
     cursor:pointer;
+    border: 0.2mm solid black;
+    background: white;
 }
 .checkboxes .box[data-checked=true] {
     background: #666;

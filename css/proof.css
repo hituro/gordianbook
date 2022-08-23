@@ -1,0 +1,17 @@
+
+
+body {
+    max-width: 200ch;
+    margin: auto;
+    width: 70vw;
+}
+
+.proof_info {
+    text-align: center;
+    font-weight: normal;
+    font-style: italic;
+}
+
+.story_name {
+    font-size: 5em;
+}
