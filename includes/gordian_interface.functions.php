@@ -6,7 +6,7 @@
 
 
     function page($content,$options=[]) {
-        return gb_header($options) . $content . gb_footer();
+        return gb_header($options) . gb_links($content) . gb_footer();
     }
 
     function error($error_text='Unknown Error') {
@@ -49,7 +49,10 @@
         $js = '';
         if ($options['js']) {
             foreach ($options['js'] AS $link) {
-                if ($link == 'vue') {
+                if (substr($link,0,8) == '<script>') {
+                    $js .= $link;
+                }
+                else if ($link == 'vue') {
                     $js  .= "<script src='https://cdn.jsdelivr.net/npm/vue/dist/vue.js'></script>\n";
                 } else {
                     $js  .= "<script type='text/javascript' src='$link'></script>\n";
@@ -95,7 +98,7 @@
               $sidebar
               <div class='content {$options['content_class']}'>
               <header>
-                <a href='gordian.php'>&laquo; Home</a>
+                <a href='/'>&laquo; Home</a>
               </header>";
     }
 
@@ -150,6 +153,10 @@
 
     function gb_get_passage($pid) {
         return $_SESSION['gb']['story']['passages'][$_SESSION['gb']['pids'][$pid]];
+    }
+
+    function gb_links($content) {
+        return str_replace("gordian.php?mode=",'',$content);
     }
 
     function n(...$args) {

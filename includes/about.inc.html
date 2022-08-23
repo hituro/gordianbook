@@ -4,11 +4,12 @@
 <p>Gordian Book imports a Twine game (either a Twine Archive, or a Twison/Twee version), and converts it to a gamebook output by numbering and shuffling the paragraphs, and converting links to the appropriate "turn to page x" form. Once converted, you can view the game in the browser, download as a standalone HTML file (e.g. for further editing), or export it as a simple PDF. (See <a href='gordian.php?mode=workflow'>Workflow notes</a>).</p>
 <p><a href="gordian.php?mode=changelog">Changelog</a></p>
 
-<h2>Example Story</h2>
-<p>Learn better from an example? Download the following and open it in Twine: <a href="skeleton_passage.html" download>Skeleton Passage</a></p>
+<h2>Getting Started</h2>
+<p>The best way to learn to use Gordian is to follow <a href="/tutorial">the tutorial.</p>
+<p>Learn better from an example? Download the following and open it in Twine: <a href="skeleton_passage.html" download>Skeleton Passage</a> (which is used in the tutorial)</p>
 <p>Or, if you just want a blank starting point: <a href="blank_twine.html" download>Blank Story</a></p>
 
-<h2>Instructions</h2>
+<h2>Reference</h2>
 <dl>
     <dt>Create your Adventure</dt>
     <dd>Create your adventure in Twine (<a href='http://twinery.org/'>twinery.org</a>) using the format of your choice (Gordian supports formatting for Harlowe 3, Sugarcube 2, and WritingFantasy), or write it in <a href='https://github.com/iftechfoundation/twine-specs/blob/master/twee-3-specification.md'>Twee format</a>. This export is intended for a paper output, so avoid using variables, javascript and the like. </dd>
@@ -18,7 +19,7 @@
             <dd>The following special passages will be extracted:
             <ul>
                 <li><b>gb-settings</b>: Used to store your Gordian settings in JSON (see <a href='gordian.php?mode=export-settings'>Export Settings</a>)</li>
-                <li><b>gb-templates</b>: Used to store your Gordian templates (see <a href="gordian.php?mode=templates">Templating System</a>)</li>
+                <li><b>gb-templates</b>: Used to store your Gordian templates (see <a href="gordian.php?mode=templates-about">Templating System</a>)</li>
                 <li><b>gb-front-cover</b>: Used to create the PDF front cover</li>
                 <li><b>gb-introduction</b>: Placed before the first numbered entry</li>
                 <li><b>gb-rear</b>: Placed at the end of the PDF, after a page break</li>
@@ -41,11 +42,14 @@
             <dd>You can tag a passage with a <b>number</b> to reserve that paragraph number in the final game — make sure to pick a valid number. (Synonym: <code>fixednumber_&lt;number&gt;</code>)</dd>
             <dd>Certain alternatives are supported for compatibility with <a href='gordian.php?mode=wf'>WritingFantasy</a>.</dd>
         <dt>Special HTML</dt>
-            <dd>The following html-tags will get special styling:
+            <dd>The following html-like tags will get special styling:
             <ul>
                 <li><code>&lt;after></code> Content placed following the passage (e.g. an image) (see <a href='gordian.php?mode=workflow'>Workflow notes</a>)</li>
                 <li><code>&lt;before></code> Content placed preceeding the passage number</li>
                 <li><code>&lt;check></code> For inline rules text and checks</li>
+                <li><code>&lt;checkboxes></code> Creates a row of checkboxes (see <a href='gordian.php?mode=keywords-about'>Checkboxes</a>)</li>
+                <li><code>&lt;checkbox-list></code> Creates a list of passages with checkboxes (see <a href='gordian.php?mode=keywords-about'>Checkboxes</a>)</li>
+                <li><code>&lt;item></code> Marks an in-game item (also <code>&lt;it></code>)</li>
                 <li><code>&lt;keyword></code> Marks a keyword (see <a href='gordian.php?mode=keywords-about'>Keywords</a>)</li>
                 <li><code>&lt;keywords></code> Outputs a list of keywords (see <a href='gordian.php?mode=keywords-about'>Keywords</a>)</li>
                 <li><code>&lt;page-before></code> Content placed on a new page preceeding the passage (e.g. a full-page illustration)</li>
@@ -58,7 +62,7 @@
         <dt>Text Formatting</dt>
             <dd>The majority of Harlow Markdown and Sugarcube Wiki-Formatting is supported, see <a href='gordian.php?mode=markdown'>Supported Text Formatting</a>.</dd>
         <dt>Templating</dt>
-            <dd>Gordian has a <a href="gordian.php?mode=templates">templating system</a>. Read the <a href="gordian.php?mode=templates">full guide</a>.</dd>
+            <dd>Gordian has a <a href="gordian.php?mode=templates-edit">templating system</a>. Read the <a href="gordian.php?mode=templates-about">full guide</a>.</dd>
     </dl>
 
     <dt>Export from Twine</dt>
@@ -68,7 +72,7 @@
     <dd>Click the <a href='gordian.php?mode=load-json'>Import Game</a> link, and paste your game into the import window, or upload your exported file, and click <b>Import</b>, your game is now loaded into the Gordian. All further steps work on this imported copy, so if you change your Twine original you'll have to export it and import it again.</dd>
 
     <dt>Convert</dt>
-    <dd>Before viewing or exporting your game, you must convert it, by clicking the <a href='gordian.php?mode=convert'>Convert to Gamebook</a> link. This will do the following:
+    <dd>After you import the game, it will be converted into a gamebook. This happens automatically, though you can convert it again by clicking the <a href='gordian.php?mode=convert'>Convert to Gamebook</a> link. This will do the following:
         <ul>
             <li>Extract the Introduction, if any.</li>
             <li>Number each paragraph, except the start, randomly</li>
