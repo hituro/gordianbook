@@ -22,8 +22,12 @@
             $_SESSION['gb']['story']        = $json;
             $_SESSION['gb']['numbering']    = [];
             $_SESSION['gb']['number_order'] = [];
-            msg("Game data loaded. You should now Convert to Gamebook");
-            go('home');
+            if (array_key_exists('convert',$_REQUEST) && !$_REQUEST['convert']) {
+                msg("Game data loaded. You should now Convert to Gamebook");
+                go('home');
+            } else {
+                include "convert.php";
+            }
         } else {
             error("Sorry, we could not parse that story. Make sure it is in Twison, Twee3, or Twine Archive format");
             go('load-json');
