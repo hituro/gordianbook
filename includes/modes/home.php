@@ -1,6 +1,6 @@
 <?php
 
-    $lists = ['Import' => [], 'Edit' => [], 'Play' => [], 'Print' => [], 'Export' => []];
+    $lists = ['Import' => [], 'Edit' => [], 'Info' => [], 'Play' => [], 'Print' => [], 'Export' => []];
             
     $lists['Import'][] = "<a href='gordian.php?mode=load-json'>Import Game</a>";
     $lists['Import'][] = "<a href='gordian.php?mode=load-game-json'>Import Gordian JSON</a>";
@@ -13,9 +13,11 @@
         $lists['Edit'][]  = "<a href='gordian.php?mode=css-edit'>Edit CSS</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=passage-edit'>Edit Passage</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=templates-edit'>Edit Templates</a>";
-        $lists['Edit'][]  = "<a href='gordian.php?mode=keywords'>Keyword Report</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=renumber'>Renumber</a>";
         $lists['Edit'][]  = "<a href='gordian.php?mode=load-settings'>Import Settings</a>";
+
+        $lists['Info'][]  = "<a href='gordian.php?mode=keywords'>Keyword Report</a>";
+        $lists['Info'][]  = "<a href='gordian.php?mode=items'>Item Report</a>";
 
         $lists['Play'][]  = "<a href='gordian.php?mode=show'>Preview Gamebook</a>";
         $lists['Play'][]  = "<a href='gordian.php?mode=show&playable=1#introduction'>Play Gamebook</a>";
@@ -28,11 +30,13 @@
                                   <a href='gordian.php?mode=pdf&skip_content=1' target='_new'>cover/matter</a>";
         $lists['Print'][] = "PDF: <a href='gordian.php?mode=pdf-range' target='_new'>page range</a>";
 
-        $lists['Export'][] = "<a href='gordian.php?mode=export-settings'>Export Settings</a>";
+        $lists['Export'][] = "<a href='gordian.php?mode=export-twine'>Export Twine Archive</a> - (<a href='gordian.php?mode=export-twine&skip_numbers=1'>without numbers</a>)";
+        $lists['Export'][] = "<a href='gordian.php?mode=export-twee'>Export Twee</a> - (<a href='gordian.php?mode=export-twee&skip_numbers=1'>without numbers</a>)";
         $lists['Export'][] = "<a href='gordian.php?mode=export-json'>Export Gordian JSON</a> - (<a href='gordian.php?mode=show-json'>view</a>)";
-        $lists['Export'][] = "<a href='gordian.php?mode=export-twine'>Export Twine Archive</a>";
-        $lists['Export'][] = "<a href='gordian.php?mode=export'>Export HTML (proofing)</a>";
-        $lists['Export'][] = "<a href='gordian.php?mode=export-twee'>Export Twee</a>";
+        $lists['Export'][] = "<a href='gordian.php?mode=export'>Export HTML (printable)</a>";
+        $lists['Export'][] = "<a href='gordian.php?mode=export&proof=1'>Export HTML (proofing)</a>";
+        $lists['Export'][] = "<a href='gordian.php?mode=export-playable'>Export HTML (playable)</a>";
+        $lists['Export'][] = "<a href='gordian.php?mode=export-settings'>Export Settings</a>";
     }
 
     $menus = "";

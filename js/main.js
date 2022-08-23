@@ -23,4 +23,7 @@ $( document ).ready(function() {
             mode: "markdown"
         });
     });
+    $('.sidebar').click(function() {
+        $(this).toggleClass('expanded');
+    })
 });
