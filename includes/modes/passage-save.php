@@ -13,9 +13,6 @@
                 // some keywords have been removed or added
                 $removed = array_diff($_SESSION['gb']['story']['passages'][$idx]['keywords'],$k);
                 $added   = array_diff($k,$_SESSION['gb']['story']['passages'][$idx]['keywords']);
-                echo "<pre>
-                REMOVED " . print_r($removed,1) ."
-                ADDED " . print_r($added,1);
                 foreach($removed AS $r) {
                     unset($_SESSION['gb']['keywords'][$r][$idx]); 
                 }
@@ -27,9 +24,9 @@
                 }
                 //$_SESSION['gb']['keywords'] = array_diff($_SESSION['gb']['keywords'],$_SESSION['gb']['story']['passages'][$idx]['keywords']);
                 $_SESSION['gb']['story']['passages'][$idx]['keywords'] = $k;
-                print_r($_SESSION['gb']['keywords']);
-                exit;
             }
+            // items 
+            $_SESSION['gb']['story']['passages'][$idx]['items'] = find_items($_REQUEST['text']);
 
             msg("Passage Saved");
 

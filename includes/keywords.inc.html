@@ -30,3 +30,32 @@
 <pre><code class='language-markup'><script type='prism-html-markup'>
     <keywords cols="3"></keywords>
 </script></code></pre>
+
+<hr>
+<h1>Checkboxes</h1>
+<p>Checkboxes are another way of tracking game progress. A set of checkboxes attached to a passage can be used to track the number of times a section has been visited (or to count some other sort of event that can happen in any series, time passing, monsters defeated, runes found).</p>
+
+<h3>The <code>&lt;checkboxes></code> tag</h3>
+<p>Gordian can generate checkboxes for you using the  <code>&lt;checkboxes></code> tag. This tag takes a number indicating how many checkboxes you want.</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <checkboxes>3</checkboxes>
+</script></code></pre>
+<p>Produces: <table class='checkboxes' cellSpacing='1mm' align='center'><tr><td class='box' width='6mm'>&nbsp;</td> <td class='box' width='6mm'>&nbsp;</td> <td class='box' width='6mm'>&nbsp;</td> </tr></table></p>
+
+<h3>The <code>&lt;checkbox-list></code> tag</h3>
+<p>Just as a keyword list is useful to help players track keywords, a checkbox list can allow multiple people to play the same paper game, by ticking boxes on the list rather than the actual sections. This will also probably save wear on the paper from marking and erasing boxes. You can use the <code>&lt;checkbox-list></code> tag to generate a list of passage numbers and checkboxes. There are two ways to use the tag.</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <checkbox-list></checkbox-list>
+</script></code></pre>
+<p>This will search the story for passages containing the <code>&lt;checkboxes></code> tag, and produce a layout of passage numbers and checkboxes in columns, much like the keywords tag. Gordian will pick the number of columns to fit the page.</p>
+
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <checkbox-list>{"cols":3,"checkboxes":[[1,3],[20,2],[100,3]]}</checkbox-list>
+</script></code></pre>
+
+<table class="checkboxlist"><tr><td class="number">1</td><td class="checkbox"><table class='checkboxes' cellSpacing='1mm' align='center'><tr><td class='box' width='6mm'>&nbsp;</td> <td class='box' width='6mm'>&nbsp;</td> <td class='box' width='6mm'>&nbsp;</td> </tr></table></td><td class="number">20</td><td class="checkbox"><table class='checkboxes' cellSpacing='1mm' align='center'><tr><td class='box' width='6mm'>&nbsp;</td> <td class='box' width='6mm'>&nbsp;</td> </tr></table></td><td class="number">100</td><td class="checkbox"><table class='checkboxes' cellSpacing='1mm' align='center'><tr><td class='box' width='6mm'>&nbsp;</td> <td class='box' width='6mm'>&nbsp;</td> <td class='box' width='6mm'>&nbsp;</td> </tr></table></td></tr></table>
+
+<p>You can supply your list of checkboxes as valid JSON. In this case you can pass a column count using the <code>cols</code> element, in which case the resulting list will use that number of columns instead of the automatically calculated number. The <code>checkboxes</code> key should be an array of arrays, each of which has the passage number as the first element and the number of checkboxes as the second. You can specify the number of columns without using the JSON markup by adding a cols attribute to the tag:</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    <checkbox-list cols="3"></checkbox-list>
+</script></code></pre>

@@ -8,7 +8,7 @@
             $passage = $_SESSION['gb']['story']['passages'][$idx];
             $number  = $_SESSION['gb']['numbering'][$passage['pid']]['number'];
             $number  = $number ? $number : 'skip';
-            $out .= "<li><a href='gordian.php?mode=passage-edit&passage_name={$passage['name']}'>{$passage['name']} ($number)</a> $c uses</li>";
+            $out .= "<li><a href='gordian.php?mode=passage-edit&passage_name={$passage['name']}' target='_new'>{$passage['name']} ($number)</a> $c uses</li>";
             $uses += $c;
         }
         $out .= "</ul>";

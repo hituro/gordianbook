@@ -63,7 +63,7 @@
             page-break-inside: auto;
         }</code></pre>
 
-        <p>&lt;page-before></p>
+        <p><code>&lt;page-before>&lt;/page-before></code></p>
         <pre><code class='language-markup'><script type='prism-html-markup'>
         <pagebreak></pagebreak>
         <sethtmlpagefooter name='otherpagefooter' page='ALL' value='on'></sethtmlpagefooter>
@@ -88,10 +88,12 @@
 
         <h3>Special tags</h3>
         <pre><code class='language-markup'><script type='prism-html-markup'>
-        <check>     => <span class='check'>&nbsp;[TEXT]&nbsp;</span>
-        <rules>     => <div class='rules'>[TEXT]</div>
-        <stats>     => <div class='stats'>[TEXT]</div>
-        <special>   => <div class='special'>[TEXT]</div>
+        <check>        => <span class='check'>&nbsp;[TEXT]&nbsp;</span>
+        <rules>        => <div class='rules'>[TEXT]</div>
+        <stats>        => <div class='stats'>[TEXT]</div>
+        <special>      => <div class='special'>[TEXT]</div>
+        <keyword>/<k>  => <i class='keyword'>[TEXT]</i>
+        <item>/<it>    => <b class='item'>[TEXT]</b>
         </script></code></pre>
         <p><i>We pad the sides of 'check' with spaces because MPDF doesn't support <code class='language-js'>display: inline-block;</code></i></p>
         <pre><code class='language-css'>
@@ -122,6 +124,26 @@
             margin-top: 1em;
         }
         </code></pre>
+
+
+        <h3>Keywords</h3>
+        <pre><code class='language-markup'><script type='prism-html-markup'>
+        <keywords>Alpha, Beta</keywords>
+
+        <table class=\"checklist\">
+            <tr>
+                <td><td class=\"checkbox\"><checkboxes>1</checkboxes></td>
+                <td>Alpha</td>
+                <td><td class=\"checkbox\"><checkboxes>1</checkboxes></td>
+                <td>Beta</td>
+            </tr>
+        </table>
+        </script></code></pre>
+        <pre><code class='language-css'>
+        .checklist { width: 100%; margin-top: 20px; }
+        .checklist .checkbox { width: 30px; }
+        </code></pre>
+
         
         <h3>Checkboxes</h3>
         <pre><code class='language-markup'><script type='prism-html-markup'>
