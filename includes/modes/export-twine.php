@@ -1,5 +1,7 @@
 <?php
 
+    $export_numbers = $_REQUEST['skip_numbers'] ? false : true;
+
     $filename = str_replace(' ','_',$_SESSION['gb']['story']['name'].".html");
     header('Content-disposition: attachment; filename='.$filename);
     header('Content-type: text/html');
@@ -22,7 +24,7 @@
 
     // passages
     foreach ($_SESSION['gb']['story']['passages'] AS $p) {
-        echo twine_passage($p);
+        echo twine_passage($p,$export_numbers);
     }
 
     // special passages

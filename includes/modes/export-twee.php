@@ -1,5 +1,7 @@
 <?php
 
+    $export_numbers = $_REQUEST['skip_numbers'] ? false : true;
+
     $filename = str_replace(' ','_',$_SESSION['gb']['story']['name'].".twee");
     header('Content-disposition: attachment; filename='.$filename);
     header('Content-type: text/twee');
@@ -11,7 +13,7 @@
         if (!array_key_exists('start',$sd)) { $sd['start'] = $sd['startnode']; }
         echo json_encode($sd,JSON_PRETTY_PRINT) . "\n\n";
     foreach ($_SESSION['gb']['story']['passages'] AS $p) {
-        echo twee_passage($p);
+        echo twee_passage($p,$export_numbers);
     }
     echo twee_passage([
         'name'      => 'gb-settings', 
