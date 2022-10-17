@@ -159,6 +159,10 @@ td .checkboxes {
     margin: 0px;
 }
 
+.checkboxes.inline {
+    float: left;
+}
+
 .placeholder {
     display: block;
     border: 2px solid rgb(146, 6, 6);
@@ -169,6 +173,10 @@ td .checkboxes {
     text-align: center;
 }
 
+.options {
+    list-style-type: 'U+003E'; 
+    padding-left: 2em;
+}
 
 .checklist { width: 100%; margin-top: 20px; }
 .checklist .checkbox { width: 30px; }
