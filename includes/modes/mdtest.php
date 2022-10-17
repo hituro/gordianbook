@@ -7,7 +7,8 @@
             }
             $md   = markdown($t,$_REQUEST['mdmode']);
             $esc  = htmlspecialchars($md);
-            $p    = autop(process_links(['text' => $md]),0);
+            $p    = autop(process_links(['text' => $md]),0); 
+            $p    = md_apply_attributes($p);
             $para = htmlspecialchars($p);
         }
         $h = ($_REQUEST['mdmode'] == 'harlowe')   ? 'selected' : '';
@@ -46,6 +47,6 @@
             <div class='content'>
             <h2><code>autop()</code> and <code>process_links()</code></h2>
             <pre style='overflow:scroll'>$para</pre>
-            ",['title' => "Markdown Test", 'css' => ['css/game.css']]);
+            ",['title' => "Markdown Test", 'css' => ['css/game.css','css/preview.css']]);
 
 ?>
