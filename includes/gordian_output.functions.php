@@ -208,9 +208,9 @@
         // need to turn each link in [[]] into a link to the correct paragraph
         //echo "<pre>".print_r($passage,1)."</pre>";
         if ($passage['tags'] && in_array('death',$passage['tags'])) {
-            $tag = "<div class='end death'>{$_SESSION['gb']['settings']['death_text']}</div>";
+            $tag = $_SESSION['gb']['settings']['death_text'] ? "<div class='end death'>{$_SESSION['gb']['settings']['death_text']}</div>" : '';
         } else if ($passage['tags'] && in_array('end',$passage['tags'])) { 
-            $tag = "<div class='end'>{$_SESSION['gb']['settings']['end_text']}</div>";
+            $tag = $_SESSION['gb']['settings']['end_text'] ? "<div class='end'>{$_SESSION['gb']['settings']['end_text']}</div>" : '';
         } else {
             $tag = '';
         }
@@ -234,6 +234,7 @@
         if ($process_markdown) {
             $text   = markdown($text, $_SESSION['gb']['settings']['mdtype'],$settings);
             $text   = autop($text,0).$tag;
+            $text   = md_apply_attributes($text);
             $after  = $after ? markdown($after, $_SESSION['gb']['settings']['mdtype'],$settings) : '';
             $before = $before ? markdown($before, $_SESSION['gb']['settings']['mdtype'],$settings) : '';
         }
@@ -278,7 +279,7 @@
         $t = str_replace(['<?php','<?=','<?','?>'],'',$t);
         $t = str_replace('$','\$',$t);
         // replace variables with echos
-        $t = preg_replace_callback_array(["/{{([a-zA-Z_.0-9]+)}}/" => 'template_var'],$t);
+        $t = preg_replace_callback_array(["/{{([a-zA-Z_.0-9]+)( *[+-\/*] *[0-9]+)?}}/" => 'template_var'],$t);
         // replace <repeat> with foreach loops
         $t = preg_replace_callback_array(["/<repeat *(\S+) *as *(\w+), *(\w+)>/i" => 'template_repeat'],$t);
         $t = preg_replace_callback_array(["/<repeat *(\S+) *as *(\w+)>/i" => 'template_repeat'],$t);
@@ -398,6 +399,7 @@
      * Process a {{variable}} inside a template
      */
     function template_var($var,$enclose=true) {
+        //n($var);
         if (strpos($var[1],'.')) {
             $parts = explode('.',$var[1]);
             $out   = "\$gbt_" . array_shift($parts);
@@ -406,6 +408,9 @@
             }
         } else {
             $out   = "\$gbt_{$var[1]}";
+        }
+        if ($var[2]) {
+            $out .= $var[2];
         }
         $out = str_replace('$_','$',$out);
         return $enclose ? "<?=$out?>" : $out;
@@ -495,6 +500,47 @@
         // restore no-process sections
         $text = md_restore_placeholders($text,$ncplaceholders);
         return $text;
+    }
+
+    function md_apply_attributes($text) {
+        preg_match_all("/\n?{:([.#].*?)}/",$text,$blocks,PREG_OFFSET_CAPTURE);
+        if ($blocks) {
+            //n(htmlentities(print_r($blocks,1)));
+            $splices = [];
+            foreach ($blocks[0] AS $aidx => $aitem) {
+                $block = (substr($aitem[0],0,1) == "\n");
+                $run   = substr($text,0,$aitem[1]);
+                $tag   = $block ? "(div|blockquote|ul|ol|table)" : "[a-z]+";
+                preg_match_all("/(<$tag.*?>)/",$run,$tags,PREG_OFFSET_CAPTURE);
+                //echo n(htmlentities(print_r($tags,1)));
+                $last_tag = $tags[0][count($tags[0])-1];
+                //echo n(htmlentities(print_r($last_tag,1)));
+                $splices[] = ['start' => $last_tag[1], 'length' => strlen($last_tag[0]), 'rep' => md_attr($last_tag[0],$blocks[1][$aidx][0])];
+                $splices[] = ['start' => $aitem[1],    'length' => strlen($aitem[0]),    'rep' => ''];
+            }
+            //n(htmlentities(print_r($splices,1)));
+            $splices = array_reverse($splices);
+            foreach ($splices AS $splice) {
+                $text = str_splice($text,$splice['rep'],$splice['start'],$splice['length']);
+            }
+        }
+        return $text;
+    }
+
+    function md_attr($tag,$attr) {
+        $type      = substr($attr,0,1);
+        $val       = substr($attr,1);
+        $attr_name = ($type == '.') ? 'class' : 'id';
+        //n($attr,$type,$attr_name);
+        if (preg_match("/$attr_name *= *(['\"])(.*?)\\1/",$tag,$matches)) {
+            //n("existing attribute",$matches);
+            $tag = str_replace("$attr_name={$matches[1]}{$matches[2]}{$matches[1]}","$attr_name={$matches[1]}{$matches[2]} $val{$matches[1]}",$tag);
+            //n(htmlentities(print_r($tag,1)));
+        } else {
+            $tag = str_replace(">"," $attr_name=\"$val\">",$tag);
+            //n(htmlentities(print_r($tag,1)));
+        }
+        return $tag;
     }
 
     function md_noprocess($text) {
@@ -981,6 +1027,7 @@
         $format = (strstr($_SESSION['gb']['settings']['page_size'],',')) ? explode(',',$_SESSION['gb']['settings']['page_size']) : $_SESSION['gb']['settings']['page_size'];
 
         $config = [
+            'curlExecutionTimeout' => 3,
             'format' => $format,
             'fontDir' => array_merge($fontDirs, [
                 $root . '/fonts',
