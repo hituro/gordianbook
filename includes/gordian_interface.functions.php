@@ -119,13 +119,35 @@
     }
 
     function gb_passage_edit_list() {
-        $out = '<ul>';
+        $out = "<div id='tabform'>
+            <ul class='tabnav'>
+                <li v-on:click='tab=1' v-bind:class=\"[tab==1 ? 'active' : '']\">Defined</li>
+                <li v-on:click='tab=2' v-bind:class=\"[tab==2 ? 'active' : '']\">Number</li>
+                <li v-on:click='tab=3' v-bind:class=\"[tab==3 ? 'active' : '']\">Alpha</li>
+            </ul>
+            <div class='tabs'>
+                <div class='tab' v-show='tab==1'><ul>";
         foreach ($_SESSION['gb']['story']['passages'] AS $idx => $passage) {
             $number = $_SESSION['gb']['numbering'][$passage['pid']]['number'];
             $number = $number ? $number : 'skip';
             $out .= "<li><a href='gordian.php?mode=passage-edit&passage_name={$passage['name']}'>{$passage['name']} ($number)</a></li>";
         }
-        $out .= '</ul>';
+        $out .= "</ul></div><div class='tab' v-show='tab==2'><ul>";
+        foreach ($_SESSION['gb']['number_order'] AS $number => $pid) {
+            $idx  = $_SESSION['gb']['numbering'][$pid]['index'];
+            $name = $_SESSION['gb']['story']['passages'][$idx]['name'];
+            $out .= "<li><a href='gordian.php?mode=passage-edit&passage_name={$name}'>{$name} ($number)</a></li>";
+        }
+        $out .= "</ul></div><div class='tab' v-show='tab==3'><ul>";
+        $names = $_SESSION['gb']['passage_names'];
+        ksort($names, SORT_NATURAL | SORT_FLAG_CASE);
+        foreach ($names AS $name => $data) {
+            $pid    = $data['pid'];
+            $number = $_SESSION['gb']['numbering'][$pid]['number'];
+            $number = $number ? $number : 'skip';
+            $out .= "<li><a href='gordian.php?mode=passage-edit&passage_name={$name}'>{$name} ($number)</a></li>";
+        }
+        $out .= '</ul></div></div></div>';
         return $out;
     }
 

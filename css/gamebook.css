@@ -197,6 +197,10 @@ dd {
     border: 1px solid #b7b7b7;
     background: #eee;
 }
+.sidebar .tabs {
+    background: none;
+    border: none;
+}
 
 .md {
     margin-left:2em;

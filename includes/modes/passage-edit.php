@@ -37,9 +37,12 @@
 
             // pdf calculations
             $config = config_mpdf($root);
+            $config['curlExecutionTimeout'] = 2;
             $mpdf = new \Mpdf\Mpdf($config);
-            $mpdf->WriteHTML(htmldoc(false,[],[$number]));
-            $height = $mpdf->y - $mpdf->tMargin;
+            try {
+                $mpdf->WriteHTML(htmldoc(false,[],[$number]));
+                $height = $mpdf->y - $mpdf->tMargin;
+            } catch (Exception $e) { echo "<pre>"; print_r($e); }
 
             //echo "<pre>"; print_r($mpdf); echo "</pre>";
 
@@ -76,9 +79,9 @@
 
                 <p>{$mpdf->page} page; {$height} mm</p>
 
-            ",['title' => "Edit Passage : {$passage['name']}", 'sidebar' => gb_passage_edit_list()]);
+            ",['title' => "Edit Passage : {$passage['name']}", 'sidebar' => gb_passage_edit_list(), 'js' => ['vue','js/tabs.js']]);
         } else {
-            echo page($form,['title' => "Edit Passage", 'sidebar' => gb_passage_edit_list()]);
+            echo page($form,['title' => "Edit Passage", 'sidebar' => gb_passage_edit_list(), 'js' => ['vue','js/tabs.js']]);
         }
 
 ?>
