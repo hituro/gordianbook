@@ -11,3 +11,7 @@
 .cover_full, .cover_image {
     position: initial;
 }
+.options {
+    list-style-type: "> ";
+    padding-left: 10px;
+}
