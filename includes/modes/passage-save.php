@@ -62,7 +62,7 @@
                     //echo "Moving forward\n";
                     $moves = [];
                     for ($i = $currnum+1;$i <= $newnum;$i ++) {
-                        echo "Will change number on $i\n";
+                        //echo "Will change number on $i\n";
                         $target_pid = $_SESSION['gb']['number_order'][$i];
                         $moves[] = [$target_pid,$i,$i-1,gb_get_passage($target_pid)['name']];
                     }
