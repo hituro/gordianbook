@@ -40,6 +40,15 @@
                 <li><b>long</b>: The game will not try to avoid page breaks in this passage</li>
                 <li><b>skip</b>: The game will skip this passage. (Synonym: <code>hidden</code>)</li>
             </ul></dd>
+        <dt>Link Syntax</dt>
+            <dd>Links work as expected for Twine (e.g. <code>[[text->passage]], [[passage&lt;-text]], [[text|passage]]</code>) with some special link names:
+            <ul>
+                <li><b>#</b>: Makes a link out of the passage number</li>
+                <li><b>turnto</b>: Makes a link with the text "turn to X", where X is the passage number. Tries to guess if the T should be upper or lower case.</li>
+                <li><b>Turnto</b>: Makes a link with the text "Turn to X", where X is the passage number.</li>
+                <li><b>returnto</b>: Makes a link with the text "return to X", where X is the passage number. Tries to guess if the R should be upper or lower case.</li>
+                <li><b>Returnto</b>: Makes a link with the text "Return to X", where X is the passage number.</li>
+            </ul></dd>
         <dt>Numeric Tags</dt>
             <dd>You can tag a passage with a <b>number</b> to reserve that paragraph number in the final game — make sure to pick a valid number. (Synonym: <code>fixednumber_&lt;number&gt;</code>)</dd>
             <dd>Certain alternatives are supported for compatibility with <a href='gordian.php?mode=wf'>WritingFantasy</a>.</dd>
@@ -55,6 +64,7 @@
                 <li><code>&lt;keyword></code> Marks a keyword (see <a href='gordian.php?mode=keywords-about'>Keywords</a>)</li>
                 <li><code>&lt;keywords></code> Outputs a list of keywords (see <a href='gordian.php?mode=keywords-about'>Keywords</a>)</li>
                 <li><code>&lt;page-before></code> Content placed on a new page preceeding the passage (e.g. a full-page illustration)</li>
+                <li><code>&lt;reference></code> Prints the number of the referenced passage (e.g. <code>&lt;reference>home&lt;/reference></code>), (also <code>&lt;r></code>) 
                 <li><code>&lt;rules></code> For boxed out rules text</li>
                 <li><code>&lt;special></code> Use inside &lt;stats> for special abilities</li>
                 <li><code>&lt;stats></code> For monster or NPC stat blocks</li>
