@@ -130,13 +130,13 @@
         foreach ($_SESSION['gb']['story']['passages'] AS $idx => $passage) {
             $number = $_SESSION['gb']['numbering'][$passage['pid']]['number'];
             $number = $number ? $number : 'skip';
-            $out .= "<li><a href='gordian.php?mode=passage-edit&passage_name={$passage['name']}'>{$passage['name']} ($number)</a></li>";
+            $out .= "<li><a href=\"gordian.php?mode=passage-edit&passage_name={$passage['name']}\">{$passage['name']} ($number)</a></li>";
         }
         $out .= "</ul></div><div class='tab' v-show='tab==2'><ul>";
         foreach ($_SESSION['gb']['number_order'] AS $number => $pid) {
             $idx  = $_SESSION['gb']['numbering'][$pid]['index'];
             $name = $_SESSION['gb']['story']['passages'][$idx]['name'];
-            $out .= "<li><a href='gordian.php?mode=passage-edit&passage_name={$name}'>{$name} ($number)</a></li>";
+            $out .= "<li><a href=\"gordian.php?mode=passage-edit&passage_name={$name}\">{$name} ($number)</a></li>";
         }
         $out .= "</ul></div><div class='tab' v-show='tab==3'><ul>";
         $names = $_SESSION['gb']['passage_names'];
@@ -145,7 +145,7 @@
             $pid    = $data['pid'];
             $number = $_SESSION['gb']['numbering'][$pid]['number'];
             $number = $number ? $number : 'skip';
-            $out .= "<li><a href='gordian.php?mode=passage-edit&passage_name={$name}'>{$name} ($number)</a></li>";
+            $out .= "<li><a href=\"gordian.php?mode=passage-edit&passage_name={$name}\">{$name} ($number)</a></li>";
         }
         $out .= '</ul></div></div></div>';
         return $out;
@@ -185,7 +185,7 @@
         if (!$args) { return true; }
         echo "<pre class='pre_n'>";
         foreach ($args AS $m) {
-            if (is_array($m)) { print_r($m); } else { echo $m; }
+            if (is_array($m)) { echo htmlspecialchars(print_r($m,1)); } else { echo $m; }
             echo ' ';
         }
         echo "</pre>";
