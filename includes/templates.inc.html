@@ -70,6 +70,7 @@
     <t:note>{"title": "NOTE", "content": "This is the content of the note"}</t>
 </script></code></pre>
 <p>You can access values from the object by putting the key in <code>{{}}</code> as shown above. If your data has nested values (arrays, or other objects) you can access them with "dot notation", for example: <code>{{weapon.damage}} {{weapons.0}}</code>.</p>
+<p>You can do simple calculation inside a numerical values by following the value name with one of <code>+ - / *</code>. For example <code>{{default + 1}}</code>.</p>
 
 <h2>Conditionals in Templates</h2>
 <p>You may wish to vary the layout of your template depending on the data passed — if X then Y, for example. You can do that using the <code>&lt;if></code> tag inside your template.</p>
