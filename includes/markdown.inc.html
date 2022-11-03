@@ -55,3 +55,8 @@
 </table>
 <h2>No-Markup (Harlowe)</h2>
 <p>Enclose text in one or more backticks <code>`</code> to turn off formatting in that text. You can include backticks <i>inside</i> the text by using more backticks to surround it (e.g. <code>`` no `processing` here``</code>).</p>
+<h2>Markdown Class Declarations</h2>
+<p>Adds a class to the preceding HTML element (whether generated from Markdown or manually written).</p>
+<p>Place <code>{:.class}</code> inline to add <code>class</code> to the preceding (or enclosing) inline element. e.g. <code>*text* {:.class}</code> produces <code>&lt;i class="class">text&lt;/i></code>.</p>
+<p>Place <code>{:.class}</code> on a new line to add <code>class</code> to the preceding block element. e.g. <pre>* text
+{:.class}</pre> produces <code>&lt;ul class="class">&lt;li>text&lt;/li>&lt;/ul></code>.</p>
