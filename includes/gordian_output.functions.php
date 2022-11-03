@@ -245,6 +245,8 @@
     /* TEMPLATE FUNCTIONS */
 
     function templates($text,$templatematches,$print=false) {
+        //$templatematches = array_reverse($templatematches);
+        //n($templatematches);
         foreach ($templatematches AS $t) {
             //echo "<pre>TEMPLATE MATCH ".htmlspecialchars(print_r($t,1))."</pre>";
             $r    = template($t[3] ? $t[3] : $t[1],$t[4] ? $t[4] : $t[2],null,'',$print);
@@ -305,7 +307,7 @@
         foreach ($tokens AS $i => $to) {
             //echo "TOKEN $i |$to|\n";
             // if $consume is non-zero it means we are consuming elements from the token steam
-            // to construct a multi-part token, such as a delimited string, or an arrray access
+            // to construct a multi-part token, such as a delimited string, or an array access
             if ($consume) {
                 if ($consume == 'var') {
                     //echo "    + CONSUMING FOR var\n";
@@ -483,6 +485,7 @@
         $text = preg_replace_callback("/^\s*{$h}(.*)$/m",function($m) { return "\n<h3>".trim($m[1])."</h3>"; },$text);
         // rules
         $text = preg_replace("/<check>(.+?)<\/check>/s","<span class='check'>$1</span>",$text);
+        $text = preg_replace("/<c>(.+?)<\/c>/s","<span class='check'>$1</span>",$text);
         $text = preg_replace("/<rules>(.+?)<\/rules>/s","<div class='rules'>$1</div>",$text);
         $text = preg_replace("/<stats>(.+?)<\/stats>/s","<div class='stats'>$1</div>",$text);
         $text = preg_replace("/<special>(.+?)<\/special>/s","<div class='special'>$1</div>",$text);
@@ -490,6 +493,7 @@
         $text = preg_replace("/<it>(.+?)<\/it>/s","<b class='item'>$1</b>",$text);
         $text = preg_replace("/<keyword>(.+?)<\/keyword>/s","<i class='keyword'>$1</i>",$text);
         $text = preg_replace("/<k>(.+?)<\/k>/s","<i class='keyword'>$1</i>",$text);
+        $text = preg_replace_callback("/<r>(.*?)<\/r>/s",function($m) { return $_SESSION['gb']['numbering'][$_SESSION['gb']['passage_names'][$m[1]]['pid']]['number']; },$text);
         $text = preg_replace_callback("/<keywords(?: +cols=['\"](?P<cols>[0-9]+)['\"])?>(?P<body>.*?)<\/keywords>/s","md_keywords",$text);
         $text = preg_replace_callback("/<checkbox-list(?: +cols=['\"](?P<cols>[0-9]+)['\"])?>(?P<body>.*?)<\/checkbox-list>/s","md_checkbox_list",$text);
         $text = preg_replace_callback("/<checkboxes>(.+?)<\/checkboxes>/s","md_boxes",$text);
