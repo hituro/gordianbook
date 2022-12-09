@@ -6,7 +6,7 @@
     header('Content-disposition: attachment; filename='.$filename);
     header('Content-type: text/twee');
     echo ":: StoryTitle\n{$_SESSION['gb']['story']['name']}\n\n";
-    echo ":: UserScript[script]\n\n:: UserStylesheet[stylesheet]{$_SESSION['gb']['story_css']}\n\n";
+    echo ":: UserScript[script]\n\n:: UserStylesheet[stylesheet]\n\n{$_SESSION['gb']['story_css']}\n\n";
     echo ":: StoryData\n";
         $sd = $_SESSION['gb']['story'];
         unset($sd['name']); unset($sd['passages']);
