@@ -1,8 +1,8 @@
 
-    .paragraph, .cover_full, .cut_image {
+    .paragraph, .cover_full, .cut_image, #introduction, .cut, .content > * {
         display                 : none;
     }
-    :target, .show, :target + .cut_image {
+    :target, .show, :target + .cut_image, :target + .cut, .content > header, .content > h1, #introduction:target {
         background              : inherit;
         display                 : block;
     }
