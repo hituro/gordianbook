@@ -59,7 +59,7 @@
 
     function htmlise($print=false,$settings,$only=false) {
         $out  = '';
-        $pf   = "<sethtmlpagefooter name='otherpagefooter' page='ALL' value='on'></sethtmlpagefooter>";
+        $pf   = $settings['playable'] ? '' : "<sethtmlpagefooter name='otherpagefooter' page='ALL' value='on'></sethtmlpagefooter>";
         $rf   = '';
         $only = get_only($only);
         if ($print && $_SESSION['gb']['settings']['cover'] && !$only && ($settings['covers'] || !$settings['print'])) {
@@ -73,7 +73,7 @@
             } else if ($settings['covers']) {
                 $out .= "<pagebreak resetpagenum='1'></pagebreak>";
             } else {
-                $out .= "<pagebreak type='next-odd' resetpagenum='1'></pagebreak>";
+                $out .= $settings['playable'] ? '' : "<pagebreak type='next-odd' resetpagenum='1'></pagebreak>";
             }
         } else if (!$settings['print'] && !$settings['covers'] && !$only) {
             $out = "<h1 class='story_name'>{$_SESSION['gb']['story']['name']}</h1>";
@@ -90,7 +90,7 @@
                     $out .= "<div class='paragraph frontmatter long'>".process_para($front,true,$print,$settings)['text']."</div>
                              <div class='body_headers'></div>";
                     if ($front['tags'] && in_array('breakafter',$front['tags'])) {
-                        $out .= "<pagebreak type='next-odd' suppress='off'></pagebreak>";
+                        $out .= $settings['playable'] ? '' : "<pagebreak type='next-odd' suppress='off'></pagebreak>";
                     }
                 }
             }
@@ -100,7 +100,7 @@
                 $out .= "<div class='paragraph introduction long' id='introduction'>".process_para($_SESSION['gb']['gb-introduction'],true,$print,$settings)['text']."</div>
                          <div class='body_headers'></div>";
                 if ($_SESSION['gb']['gb-introduction']['tags'] && in_array('breakafter',$_SESSION['gb']['gb-introduction']['tags'])) {
-                    $out .= "<pagebreak type='next-odd' suppress='off'></pagebreak>";
+                    $out .= $settings['playable'] ? '' : "<pagebreak type='next-odd' suppress='off'></pagebreak>";
                 } else {
                     $out .= "<div class='game_divider'></div>";
                 }
@@ -124,7 +124,7 @@
                     $pp   = process_para($pass,true,$print,$settings);
                     
                     if ($pass['tags'] && in_array('breakbefore',$pass['tags'])) {
-                        $out .= "<pagebreak suppress='off'/>";
+                        $out .= $settings['playable'] ? '' : "<pagebreak suppress='off'></pagebreak>";
                     }
                     
                     if ($settings['proof']) {
@@ -132,13 +132,13 @@
                     }
                     $out .= $rf ? $rf : $pf;
                     
-                    if ($_REQUEST['dice']) {
+                    if ($_SESSION['gb']['settings']['footers'] == 'dice' && !$settings['playable']) {
                         $r    = rand(1,100);
                         $out .= "
                         <htmlpagefooter name=\"{$number}_footer\" style=\"display:none\">
                             <div class='footer'>
-                              <img src='/images/app/dice-".rand(1,6).".png' style='width:55px;'> 
-                              <img src='/images/app/dice-".rand(1,6).".png' style='width:55px;'></div>
+                              <img src='images/app/dice-".rand(1,6).".png' style='width:55px;'> 
+                              <img src='images/app/dice-".rand(1,6).".png' style='width:55px;'></div>
                         </htmlpagefooter>";
                         $rf   = "<sethtmlpagefooter name='{$number}_footer' page='ALL' value='on'></sethtmlpagefooter>";
                     }
@@ -156,7 +156,7 @@
                             {$pp['after']}";
                     $out .= $rf ? $rf : $pf;
                     if ($_SESSION['gb']['settings']['break'] || ($pass['tags'] && in_array('breakafter',$pass['tags']))) {
-                        $out .= "<pagebreak type='next-odd' suppress='off'></pagebreak>";
+                        $out .= $settings['playable'] ? '' : "<pagebreak type='next-odd' suppress='off'></pagebreak>";
                     }
                     $count ++;
                     if ($_REQUEST['limit'] && $count >= $_REQUEST['limit']) { break; }
@@ -450,6 +450,8 @@
         $text = preg_replace("|\n\\\\|",' ',$text);
         // WF no-process sections
         list($text,$ncplaceholders) = md_noprocess($text);
+        // gb-prefixes
+        $text = preg_replace("|(</{0,1})gb-(.*?)>|s","$1$2>",$text);
         // comments 
         $text = preg_replace("|/[*%](.*?)[*%]/|s","<comment>$1</comment>",$text);
         $text = preg_replace("|<!--(.*?)-->|s","<comment>$1</comment>",$text);

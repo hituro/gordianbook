@@ -82,6 +82,11 @@
                     Left <input name='margin_print_left' type='text' value='{$mpl}' class='auto' style='width:2em'>
                     Right <input name='margin_print_right'  type='text' value='{$mpr}' class='auto' style='width:2em'>
                 </div>
+                <div class='form-row'>
+                    <label for='cover'>Footers</label>
+                    <input name='footers' type='radio' value='numbers' ".($_SESSION['gb']['settings']['footers'] == 'numbers' ?'CHECKED':'')."> Numbers
+                    <input name='footers' type='radio' value='dice'    ".($_SESSION['gb']['settings']['footers'] == 'dice'    ?'CHECKED':'')."> Dice
+                </div>
             </div>
             <div class='form-row'>
                 <input type='submit' value='Save'>

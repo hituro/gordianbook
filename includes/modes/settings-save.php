@@ -17,6 +17,7 @@
     $_SESSION['gb']['settings']['margin_bottom']       = $_REQUEST['margin_bottom'];
     $_SESSION['gb']['settings']['margin_print_left']   = $_REQUEST['margin_print_left'];
     $_SESSION['gb']['settings']['margin_print_right']  = $_REQUEST['margin_print_right'];
+    $_SESSION['gb']['settings']['footers']             = $_REQUEST['footers'] ? $_REQUEST['footers'] : 'numbers';
     msg("Settings saved");
     go('settings');
 
