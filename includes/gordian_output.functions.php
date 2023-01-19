@@ -755,7 +755,12 @@
             }
             $out .= "\n";
         }
-        return str_replace(["<p><div","/div></p>","<p><table","/ul></p>"],['<div','/div>','<table','/ul>'],$out);
+        $out = str_replace(["<p><div","/div></p>","<p><table","/ul></p>"],['<div','/div>','<table','/ul>'],$out);
+        //preg_match_all("|div([^>]*)>((?:(?!<p>).)*)</p>|gs",$out,$matches);
+        //print_r($matches);
+        $out = preg_replace("|div([^>]*)>((?:(?!<p>).)*)</p>|s","div$1><p>$2<p/>",$out);
+        $out = preg_replace("|<p>((?:(?!</p>).)*)</div>|s","<p>$1</p></div>",$out);
+        return $out;
     }
 
     function process_links($passage,$settings=[]) {
@@ -831,8 +836,10 @@
         ];
         // first build the document data (title, metadata)
         $story_data       = $dom->findOne('tw-storydata');
+        $num_attrs        = ['startnode', 'zoom'];
         foreach (['name','startnode','format','format-version','zoom','tag-colors','ifid','tags'] AS $e) {
             if ($story_data->getAttribute($e))  { $out[$e] = $story_data->getAttribute($e); }
+            if (in_array($e,$num_attrs)) { $out[$e] = (int) $out[$e]; }
         }
         // then add styles and js
         $style = $dom->findOne('#twine-user-stylesheet');
@@ -878,26 +885,22 @@
         foreach ($passages AS $passage) {
             if (!trim($passage)) { continue; }
             $passage = '::' . $passage;
-            //echo "<pre>"; print_r($passage);
             $title   = preg_match("/^:: *(?<title>.*?) *(?:\[(?<tags>.*?)\])? *(?:(?<meta>\{.*?\}))?\n/",$passage,$matches);
             $passage = trim(str_replace($matches[0],'',$passage));
             $tags    = array_filter(explode(' ',$matches['tags']));
             if ($matches['title'] == 'StoryTitle') {
-                //echo "title set\n";
                 $out['name'] = $passage;
             } else if ($matches['title'] == 'StoryData') {
-                //echo "data set\n";
                 $json = json_decode($passage,true);
                 if ($json['startnode']) { $out['startnode'] = $json['startnode']; } else { $out['startnode'] = $json['start']; }
                 foreach (['format-version','zoom','tag-colors','ifid'] AS $e) {
                     if ($json[$e])  { $out[$e] = $json[$e]; }
                 }
                 $out['format'] = $json['format'] ? $json['format'] : 'Harlowe';
-            //} else if (in_array('stylesheet',$tags)) {
-            //    $_SESSION['gb']['settings']['css'] .= $passage;
-            //    continue;
+            } else if (in_array('stylesheet',$tags)) {
+                $_SESSION['gb']['story_css'] .= $passage;
+                continue;
             } else if (array_intersect($tags,$ommit_tags)) {
-                //echo "ommitted\n";
                 continue;
             } else {
                 $new = [
@@ -912,13 +915,10 @@
                     if ($meta['position']) { $new['position'] = $meta['position']; }
                     if ($meta['size']) { $new['size'] = $meta['size']; }
                 }
-                //echo "create passage ".print_r($new,1)."\n";
                 $out['passages'][] = $new;
                 $idx ++;
             }
-            //print_r($matches); echo "================================\n</pre>";
         }
-        //echo "<pre>"; print_r($out); echo "</pre>";
         return $out;
     }
 
@@ -1085,6 +1085,21 @@
         $tag
         </div>
         {$pp['after']}";
+    }
+
+
+    function guidv4($data = null) {
+        // Generate 16 bytes (128 bits) of random data or use the data passed into the function.
+        $data = $data ?? random_bytes(16);
+        assert(strlen($data) == 16);
+    
+        // Set version to 0100
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+        // Set bits 6-7 to 10
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+    
+        // Output the 36 character UUID.
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 
 ?>

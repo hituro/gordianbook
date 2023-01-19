@@ -10,7 +10,8 @@
     echo ":: StoryData\n";
         $sd = $_SESSION['gb']['story'];
         unset($sd['name']); unset($sd['passages']);
-        if (!array_key_exists('start',$sd)) { $sd['start'] = $sd['startnode']; }
+        if (!array_key_exists('start',$sd)) { $sd['start'] = $_SESSION['gb']['story']['passages'][$_SESSION['gb']['pids'][$sd['startnode']]]['name']; }
+        if (!array_key_exists('ifid',$sd))  { $sd['ifid'] = strtoupper(guidv4()); }
         echo json_encode($sd,JSON_PRETTY_PRINT) . "\n\n";
     foreach ($_SESSION['gb']['story']['passages'] AS $p) {
         echo twee_passage($p,$export_numbers);
@@ -37,5 +38,6 @@
     if ($_SESSION['gb']['gb-templates']) {
         echo twee_passage($_SESSION['gb']['gb-templates']['passage']);
     }
+    
 
 ?>

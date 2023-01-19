@@ -1,6 +1,10 @@
 <H1>Changelog</h1>
     <dl>
 
+        <dt>2023-01-19</dt>
+        <dd>Made some minor changes to the Twee output to better fit the standard. We now add an IFID is one is missing, and generate a Start attribute in StoryData if only startnode is provided.</dd>
+        <dd>Made some minor changes to the text processing so that <code>&lt;rules&gt;\\nsome text\\nsome more text\\n&lt;/rules&gt;</code> now correctly wraps the contents in paragraph tags.</dd>
+
         <dt>2022-11-07</dt>
         <dd>You can write Gordian tags with a <code>gb-</code> prefix — for example, if your IDE follows the HTML custom-tag syntax. For example <code>&lt;gt-keyword>&lt;/gt-keyword></code> is legal.</dd>
 

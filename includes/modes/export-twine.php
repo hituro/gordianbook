@@ -11,9 +11,12 @@
     $skip = ['tag-colors','passages'];
     foreach ($_SESSION['gb']['story'] AS $attr => $v) {
         if (!in_array($attr,$skip)) {
-            $attrs[] = "$attr=\"$v\"";
+            $attrs[$attr] = "$attr=\"$v\"";
         }
     }
+    if (!array_key_exists('start',$attrs)) { $attrs['start'] = 'start="'.$_SESSION['gb']['story']['passages'][$_SESSION['gb']['pids'][$_SESSION['gb']['story']['startnode']]]['name'] . '"'; }
+    if (!array_key_exists('ifid',$attrs))  { $attrs['ifid']  = 'ifid="' . strtoupper(guidv4()) . '"'; }
+
     $attrs = implode(' ',$attrs);
     echo "<tw-storydata $attrs hidden>";
     echo "<style role=\"stylesheet\" id=\"twine-user-stylesheet\" type=\"text/twine-css\">{$_SESSION['gb']['story_css']}</style>";
