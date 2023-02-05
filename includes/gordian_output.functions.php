@@ -70,8 +70,8 @@
             if ($settings['covers'] && $settings['simplex']) {
             } else if ($settings['covers'] && $settings['covers-only']) {
                 $out .= "<pagebreak type='next-odd' suppress='on' resetpagenum='1'></pagebreak>";
-            } else if ($settings['covers']) {
-                $out .= "<pagebreak resetpagenum='1'></pagebreak>";
+            } else if ($settings['covers'] || $settings['simplex']) {
+                $out .= "<pagebreak type='next-odd' resetpagenum='1'></pagebreak>";
             } else {
                 $out .= $settings['playable'] ? '' : "<pagebreak type='next-odd' resetpagenum='1'></pagebreak>";
             }
@@ -581,7 +581,7 @@
                 $diff = $depth - $lists['depth'];
                 //echo "<pre>  + increase depth by $diff </pre>";
                 $lists['depth'] = $depth;
-                $rep = str_repeat("<{$list_type}>",$diff) . $start.trim($litems[2][$lidx][0]).$end;
+                $rep = str_repeat("\n<{$list_type}>",$diff) . $start.trim($litems[2][$lidx][0]).$end;
             } else if ($depth < $lists['depth']) {
                 $diff = $lists['depth'] - $depth;
                 //echo "<pre>  - increase depth by $diff </pre>";
@@ -758,14 +758,14 @@
         $out = str_replace(["<p><div","/div></p>","<p><table","/ul></p>"],['<div','/div>','<table','/ul>'],$out);
         //preg_match_all("|div([^>]*)>((?:(?!<p>).)*)</p>|gs",$out,$matches);
         //print_r($matches);
-        $out = preg_replace("|div([^>]*)>((?:(?!<p>).)*)</p>|s","div$1><p>$2<p/>",$out);
+        $out = preg_replace("|<div([^>]*)>((?:(?!<p>).)*)</p>|s","<div$1><p>$2</p>",$out);
         $out = preg_replace("|<p>((?:(?!</p>).)*)</div>|s","<p>$1</p></div>",$out);
         return $out;
     }
 
     function process_links($passage,$settings=[]) {
         $prefix = $settings['para_links'] ? 'para_' : '';
-        preg_match_all("/\[\[(.*?)\]\]/",$passage['text'],$matches);
+        preg_match_all("/\[\[([^\[\]]*?)\]\]/",$passage['text'],$matches);
         $debug = "<pre>"; 
         $debug .= print_r($matches,1);
         foreach ($matches[1] AS $lidx => $link) {
@@ -839,7 +839,7 @@
         $num_attrs        = ['startnode', 'zoom'];
         foreach (['name','startnode','format','format-version','zoom','tag-colors','ifid','tags'] AS $e) {
             if ($story_data->getAttribute($e))  { $out[$e] = $story_data->getAttribute($e); }
-            if (in_array($e,$num_attrs)) { $out[$e] = (int) $out[$e]; }
+            if (in_array($e,$num_attrs)) { $out[$e] = (float) $out[$e]; }
         }
         // then add styles and js
         $style = $dom->findOne('#twine-user-stylesheet');
