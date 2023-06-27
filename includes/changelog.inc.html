@@ -3,10 +3,10 @@
 
         <dt>2023-01-19</dt>
         <dd>Made some minor changes to the Twee output to better fit the standard. We now add an IFID is one is missing, and generate a Start attribute in StoryData if only startnode is provided.</dd>
-        <dd>Made some minor changes to the text processing so that <code>&lt;rules&gt;\\nsome text\\nsome more text\\n&lt;/rules&gt;</code> now correctly wraps the contents in paragraph tags.</dd>
+        <dd>Made some minor changes to the text processing so that <code>&lt;rules&gt;\nsome text\nsome more text\n&lt;/rules&gt;</code> now correctly wraps the contents in paragraph tags.</dd>
 
         <dt>2022-11-07</dt>
-        <dd>You can write Gordian tags with a <code>gb-</code> prefix — for example, if your IDE follows the HTML custom-tag syntax. For example <code>&lt;gt-keyword>&lt;/gt-keyword></code> is legal.</dd>
+        <dd>You can write Gordian tags with a <code>gb-</code> prefix — for example, if your IDE follows the HTML custom-tag syntax. For example <code>&lt;gb-keyword>&lt;/gb-keyword></code> is legal.</dd>
 
         <dt>2022-10-31</dt>
         <dd>Added <code>&lt;reference>&lt;/reference></code> (synonym <code>&lt;r>&lt;/r></code>) to insert a passage number without a link.</dd>
@@ -33,7 +33,7 @@
         <dd>Added a viewer for the current story JSON (<a href="gordian.php?mode=show-json">view</a>)</dd>
 
         <dt>2022-06-18</dt>
-        <dd>Line-breaks inside a template call (<code>&lt;template></code>) no longer generates an error.</dd>
+        <dd>Line-breaks inside a template call (<code>&lt;template></code>) no longer generate an error.</dd>
         <dd>A multi-line Sugarcube blockquote (lines prefixed with <code>> </code>) now adds a break at the end of each line.</dd>
         <dd>Fixed a bug where exporting to a Twine save file could create phantom blank passage tags</dd>
         <dd>Added a playable preview mode, where only one passage at a time is shown</dd>
