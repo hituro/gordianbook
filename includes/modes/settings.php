@@ -36,7 +36,7 @@
                 <div class='form-row'>
                     <label for='page_size'>Page Size</label>
                     <p><i>Default A4-P</i></p>
-                    <input name='page_size' type='text' value='{$_SESSION['gb']['settings']['page_size']}'>
+                    <input name='page_size' type='text' value='".(is_array($_SESSION['gb']['settings']['page_size']) ? implode(',',$_SESSION['gb']['settings']['page_size']) : $_SESSION['gb']['settings']['page_size'])."'>
                 </div>
                 <div class='form-row'>
                     <label for='separator'>Use paragraph separator?</label>
