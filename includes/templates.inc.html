@@ -1,6 +1,7 @@
 <h1>Gordian Templating</h1>
 
 <p>You may find yourself frequently reusing a block of layout, such as a monster stat block, skill check, or shop. In this case you can use a <code>template</code> to store the layout and reusse it.</p>
+<p><i>For a lighter-weight alternative, take a look at <a href="gordian.php?mode=placeholders-about">placeholders</a></i></p>
 
 <h2>Defining a Template</h2>
 <p>Templates are declared inside the <code>gb-templates</code> passage. The passage can contain one or more <code>&lt;template></code> tags. For example:</p>
@@ -36,7 +37,17 @@
     </script></code></pre>
 </div>
 
-<p>If you prefer you can use the syntax <code>&lt;template name="template_name">&lt;/template></code>.</p>
+<p>If you prefer you can use the syntax <code>&lt;template name="template_name">&lt;/template></code>, or the placeholder shortcut <code>$template_name</code>. In addition, for compatibility with the HTML Custom Element syntax, <code>&lt;gb-template></code> is also valid.</p>
+
+<div class="example">
+    <p>For example, all of the following are equivalent:</p>
+    <pre><code class='language-markup'><script type='prism-html-markup'>
+        <gb-template name="dead"></gb-template>
+        <template name="dead"></template>
+        <t:dead></t>
+        $dead
+    </script></code></pre>
+</div>
 
 <h2>Passing Content to a Template</h2>
 <p>A template with fixed text has limited uses (though not none). More often you will want to pass some content to a template. For example imagine you have a specially styled div in your game for notes, and want to use that frequently. You could set up a template and pass the content of the note.</p>

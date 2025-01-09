@@ -1,0 +1,24 @@
+<h1>Gordian Placeholders</h1>
+
+<p>Placeholders are a lightweight alternative to <a href="gordian.php?mode=templates">templates</a>, for reusing text that requires little processing. A placeholder can be used in the text with Twine-variable-like syntax, e.g. <code>$placeholer</code></p>
+
+<h2>Defining Placeholders</h2>
+<p>Placeholders are declared inside the <code>gb-placeholders</code> passage. The passage should contain a single JSON Object whose keys are the placeholder names and whose values are the placeholder contents. For example:</p>
+<pre><code class='language-json'><script type='prism-json-markup'>
+    {
+        "name": "Bob",
+        "greeting": "Hello $name"
+    }
+</script></code></pre>
+<p>Note that a piece of placeholder text can refer to a previous placeholder with <code>$placeholdername</code>. This doesn't work the other way around, a placeholder can only refer to a placeholder defined earlier in the list, not later.</p>
+
+<h2>Using Placeholders</h2>
+<p>In passage text, you can use a placeholder by prefixing its name with a dollar sign. For example:</p>
+<pre><code class='language-markup'><script type='prism-html-markup'>
+    "Hey," you say, "My name is $name."
+
+    "$greeting", the chef says.
+</script></code></pre>
+
+<h2>Placeholder Templates</h2>
+<p>If Gordian sees a <code>$placeholder</code> and it <i>doesn't</i> match a placeholder it will convert it into a template call instead, so that <code>$placeholder</code> becomes <code>&lt;t:placeholder>&lt;/t></code>. In this way you can use either placeholders or templates for your reusable text, whichever makes the most sense to you.</p>

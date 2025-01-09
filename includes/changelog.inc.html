@@ -1,6 +1,17 @@
 <H1>Changelog</h1>
     <dl>
 
+        <dt>2024-12-20 (Link customising)</dt>
+        <dd>The default link text can now be overriden in <code>settings</code>.</dd>
+
+        <dt>2024-05-09 (Placeholders)</dt>
+        <dd>Passages named <code>StoryInit</code>, or tagged <code>startup</code> are now skipped.</dd>
+        <dd>Twine variable syntax (<code>$variable</code>) is now recognised as a reference to the placeholder named <code>variable</code> if it exists, or to the template <code>variable</code> if it exists. If neither exist, it is treated as literal text.</dd>
+        <dd>Added the <code>gb-placeholders</code> special passage. It's contents are expected to be a JSON object of placeholder names and contents (see <a href="gordian.php?mode=placeholders-about">placeholders</a>).</dd>
+
+        <dt>2024-04-27</dt>
+        <dd>Upgraded to PHP 8.1 Compatibility</dd>
+
         <dt>2023-01-19</dt>
         <dd>Made some minor changes to the Twee output to better fit the standard. We now add an IFID is one is missing, and generate a Start attribute in StoryData if only startnode is provided.</dd>
         <dd>Made some minor changes to the text processing so that <code>&lt;rules&gt;\nsome text\nsome more text\n&lt;/rules&gt;</code> now correctly wraps the contents in paragraph tags.</dd>

@@ -38,6 +38,9 @@
     if ($_SESSION['gb']['gb-templates']) {
         echo twee_passage($_SESSION['gb']['gb-templates']['passage']);
     }
+    if ($_SESSION['gb']['gb-placeholders']) {
+        echo twee_passage($_SESSION['gb']['gb-placeholders']['passage']);
+    }
     
 
 ?>

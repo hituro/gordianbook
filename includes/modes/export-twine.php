@@ -53,6 +53,9 @@
     if ($_SESSION['gb']['gb-templates']) {
         echo twine_passage($_SESSION['gb']['gb-templates']['passage']);
     }
+    if ($_SESSION['gb']['gb-placeholders']) {
+        echo twine_passage($_SESSION['gb']['gb-placeholders']['passage']);
+    }
     echo "</tw-storydata>";
 
 ?>

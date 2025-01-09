@@ -22,6 +22,8 @@
             <ul>
                 <li><b>gb-settings</b>: Used to store your Gordian settings in JSON (see <a href='gordian.php?mode=export-settings'>Export Settings</a>)</li>
                 <li><b>gb-templates</b>: Used to store your Gordian templates (see <a href="gordian.php?mode=templates-about">Templating System</a>)</li>
+                <li><b>gb-placeholders</b>: Used to store your Gordian placeholders (see <a href="gordian.php?mode=placeholders-about">Placeholders</a>)</li>
+
                 <li><b>gb-front-cover</b>: Used to create the PDF front cover</li>
                 <li><b>gb-introduction</b>: Placed before the first numbered entry</li>
                 <li><b>gb-rear</b>: Placed at the end of the PDF, after a page break</li>
@@ -48,6 +50,7 @@
                 <li><b>Turnto</b>: Makes a link with the text "Turn to X", where X is the passage number.</li>
                 <li><b>returnto</b>: Makes a link with the text "return to X", where X is the passage number. Tries to guess if the R should be upper or lower case.</li>
                 <li><b>Returnto</b>: Makes a link with the text "Return to X", where X is the passage number.</li>
+                <li><b>literal:text</b>: Makes a link with "text" and doesn't include the passage number.</li>
             </ul></dd>
         <dt>Numeric Tags</dt>
             <dd>You can tag a passage with a <b>number</b> to reserve that paragraph number in the final game — make sure to pick a valid number. (Synonym: <code>fixednumber_&lt;number&gt;</code>)</dd>

@@ -63,7 +63,7 @@
                         $_SESSION['gb']['backmatter']['numbered'][$matter_idx] = $passage['pid'];
                     }
                     $debug .= "REMOVING $pname ({$passage['pid']}) AS FRONT/BACK MATTER\n".$matter." PLACING it in $mater_idx\n".print_r($_SESSION['gb']['frontmatter'],1).print_r($_SESSION['gb']['backmatter'],1);
-                } else if ($passage['tags'] && (in_array('skip',$passage['tags']) || in_array('hidden',$passage['tags']))) {
+                } else if ($passage['tags'] && (in_array('skip',$passage['tags']) || in_array('hidden',$passage['tags']) || in_array('startup',$passage['tags'])) || $pname == "storyinit") {
                     $skip[$passage['pid']] = 1;
                     $passage_count --;
                     $debug .= "SKIPPING $pname, PASSAGE COUNT $passage_count\n";
@@ -71,7 +71,17 @@
                     $_SESSION['gb']['settings']['story_css'] .= $passage['text'];
                     unset($_SESSION['gb']['story']['passages'][$idx]);
                     $passage_count --;
-                } else if ($pname == 'gb-settings') {
+                } else if ($pname == 'gb-placeholders') {
+                    $content = json_decode($passage['text'],true);
+                    $placeholders = create_placeholders($content);
+                    $_SESSION['gb'][$pname] = [
+                        'passage' => $passage,
+                        'placeholders' => $placeholders
+                    ];
+                    unset($_SESSION['gb']['story']['passages'][$idx]);
+                    $passage_count --;
+                    $debug .= "REMOVING $pname, PASSAGE COUNT $passage_count\n";
+                }else if ($pname == 'gb-settings') {
                     $content = json_decode($passage['text'],true);
                     unset($_SESSION['gb']['story']['passages'][$idx]);
                     $skip[$passage['pid']] = 1;
@@ -86,12 +96,6 @@
                         $_SESSION['gb']['settings'] = array_merge($defaults['settings'],$content); 
                     }
                 } else if ($pname == 'gb-templates') {
-                    // preg_match_all("|<template name=\"(.*)\">(.*)</template>|sU",$passage['text'],$matches,PREG_SET_ORDER);
-                    // $debug .= "MATCHES : " . print_r($matches,1);
-                    // foreach ($matches AS $match) {
-                    //     $templates[$match[1]] = $match[2];
-                    // }
-                    // $debug .= "TEMPLATES : " . print_r($templates,1);
                     $templates = create_templates($passage['text']);
                     $_SESSION['gb'][$pname] = [
                         'passage' => $passage,
