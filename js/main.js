@@ -23,6 +23,15 @@ $( document ).ready(function() {
             mode: "markdown"
         });
     });
+    $('.codemirror.javascript').each(function(i, block) {
+        var editor = CodeMirror.fromTextArea(block, {
+            lineNumbers: false,
+            lineWrapping: true,
+            flattenSpans: false,
+            htmlMode: true,
+            mode: "javascript"
+        });
+    });
     $('.sidebar').click(function() {
         $(this).toggleClass('expanded');
     })

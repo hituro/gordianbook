@@ -28,7 +28,8 @@
             'resolution'        => 300,
             'image_resolution'  => 300,
             'low_res'           => false,
-            'footers'           => 'numbers'
+            'footers'           => 'numbers',
+            'links'             => []
         ],
         'stats'         => [
             'passages'  => 0,

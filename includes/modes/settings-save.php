@@ -18,6 +18,17 @@
     $_SESSION['gb']['settings']['margin_print_left']   = $_REQUEST['margin_print_left'];
     $_SESSION['gb']['settings']['margin_print_right']  = $_REQUEST['margin_print_right'];
     $_SESSION['gb']['settings']['footers']             = $_REQUEST['footers'] ? $_REQUEST['footers'] : 'numbers';
+
+    // links
+
+    if (!is_array($_SESSION['gb']['settings']['links'])) { $_SESSION['gb']['settings']['links'] = []; }
+
+    $_SESSION['gb']['settings']['links']['Turnto']     = $_REQUEST['links_Turnto'];
+    $_SESSION['gb']['settings']['links']['turnto']     = $_REQUEST['links_turnto'];
+    $_SESSION['gb']['settings']['links']['Returnto']   = $_REQUEST['links_Returnto'];
+    $_SESSION['gb']['settings']['links']['returnto']   = $_REQUEST['links_returnto'];
+    $_SESSION['gb']['settings']['links']['default']    = $_REQUEST['links_default'];
+
     msg("Settings saved");
     go('settings');
 

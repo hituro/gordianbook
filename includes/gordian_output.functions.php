@@ -4,10 +4,10 @@
     /* GAMEBOOK OUTPUT FUNCTIONS                                                           */
     /* =================================================================================== */
 
-    function htmldoc($print=true,$settings,$only=false) {
+    function htmldoc($print=true,$settings=[],$only=false) {
         //ini_set('display_errors',1);
-        $link_css  = $settings['print']    ? "<style>".file_get_contents('css/print.css')."</style>" : '';
-        $proof_css = $settings['proof']    ? "<style>".file_get_contents('css/proof.css')."</style>" : '';
+        $link_css  = isset($settings['print']) && $settings['print']    ? "<style>".file_get_contents('css/print.css')."</style>" : '';
+        $proof_css = isset($settings['proof']) && $settings['proof']    ? "<style>".file_get_contents('css/proof.css')."</style>" : '';
         return "<!DOCTYPE html>
                 <head>
                 <title>{$_SESSION['gb']['story']['name']}</title>
@@ -16,7 +16,6 @@
                 $proof_css
                 <style>{$_SESSION['gb']['story_css']}</style>
                 <style>{$_SESSION['gb']['settings']['css']}</style>
-                $play_css
                 </head>
                 <body>
                 <htmlpageheader name=\"firstpageheader\" style=\"display:none\"></htmlpageheader>
@@ -51,15 +50,15 @@
                 </head>
                 <body>
                 <div class='content'>
-                ".htmlise($print,$settings,$only)."
+                ".htmlise(false,$settings,false)."
                 </div>
                 </body>
                 </html>";
     }
 
-    function htmlise($print=false,$settings,$only=false) {
+    function htmlise($print=false,$settings=[],$only=false) {
         $out  = '';
-        $pf   = $settings['playable'] ? '' : "<sethtmlpagefooter name='otherpagefooter' page='ALL' value='on'></sethtmlpagefooter>";
+        $pf   = isset($settings['playable']) && $settings['playable'] ? '' : "<sethtmlpagefooter name='otherpagefooter' page='ALL' value='on'></sethtmlpagefooter>";
         $rf   = '';
         $only = get_only($only);
         if ($print && $_SESSION['gb']['settings']['cover'] && !$only && ($settings['covers'] || !$settings['print'])) {
@@ -73,7 +72,7 @@
             } else if ($settings['covers'] || $settings['simplex']) {
                 $out .= "<pagebreak type='next-odd' resetpagenum='1'></pagebreak>";
             } else {
-                $out .= $settings['playable'] ? '' : "<pagebreak type='next-odd' resetpagenum='1'></pagebreak>";
+                $out .= isset($settings['playable']) && $settings['playable'] ? '' : "<pagebreak type='next-odd' resetpagenum='1'></pagebreak>";
             }
         } else if (!$settings['print'] && !$settings['covers'] && !$only) {
             $out = "<h1 class='story_name'>{$_SESSION['gb']['story']['name']}</h1>";
@@ -96,7 +95,7 @@
             }
 
             /* Then is gb-introduction */
-            if ($_SESSION['gb']['gb-introduction'] && !$only && !$settings['playable']) {
+            if (array_key_exists('gb-introduction',$_SESSION['gb']) && $_SESSION['gb']['gb-introduction'] && !$only && (isset($settings['playable'] )&& !$settings['playable'])) {
                 $out .= "<div class='paragraph introduction long' id='introduction'>".process_para($_SESSION['gb']['gb-introduction'],true,$print,$settings)['text']."</div>
                          <div class='body_headers'></div>";
                 if ($_SESSION['gb']['gb-introduction']['tags'] && in_array('breakafter',$_SESSION['gb']['gb-introduction']['tags'])) {
@@ -108,11 +107,12 @@
 
             /* Then turn on page numbering, and start outputting actual passages */
 
-            if (!$_REQUEST['skip_content']) {
+            if (empty($_REQUEST['skip_content'])) {
                 $out    .= $pf;
-                $divider = ($_SESSION['gb']['settings']['separator'] || $settings['proof']) ? "<div class='game_divider'></div>" : '';
+                $divider = ($_SESSION['gb']['settings']['separator'] || isset($settings['proof']) && $settings['proof']) ? "<div class='game_divider'></div>" : '';
                 $total   = count($_SESSION['gb']['numbering']);
                 $count   = 0;
+                $proof_info = '';
                 foreach ($_SESSION['gb']['number_order'] AS $number => $pid) {
                     if ($only && !in_array($number,$only)) { continue; }
                     if ($number == $total) { $divider = ''; }
@@ -124,10 +124,10 @@
                     $pp   = process_para($pass,true,$print,$settings);
                     
                     if ($pass['tags'] && in_array('breakbefore',$pass['tags'])) {
-                        $out .= $settings['playable'] ? '' : "<pagebreak suppress='off'></pagebreak>";
+                        $out .= isset($settings['playable']) && $settings['playable'] ? '' : "<pagebreak suppress='off'></pagebreak>";
                     }
                     
-                    if ($settings['proof']) {
+                    if (isset($settings['proof'])) {
                         $proof_info = "<h3 class='proof_info'>pid #{$pid} — {$pass['name']}</h3>";
                     }
                     $out .= $rf ? $rf : $pf;
@@ -147,30 +147,29 @@
                             {$pp['before']}
                             <div class='paragraph $long' id='para_$number'>
                             <bookmark content='$number'></bookmark>
-                            <h2 id='$number'><a name='$number'>$number.</a> {$edit}</h2>
+                            <h2 id='$number' class='section_number'><a name='$number'>$number.</a> {$edit}</h2>
                             $proof_info
                             {$pp['text']}
-                            $tag
                             </div>
                             $divider
                             {$pp['after']}";
                     $out .= $rf ? $rf : $pf;
                     if ($_SESSION['gb']['settings']['break'] || ($pass['tags'] && in_array('breakafter',$pass['tags']))) {
-                        $out .= $settings['playable'] ? '' : "<pagebreak type='next-odd' suppress='off'></pagebreak>";
+                        $out .= isset($settings['playable']) && $settings['playable'] ? '' : "<pagebreak type='next-odd' suppress='off'></pagebreak>";
                     }
                     $count ++;
-                    if ($_REQUEST['limit'] && $count >= $_REQUEST['limit']) { break; }
+                    if (isset($_REQUEST['limit']) && $count >= $_REQUEST['limit']) { break; }
                 }
             }
 
 
             /* Then is gb-introduction again, for playable version */
-            if ($_SESSION['gb']['gb-introduction'] && !$only && $settings['playable']) {
+            if (array_key_exists('gb-introduction',$_SESSION['gb']) && $_SESSION['gb']['gb-introduction'] && !$only && isset($settings['playable'])) {
                 $out .= "<div class='paragraph introduction long' id='introduction'>".process_para($_SESSION['gb']['gb-introduction'],true,$print,$settings)['text']."</div>";
             }
             
             /* Then output any backmatter from WF style backmatter_X tags */
-            if ($_SESSION['gb']['backmatter'] && !$only) {
+            if (array_key_exists('backmatter',$_SESSION['gb']) && $_SESSION['gb']['backmatter'] && !$only) {
                 $out .= "<pagebreak suppress='off'></pagebreak>";
                 foreach ($_SESSION['gb']['backmatter'] AS $back_pid) {
                     $back = $_SESSION['gb']['story']['passages'][$_SESSION['gb']['pids'][$back_pid]];
@@ -187,7 +186,7 @@
 
             /* Finally, output gb-rear */
 
-            if ($_SESSION['gb']['gb-rear'] && !$only) {
+            if (array_key_exists('gb-rear',$_SESSION['gb']) && !$only) {
                 $out .= "<pagebreak suppress='off'></pagebreak><div class='paragraph rear'>".process_para($_SESSION['gb']['gb-rear'])['text']."</div>";
             }
         }
@@ -207,6 +206,7 @@
     function process_para($passage,$process_markdown=true,$print=false,$settings=[]) {
         // need to turn each link in [[]] into a link to the correct paragraph
         //echo "<pre>".print_r($passage,1)."</pre>";
+        $before = $after = '';
         if ($passage['tags'] && in_array('death',$passage['tags'])) {
             $tag = $_SESSION['gb']['settings']['death_text'] ? "<div class='end death'>{$_SESSION['gb']['settings']['death_text']}</div>" : '';
         } else if ($passage['tags'] && in_array('end',$passage['tags'])) { 
@@ -216,6 +216,7 @@
         }
         $text = $passage['text'];
         $text = process_links($passage,$settings); 
+        $text = placeholders($text,$settings);
         if (preg_match_all("/(?:<template name=\"(.*)\"[^>]*>(.*)<\/template>|<t:(.*)>(.*)<\/t>)/sU",$text,$templatematch,PREG_SET_ORDER)) {
             $text   = templates($text,$templatematch,$print);
         }
@@ -233,13 +234,28 @@
         }
         if ($process_markdown) {
             $text   = markdown($text, $_SESSION['gb']['settings']['mdtype'],$settings);
-            $text   = autop($text,0).$tag;
+            $text   = autop($text,$_SESSION['gb']['settings']['single_line_breaks'] ?? 0).$tag;
             $text   = md_apply_attributes($text);
-            $after  = $after ? markdown($after, $_SESSION['gb']['settings']['mdtype'],$settings) : '';
+            $after  = $after  ? markdown($after, $_SESSION['gb']['settings']['mdtype'],$settings) : '';
             $before = $before ? markdown($before, $_SESSION['gb']['settings']['mdtype'],$settings) : '';
         }
         //echo "<pre>".htmlspecialchars($text)."</pre>";
         return ['text' => $text, 'after' => $after, 'before' => $before];
+    }
+
+    function placeholders($text,$settings) {
+        $text = preg_replace_callback('/\$([a-zA-Z_][a-zA-Z0-9_]+)\W/s', 
+                    function($m) use ($settings) { 
+                        if (!array_key_exists('gb-placeholders',$_SESSION['gb']) || !count($_SESSION['gb']['gb-placeholders']['placeholders'])) { return $m[1]; }
+                        if ($_SESSION['gb']['gb-placeholders']['placeholders'][$m[1]]) {
+                            return $_SESSION['gb']['gb-placeholders']['placeholders'][$m[1]];
+                        } else if ($_SESSION['gb']['gb-templates']['templates'][$m[1]]) {
+                            return "<t:{$m[1]}></t>";
+                        } else {
+                            return $m[1];
+                        }
+                    },$text);
+        return $text;
     }
 
     /* TEMPLATE FUNCTIONS */
@@ -344,7 +360,7 @@
                 // if we have whitespace and are not in a string, skip it
                 continue;
             }
-            if ($tokens[$i +1] == '.' ) {
+            if (isset($tokens[$i +1]) && $tokens[$i +1] == '.' ) {
                 // start consuming for a dot-notation variable
                 $token   = $to;
                 $consume = 'var';
@@ -411,7 +427,7 @@
         } else {
             $out   = "\$gbt_{$var[1]}";
         }
-        if ($var[2]) {
+        if (isset($var[2]) && $var[2]) {
             $out .= $var[2];
         }
         $out = str_replace('$_','$',$out);
@@ -429,7 +445,10 @@
             echo "<pre>" . print_r(get_defined_vars(),1) . "</pre>";
         }
         ob_start();
-        eval("?>$t<?php ");
+        $old_error_reporting = error_reporting();
+        error_reporting(0);
+        eval("?><?php error_reporting(0)?>$t<?php ");
+        error_reporting($old_error_reporting);
         return ob_get_clean();
     }
 
@@ -440,7 +459,7 @@
         // includes
         $include = "/(\(display: *\"(.*?)\"\)|<<include *\"(.*?)\">>)/";
         $text = preg_replace_callback($include, 
-                    function($m) { 
+                    function($m) use ($settings) { 
                         $idx = $_SESSION['gb']['passage_names'][$m[2]]['idx'];
                         return process_para($_SESSION['gb']['story']['passages'][$idx],false,$settings)['text']; 
                     },$text);
@@ -666,13 +685,13 @@
         } else {
             $mode      = 'body';
             $length    = 20;
-            $keys      = $matches['body'] ? explode(',',trim($matches['body'])) : array_keys($_SESSION['gb']['keywords']);
+            $keys      = !empty($matches['body']) ? explode(',',trim($matches['body'])) : array_keys($_SESSION['gb']['keywords']);
             $keys      = array_map('trim',$keys);
                          sort($keys);
             $kcount    = count($keys);
-            $colcount  = $matches['cols'] ? $matches['cols'] : ceil($kcount / $length);
+            $colcount  = !empty($matches['cols']) ? $matches['cols'] : ceil($kcount / $length);
         }
-        $colheight = ceil($kcount / $colcount);
+        $colheight = $colcount ? ceil($kcount / $colcount) : 1;
         $cols      = array_chunk($keys,$colheight);
 
         //echo "<pre>"; print_r($_SESSION['gb']['keywords']); print_r($keys); print_r($cols); echo "</pre>";
@@ -749,11 +768,12 @@
         $out = '';
         foreach ($arr AS $part) {
             if (!preg_match('/^\s*<(.*)>\s*$/',$part)) {
-                $out .= '<p>'.$part.'</p>';
-            } else {
-                $out .= $part;
+                $part = '<p>'.$part.'</p>';
             }
-            $out .= "\n";
+            if ($br) {
+                $part = str_replace("\n",'<br>',$part);
+            }
+            $out .= $part . "\n";
         }
         $out = str_replace(["<p><div","/div></p>","<p><table","/ul></p>"],['<div','/div>','<table','/ul>'],$out);
         //preg_match_all("|div([^>]*)>((?:(?!<p>).)*)</p>|gs",$out,$matches);
@@ -764,7 +784,7 @@
     }
 
     function process_links($passage,$settings=[]) {
-        $prefix = $settings['para_links'] ? 'para_' : '';
+        $prefix = isset($settings['para_links']) ? 'para_' : '';
         preg_match_all("/\[\[([^\[\]]*?)\]\]/",$passage['text'],$matches);
         $debug = "<pre>"; 
         $debug .= print_r($matches,1);
@@ -772,15 +792,15 @@
             $link  = html_entity_decode($link,ENT_QUOTES | ENT_HTML5);
             $parts = preg_split("/(->|<-|\|)/",$link,-1,PREG_SPLIT_DELIM_CAPTURE);
             $debug .= print_r($parts,1);
-            if ($parts[1] == '<-') {
+            if (isset($parts[1]) && $parts[1] == '<-') {
                 // reversed style
                 $name   = $parts[2];
                 $pid    = $_SESSION['gb']['passage_names'][$parts[0]];
                 $debug .= " LINK PATTERN 1 ";
-            } else if ($parts[1]) {
+            } else if (isset($parts[1]) && $parts[1]) {
                 $name   = $parts[0];
                 $pid    = $_SESSION['gb']['passage_names'][$parts[2]];
-                $debug .= " LINK PATTERN 2 $name -> {$parts[2]} ($pid)\n";
+                //$debug .= " LINK PATTERN 2 $name -> {$parts[2]} ($pid)\n";
             } else {
                 $name   = $parts[0];
                 $pid    = $_SESSION['gb']['passage_names'][$parts[0]];
@@ -791,27 +811,43 @@
             $number = $_SESSION['gb']['numbering'][$pid['pid']]['number'];
             $number = $number ?? "X";
             $name   = trim($name);
+
+            // create patterns
+
+            if (!is_array($_SESSION['gb']['settings']['links'])) { $_SESSION['gb']['settings']['links'] = []; }
+            $patterns = [
+                'Turnto'    => $_SESSION['gb']['settings']['links']['Turnto']   ?? "Turn to [[number]]",
+                'turnto'    => $_SESSION['gb']['settings']['links']['turnto']   ?? "turn to [[number]]",
+                'Returnto'  => $_SESSION['gb']['settings']['links']['Returnto'] ?? "Return to [[number]]",
+                'returnto'  => $_SESSION['gb']['settings']['links']['returnto'] ?? "return to [[number]]",
+                'default'   => $_SESSION['gb']['settings']['links']['default']  ?? " (turn to [[number]])",
+            ];
+
+            // create links
+
             if ($name == 'Turnto') {
                 $debug .= " TURNTO LINK ";
-                $ltext = "Turn to $number";
+                $ltext = str_replace('[[number]]',$number,$patterns['Turnto']); // Turn to $number
             } else if ($name == 't_urnto') {
-                $ltext = "turn to $number";
+                $ltext = str_replace('[[number]]',$number,$patterns['turnto']); // "turn to $number";
             } else if ($name == 'turnto' || $name === '') {
                 $debug .= " TURNTO LINK ";
                 $pattern = "/[.?!]\s+\[\[".str_replace('|','\|',$link)."/"; 
                 if (preg_match($pattern,$passage['text'],$lmatches)) {
-                    $ltext = "Turn to $number";
+                    $ltext = str_replace('[[number]]',$number,$patterns['Turnto']); // Turn to $number
                 } else {
-                    $ltext = "turn to $number";
+                    $ltext = str_replace('[[number]]',$number,$patterns['turnto']); // "turn to $number";
                 }
             } else if ($name == 'Returnto') {
-                $ltext = "Return to $number";
+                $ltext = str_replace('[[number]]',$number,$patterns['Returnto']); // "Return to $number";
             } else if ($name == 'returnto') {
-                $ltext = "return to $number";
+                $ltext = str_replace('[[number]]',$number,$patterns['returnto']); // "return to $number";
             } else if ($name == '#') {
-                $ltext = "$number";
+                $ltext = "$number"; 
+            } else if (substr($name,0,8) == 'literal:') {
+                $ltext = substr($name,8);
             } else {
-                $ltext = "$name (turn to $number)";
+                $ltext = $name . str_replace('[[number]]',$number,$patterns['default']); // "$name (turn to $number)";
             }
             $debug .= " $ltext \n\n";
             //$ltext  = ($name == 'turnto') ? "turn to $number" : "$name (turn to $number)";
@@ -977,6 +1013,17 @@
         return $templates;
     }
 
+    function create_placeholders($source) {
+        $placeholders = [];
+        foreach ($source AS $name => $value) {
+            $placeholders[$name] = preg_replace_callback('/\$([a-zA-Z0-9\-_]+)/s',
+                function($m) use ($placeholders) { 
+                    return $placeholders[$m[1]] ?? $m[1];
+                },$value);
+        }
+        return $placeholders;
+    }
+
     function find_keywords($text) {
         preg_match_all("/<k(?:eyword)?>(.+?)<\/k(?:eyword)?>/s",$text,$matches);
         return $matches[1];
@@ -998,7 +1045,7 @@
     }
 
     function get_only($only=false) {
-        if (!$only && !$_REQUEST['only']) { return false; }
+        if (!$only && (!isset($_REQUEST['only']) || !$_REQUEST['only'])) { return false; }
         $only = $only ? $only : explode(',',$_REQUEST['only']);
         $ret  = [];
         foreach ($only AS $o) {
@@ -1024,10 +1071,10 @@
         $fontData = $defaultFontConfig['fontdata'];
 
         $settings = $settings ?? [
-            'print'       => $_REQUEST['print'] ? true : false,
-            'covers'      => $_REQUEST['covers'] ? true : false,
-            'simplex'     => $_REQUEST['simplex'] ? true : false,
-            'covers-only' => $_REQUEST['cover-only'] ? true : false,
+            'print'       => isset($_REQUEST['print']) ? true : false,
+            'covers'      => isset($_REQUEST['covers']) ? true : false,
+            'simplex'     => isset($_REQUEST['simplex']) ? true : false,
+            'covers-only' => isset($_REQUEST['cover-only']) ? true : false,
         ];
 
         $format = (strstr($_SESSION['gb']['settings']['page_size'],',')) ? explode(',',$_SESSION['gb']['settings']['page_size']) : $_SESSION['gb']['settings']['page_size'];
@@ -1060,7 +1107,7 @@
             'margin_left'        => $_SESSION['gb']['settings']['margin_left']   ?? 10,
             'margin_right'       => $_SESSION['gb']['settings']['margin_right']  ?? 10
         ];
-        if ($_REQUEST['print'] && !$_REQUEST['cover-only']) {
+        if (isset($_REQUEST['print']) && $_REQUEST['print'] && (isset($_REQUEST['cover-only']) && !$_REQUEST['cover-only'])) {
             $config = array_merge($config,[
                 'margin_left'   => $_SESSION['gb']['settings']['margin_print_left'] ?? 20,
                 'margin_right'  => $_SESSION['gb']['settings']['margin_print_right'] ?? 10,
@@ -1071,14 +1118,14 @@
     }
 
     function render_one($passage,$number) {
-        $pp      = process_para($passage,true,$print);
+        $pp      = process_para($passage,true,'');
         return "
         <style>".file_get_contents('css/game.css')."</style>
         <style>".file_get_contents('css/preview.css')."</style>
         <style>{$_SESSION['gb']['story_css']}</style>
         <style>{$_SESSION['gb']['settings']['css']}</style>
         {$pp['before']}
-        <div class='paragraph $long' id='para_$number'>
+        <div class='paragraph' id='para_$number'>
         <bookmark content='{$_SESSION['gb']['numbering'][$pid]['number']}'></bookmark>
         <h2 id=''><a name='$number'>$number.</a>{$edit}</h2>
         {$pp['text']}
