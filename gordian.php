@@ -1,7 +1,7 @@
 <?php
 
     ini_set('session.gc_maxlifetime','5000');
-    ini_set('max_execution_time',50);
+    ini_set('max_execution_time',300);
     session_start();
     require "includes/gordian_interface.functions.php";
     require "includes/gordian_output.functions.php";
