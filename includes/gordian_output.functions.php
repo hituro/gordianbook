@@ -95,7 +95,7 @@
             }
 
             /* Then is gb-introduction */
-            if (array_key_exists('gb-introduction',$_SESSION['gb']) && $_SESSION['gb']['gb-introduction'] && !$only && (isset($settings['playable'] )&& !$settings['playable'])) {
+            if (array_key_exists('gb-introduction',$_SESSION['gb']) && $_SESSION['gb']['gb-introduction'] && !$only) {
                 $out .= "<div class='paragraph introduction long' id='introduction'>".process_para($_SESSION['gb']['gb-introduction'],true,$print,$settings)['text']."</div>
                          <div class='body_headers'></div>";
                 if ($_SESSION['gb']['gb-introduction']['tags'] && in_array('breakafter',$_SESSION['gb']['gb-introduction']['tags'])) {
@@ -642,15 +642,15 @@
                 $splices[] = ['rep' => "{$close}<div class='align' style='text-align:right'>", 'start' => $aitem[1], 'length' => strlen($aitem[0])];
                 $open      = true;
             }
-            else if (preg_match("/^<==+$/",$aligns[1][$aidx][0])) { // right-aligned
+            else if (preg_match("/^<==+$/",$aligns[1][$aidx][0])) { // left-aligned
                 $splices[] = ['rep' => "{$close}", 'start' => $aitem[1], 'length' => strlen($aitem[0])];
                 $open      = false;
             }
-            else if (preg_match("/^<==+>$/",$aligns[1][$aidx][0])) { // right-aligned
+            else if (preg_match("/^<==+>$/",$aligns[1][$aidx][0])) { // justified
                 $splices[] = ['rep' => "{$close}<div class='align' style='text-align:justify'>", 'start' => $aitem[1], 'length' => strlen($aitem[0])];
                 $open      = true;
             }
-            else if (preg_match("/^(=+)><(=+)$/",$aligns[1][$aidx][0],$cmatch)) { // right-aligned
+            else if (preg_match("/^(=+)><(=+)$/",$aligns[1][$aidx][0],$cmatch)) { // centred
                 $left      = strlen($cmatch[1]);
                 $right     = strlen($cmatch[2]);
                 if ($left != $right) {
@@ -731,7 +731,7 @@
             $out .= '<tr>';
             for($col = 0;$col < $colcount;$col++) {
                 $key  = $cols[$col][$row];
-                $out .= $key ? '<tr><td class="number">' . $key[0] . '</td><td class="checkbox">' . md_boxes([0,$key[1]],'left') . '</td>' : '<td></td>';
+                $out .= $key ? '<td class="number">' . $key[0] . '</td><td class="checkbox">' . md_boxes([0,$key[1]],'left') . '</td>' : '<td></td>';
             } 
             $out .= '</tr>';
         }
@@ -776,8 +776,6 @@
             $out .= $part . "\n";
         }
         $out = str_replace(["<p><div","/div></p>","<p><table","/ul></p>"],['<div','/div>','<table','/ul>'],$out);
-        //preg_match_all("|div([^>]*)>((?:(?!<p>).)*)</p>|gs",$out,$matches);
-        //print_r($matches);
         $out = preg_replace("|<div([^>]*)>((?:(?!<p>).)*)</p>|s","<div$1><p>$2</p>",$out);
         $out = preg_replace("|<p>((?:(?!</p>).)*)</div>|s","<p>$1</p></div>",$out);
         return $out;
