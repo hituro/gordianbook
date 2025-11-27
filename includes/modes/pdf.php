@@ -7,7 +7,8 @@
     $mpdf = new \Mpdf\Mpdf($config);
     $mpdf->SetCompression(true);
     try {
-        $mpdf->WriteHTML(htmldoc(true,$settings));
+        $doc = htmldoc(true,$settings);
+        $mpdf->WriteHTML($doc);
         $mpdf->Output();
     } catch (Exception $e) { echo "<pre>"; print_r($e); }
 ?>
