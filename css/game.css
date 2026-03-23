@@ -142,6 +142,17 @@ img {
     padding-top: 6cm;
 }
 
+.box_area {
+    display: block;
+    border-radius: 1mm;
+    margin: 1em 0px;
+    padding: 0.5em;
+    border: 1px solid #999;
+    background: white;
+    color: black;
+    height: 4em;
+}
+
 .checkboxes {
     text-align: center;
     height: 4mm;

@@ -518,6 +518,8 @@
         $text = preg_replace_callback("/<keywords(?: +cols=['\"](?P<cols>[0-9]+)['\"])?>(?P<body>.*?)<\/keywords>/s","md_keywords",$text);
         $text = preg_replace_callback("/<checkbox-list(?: +cols=['\"](?P<cols>[0-9]+)['\"])?>(?P<body>.*?)<\/checkbox-list>/s","md_checkbox_list",$text);
         $text = preg_replace_callback("/<checkboxes>(.+?)<\/checkboxes>/s","md_boxes",$text);
+        $text = preg_replace("/<box>/s","<div class='box_area'></div>",$text);
+        $text = preg_replace_callback("/<box-list>/s","md_box_list",$text);
         // comments 
         $text = preg_replace("|<comment>(.*?)</comment>|s","<!-- $1 -->",$text);
         // image resolution
@@ -751,6 +753,28 @@
         return $checkboxes;
     }
 
+    function md_box_list($matches) {
+        $boxes = md_get_boxes();
+        $out   = "<div class='box_list'>";
+        foreach ($boxes AS $number => $box) {
+            $out .= "<div><b>$number</b><div class='box_area'></div></div>";
+        }
+        return $out . "</div>";
+    }
+    function md_get_boxes() {
+        $boxes = [];
+        foreach ($_SESSION['gb']['story']['passages'] AS $pidx => $passage) {
+            preg_match_all("/<box>/s",$passage['text'],$matches);
+            if ($matches[1]) {
+                $count   = array_sum($matches[1]);
+                $number  = $_SESSION['gb']['numbering'][$passage['pid']]['number'];
+                $boxes[$number] = true;
+            }
+        }
+        ksort($boxes);
+        return $boxes;
+    }
+
     function md_boxes($matches,$align='center') {
         return "<table class='checkboxes' cellSpacing='1mm' align='$align' border='0'><tr>" . str_repeat("<td class='box' width='6mm'>&nbsp;</td> ",$matches[1]) . '</tr></table>';
     }
@@ -814,38 +838,38 @@
 
             if (!is_array($_SESSION['gb']['settings']['links'])) { $_SESSION['gb']['settings']['links'] = []; }
             $patterns = [
-                'Turnto'    => $_SESSION['gb']['settings']['links']['Turnto']   ?? "Turn to [[number]]",
-                'turnto'    => $_SESSION['gb']['settings']['links']['turnto']   ?? "turn to [[number]]",
-                'Returnto'  => $_SESSION['gb']['settings']['links']['Returnto'] ?? "Return to [[number]]",
-                'returnto'  => $_SESSION['gb']['settings']['links']['returnto'] ?? "return to [[number]]",
-                'default'   => $_SESSION['gb']['settings']['links']['default']  ?? " (turn to [[number]])",
+                'Turnto'    => $_SESSION['gb']['settings']['links']['Turnto']   ?? "Turn to {number}",
+                'turnto'    => $_SESSION['gb']['settings']['links']['turnto']   ?? "turn to {number}",
+                'Returnto'  => $_SESSION['gb']['settings']['links']['Returnto'] ?? "Return to {number}",
+                'returnto'  => $_SESSION['gb']['settings']['links']['returnto'] ?? "return to {number}",
+                'default'   => $_SESSION['gb']['settings']['links']['default']  ?? " (turn to {number})",
             ];
 
             // create links
 
             if ($name == 'Turnto') {
                 $debug .= " TURNTO LINK ";
-                $ltext = str_replace('[[number]]',$number,$patterns['Turnto']); // Turn to $number
+                $ltext = str_replace('{number}',$number,$patterns['Turnto']); // Turn to $number
             } else if ($name == 't_urnto') {
-                $ltext = str_replace('[[number]]',$number,$patterns['turnto']); // "turn to $number";
+                $ltext = str_replace('{number}',$number,$patterns['turnto']); // "turn to $number";
             } else if ($name == 'turnto' || $name === '') {
                 $debug .= " TURNTO LINK ";
                 $pattern = "/[.?!]\s+\[\[".str_replace('|','\|',$link)."/"; 
                 if (preg_match($pattern,$passage['text'],$lmatches)) {
-                    $ltext = str_replace('[[number]]',$number,$patterns['Turnto']); // Turn to $number
+                    $ltext = str_replace('{number}',$number,$patterns['Turnto']); // Turn to $number
                 } else {
-                    $ltext = str_replace('[[number]]',$number,$patterns['turnto']); // "turn to $number";
+                    $ltext = str_replace('{number}',$number,$patterns['turnto']); // "turn to $number";
                 }
             } else if ($name == 'Returnto') {
-                $ltext = str_replace('[[number]]',$number,$patterns['Returnto']); // "Return to $number";
+                $ltext = str_replace('{number}',$number,$patterns['Returnto']); // "Return to $number";
             } else if ($name == 'returnto') {
-                $ltext = str_replace('[[number]]',$number,$patterns['returnto']); // "return to $number";
+                $ltext = str_replace('{number}',$number,$patterns['returnto']); // "return to $number";
             } else if ($name == '#') {
                 $ltext = "$number"; 
             } else if (substr($name,0,8) == 'literal:') {
-                $ltext = substr($name,8);
+                $ltext = str_replace('{number}',$number,substr($name,8));
             } else {
-                $ltext = $name . str_replace('[[number]]',$number,$patterns['default']); // "$name (turn to $number)";
+                $ltext = $name . str_replace('{number}',$number,$patterns['default']); // "$name (turn to $number)";
             }
             $debug .= " $ltext \n\n";
             //$ltext  = ($name == 'turnto') ? "turn to $number" : "$name (turn to $number)";
