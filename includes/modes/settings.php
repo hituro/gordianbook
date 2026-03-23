@@ -36,27 +36,27 @@
                 <div class='form-row'>
                     <label for='links_default'>Default Link Text</label><br><br>
                     <input name='links_default' type='text' value='{$_SESSION['gb']['settings']['links']['default']}' 
-                           placeholder=' (turn to [[number]])'>
+                           placeholder=' (turn to {number})'>
                 </div>
                 <div class='form-row'>
                     <label for='links_Turnto'>Turnto Link Text</label><br><br>
                     <input name='links_Turnto' type='text' value='{$_SESSION['gb']['settings']['links']['Turnto']}' 
-                           placeholder='Turn to [[number]]'>
+                           placeholder='Turn to {number}'>
                 </div>
                 <div class='form-row'>
                     <label for='links_turnto'>turnto Link Text</label><br><br>
                     <input name='links_turnto' type='text' value='{$_SESSION['gb']['settings']['links']['turnto']}' 
-                           placeholder='turn to [[number]]'>
+                           placeholder='turn to {number}'>
                 </div>
                 <div class='form-row'>
                     <label for='links_Returnto'>Returnto Link Text</label><br><br>
                     <input name='links_Returnto' type='text' value='{$_SESSION['gb']['settings']['links']['Returnto']}' 
-                           placeholder='Return to [[number]]'>
+                           placeholder='Return to {number}'>
                 </div>
                 <div class='form-row'>
                     <label for='links_return'>return Link Text</label><br><br>
                     <input name='links_return' type='text' value='{$_SESSION['gb']['settings']['links']['return']}' 
-                           placeholder='return to [[number]]'>
+                           placeholder='return to {number}'>
                 </div>
             </div>
 
